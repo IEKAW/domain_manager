@@ -1,0 +1,23 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>ドメイン管理ツール</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link type="text/css" rel="stylesheet" href="{% static 'css/login.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'asset/css/bootstrap.min.css' %}"/>
+    <link type="text/css" rel="stylesheet" href="{% static 'asset/css/bootstrap-theme.min.css' %}"/>
+</head>
+<body>
+    <div id="main" class="container">
+        {% block content %}
+            {{ content }}
+        {% endblock %}
+    </div>
+    <script src="//code.jquery.com/jquery-1.11.3.min.js"></script>
+    <script src="{% static 'asset/js/bootstrap.min.js' %}"></script>    
+    <script src="{% static 'js/login.js' %}"></script>
+</body>
+</html>

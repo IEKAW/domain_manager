@@ -1,0 +1,32 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>サイト管理</h1>
+
+<table class="table table-striped table-bordered table-hover">
+    <tr>
+        <th>グループ
+        <div class="btn-group">
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">全表示
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li>aaaaa</li>
+                <li>bbbbb</li>
+            </ul>
+        </div>
+        </th>
+        <th>サイトタイトル</th>
+        <th>URL</th>
+        <th>日本語</th>
+        <th>サーバー</th>
+    </tr>
+    <tr>
+        <td>aaaaa</td>
+        <td>bbbbb</td>
+        <td>ccccc</td>
+        <td>ddddd</td>
+        <td>eeeee</td>
+    </tr>
+</table>
+ {% endblock %}

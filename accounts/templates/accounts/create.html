@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+<p>{{ error_msg }}</p>
+
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <form class="form-horizontal" action='create' method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{{ next }}" />
+              <fieldset>
+                <div id="legend">
+                  <legend class="">Login</legend>
+                </div>
+                <div class="control-group">
+                  <!-- Username -->
+                  <label class="control-label"  for="username">Username</label>
+                  <div class="controls">
+                    <input type="text" id="username" name="name" placeholder="username" required=""  class="input-xlarge form-control">
+                  </div>
+                </div>
+                <div class="control-group">
+                  <!-- Username -->
+                  <label class="control-label"  for="username">E-Mail</label>
+                  <div class="controls">
+                    <input type="text" class="input-xlarge form-control" placeholder="e-mail" required="" name="e_mail">
+                  </div>
+                </div>
+                <div class="control-group">
+                  <!-- Password-->
+                  <label class="control-label" for="password">Password</label>
+                  <div class="controls">
+                    <input type="password" id="password" name="password" placeholder="password" required=""  class="input-xlarge form-control">
+                  </div>
+                </div>
+                <br/>
+                <div class="control-group">
+                  <!-- Button -->
+                  <div class="controls">
+                    <button class="btn btn-success">Login</button>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

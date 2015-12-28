@@ -1,3 +1,4 @@
+# coding: utf8
 """
 Django settings for domain_manager project.
 
@@ -11,11 +12,20 @@ https://docs.djangoproject.com/en/1.9/ref/settings/
 """
 
 import os
+from os.path import abspath, dirname
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
-
+# プロジェクトのルートをSITE_ROOTとする
+SITE_ROOT = abspath(os.path.join(dirname(__file__), ".."))
+# 静的ファイルを保存するフォルダ名を設定
+STATIC_URL = '/static/'
+# 静的ファイルを保存するフォルダのパスを設定
+STATICFILES_DIRS = (
+    os.path.join(SITE_ROOT, '/system/static'),
+)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.9/howto/deployment/checklist/
 
@@ -27,6 +37,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_URL = 'auth/login'
+
+LOGIN_REDIRECT_URL = '/'
 
 # Application definition
 
@@ -37,6 +50,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'system',
+    'accounts'
 ]
 
 MIDDLEWARE_CLASSES = [
@@ -78,10 +93,10 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': "domain_manager",
-	'USER': "root",
-	"PASSWORD": "060510shiba",
-	"HOST": "localhost",
-	"PORT": "3306"
+        'USER': "root",
+        "PASSWORD": "060510shiba",
+        "HOST": "localhost",
+        "PORT": "3306"
     }
 }
 
@@ -108,9 +123,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/1.9/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ja'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Tokyo'
 
 USE_I18N = True
 
@@ -121,5 +136,3 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.9/howto/static-files/
-
-STATIC_URL = '/static/'

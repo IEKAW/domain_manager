@@ -1,0 +1,21 @@
+<nav class="navbar navbar-default">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/">Domain Manager</a>
+    </div>
+
+    <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+      <ul class="nav navbar-nav">
+        <li><a href="{% url 'system.views.domain' %}">ドメイン管理</a></li>
+        <li><a href="{% url 'system.views.server' %}">サーバー管理</a></li>
+        <li><a href="{% url 'system.views.site' %}">サイト管理</a></li>
+        <li><a href="{% url 'system.views.domain_unup' %}">更新しないドメイン</a></li>
+        <li><a href="{% url 'system.views.server_unup' %}">更新しないサーバー</a></li>                
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li><a href="#">Settings</a></li>
+        <li><a href="/auth/logout">Logout</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>

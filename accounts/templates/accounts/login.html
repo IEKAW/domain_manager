@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+<div class="container">
+    <div class="row">
+        <div class="span12">
+            <form class="form-signin" method="post" action="{% url 'django.contrib.auth.views.login' %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ next }}" />
+              <fieldset>
+                <div id="legend">
+                  <legend class="">Login</legend>
+                </div>
+                <div class="control-group">
+                  <!-- Username -->
+                  <label class="control-label"  for="username">Username</label>
+                  <div class="controls">
+                    <input type="text" id="username" name="username" placeholder="username" class="input-xlarge form-control">
+                  </div>
+                </div>
+                <div class="control-group">
+                  <!-- Password-->
+                  <label class="control-label" for="password">Password</label>
+                  <div class="controls">
+                    <input type="password" id="password" name="password" placeholder="password" class="input-xlarge form-control">
+                  </div>
+                </div>
+                <br/>
+                <div class="control-group">
+                  <!-- Button -->
+                  <div class="controls">
+                    <button class="btn btn-success">Login</button>
+                    <a href="{% url 'accounts.views.create' %}" class="btn btn-warning">新規ユーザー作成</a>
+                  </div>
+                </div>
+              </fieldset>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+{% endblock %}
