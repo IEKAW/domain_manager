@@ -1,0 +1,61 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>{{ data.server }} <a href="" class="btn btn-warning">ログイン</a></h1>
+
+<div class="col-md-6">
+<h2>サーバー情報</h2>
+<table class="table table-striped table-bordered table-hover">
+    <tr>
+        <td>ログインID</td>
+        <td>{{ data.id }}</td>
+    </tr>
+    <tr>
+        <td>ログインパスワード</td>
+        <td>{{ data.pass }}</td>
+    </tr>
+    <tr>
+        <td>FTPサーバー(ホスト名)</td>
+        <td>{{ data.host }}</td>
+    </tr>
+    <tr>
+        <td>ユーザー名(アカウント名)</td>
+        <td>{{ data.username }}</td>
+    </tr>
+    <tr>
+        <td>FTPパスワード</td>
+        <td>{{ data.ftp_pass }}</td>
+    </tr>
+    <tr>
+        <td>データベースのパスワード</td>
+        <td>{{ data.db_pass }}</td>
+    </tr>
+</table>
+<h2>備考</h2>
+<p>{{ data.remarks }}</p>
+</div>
+
+<div class="col-md-5 col-md-offset-1">
+<h2>更新日</h2><br/>
+<p>{{ data.update_at }}</p>
+<h2>支払い方法</h2><br/>
+<p>{{ data.payment }}</p>
+<br/>
+<h2>ネームサーバー</h2>
+<table class="table table-striped table-bordered table-hover">
+    <tr>
+        <td>ネームサーバー1</td>
+        <td>{{ data.id }}</td>
+    </tr>
+    <tr>
+        <td>ネームサーバー2</td>
+        <td>{{ data.pass }}</td>
+    </tr>
+    <tr>
+        <td>ネームサーバー3</td>
+        <td>{{ data.host }}</td>
+    </tr>
+</table>
+</div>
+<a href="" class="btn btn-info pull-right">編集</a>
+ {% endblock %}

@@ -1,0 +1,31 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>新規サーバー追加</h1>
+
+<form action="{% url 'system.views.create_server' %}" method="POST" >
+    {% csrf_token %}
+    <label for="company">サーバー会社:</label>
+    <input type="text" name="company" class="form-control" /><br/>
+    <label for="host">FTP􏰌􏰍􏰎􏰍􏰏サーバー(ホスト名):</label>
+    <input type="text" name="host" class="form-control" ><br/>
+    <label for="id">ログインID:</label>
+    <input type="text" name="id" class="form-control" ><br/>
+    <label for="pass">ログインパスワード:</label>
+    <input type="text" name="pass" class="form-control" ><br/>
+    <label for="account">ユーザー名(アカウント名):</label>
+    <input type="text" name="account" class="form-control" ><br/>
+    <label for="ftp_pass">FTPパスワード:</label>
+    <input type="text" name="ftp_pass" class="form-control" ><br/>
+    <label for="db_pass">データベースパスワード:</label>
+    <input type="text" name="db_pass" class="form-control" ><br/>
+    <label for="update_at">更新日:</label>
+    <input type="date" name="update_at" class="form-control"><br/>
+    <label for="pay">支払い方法:</label>
+    <input type="text" name="pay" class="form-control" ><br/>
+    <label for="remark">備考:</label>
+    <input type="text" name="remark" class="form-control" ><br/>
+    <input type="submit" value="登録" class="btn btn-default">
+</form>
+
+ {% endblock %}

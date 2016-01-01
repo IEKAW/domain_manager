@@ -3,6 +3,8 @@
 {% block content %}
 <h1>ドメイン管理</h1>
 
+<a class="btn btn-default pull-right" href="{% url 'system.views.create_domain' %}">新規ドメイン追加</a><br/><br/>
+
 <table class="table table-striped table-bordered table-hover">
     <tr>
         <th>ドメイン名</th>
@@ -12,13 +14,18 @@
         <th>代表サイト</th>
         <th>更新</th>
     </tr>
+    {% for raw in data %}
     <tr>
-        <td>aaaaa</td>
-        <td>bbbbb</td>
-        <td>ccccc</td>
-        <td>ddddd</td>
+        <td><a href="/domain/detail?domain_id={{ raw.id }}">{{ raw.domain }}</a></td>
+        <td>{{ raw.japanese }}</td>
+        <td>{{ raw.updated_at }}</td>
+        <td>{{ raw.company }}</td>
         <td>eeeee</td>
-        <td>fffff</td>
+        <td>
+            <a href="/domain/update?domain_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>
+            <a href="" class="btn-info btn-xs">更新しない</a>
+        </td>
     </tr>
+    {% endfor %}
 </table>
  {% endblock %}

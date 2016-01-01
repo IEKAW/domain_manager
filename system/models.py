@@ -9,7 +9,7 @@ class Domain(models.Model):
     japanese = models.CharField(max_length=255)
     updated_date = models.DateField()
     domain_company = models.CharField(max_length=255)
-    representative = models.CharField(max_length=255)
+    domain_company_url = models.CharField(max_length=255, null=True)
 
 
 class Site(models.Model):
@@ -19,6 +19,12 @@ class Site(models.Model):
     url = models.CharField(max_length=255)
     japanese = models.CharField(max_length=255)
     server = models.CharField(max_length=255)
+    updated_date = models.DateField(null=True)
+    template = models.CharField(max_length=255, null=True)
+    login_url = models.CharField(max_length=255, null=True)
+    login_id = models.CharField(max_length=255, null=True)
+    login_pass = models.CharField(max_length=255, null=True)
+    remarks = models.TextField(null=True)
 
 
 class Server(models.Model):
@@ -26,6 +32,13 @@ class Server(models.Model):
     server_company = models.CharField(max_length=255)
     updated_date = models.DateField()
     host = models.CharField(max_length=255)
+    username = models.CharField(max_length=255, null=True)
+    ftp_pass = models.CharField(max_length=255, null=True)
+    db_pass = models.CharField(max_length=255, null=True)
+    payment = models.CharField(max_length=255, null=True)
+    remarks = models.TextField(null=True)
+    login_id = models.CharField(max_length=255, null=True)
+    login_pass = models.CharField(max_length=255, null=True)
 
 
 class SiteComment(models.Model):
@@ -41,3 +54,11 @@ class Link(models.Model):
     to_site = models.IntegerField()
     link_position = models.CharField(max_length=255)
     created_at = models.DateField()
+
+
+class DomainDetail(models.Model):
+    """docstring for DomainDetail"""
+    domain_id = models.IntegerField()
+    url = models.CharField(max_length=255, null=True)
+    title = models.CharField(max_length=255, null=True)
+    is_representative = models.BooleanField(default=False)

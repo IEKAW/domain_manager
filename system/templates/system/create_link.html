@@ -1,0 +1,22 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>新規リンク追加</h1>
+
+<form>
+    <label for="company">サイトタイトル:</label>
+    <input type="text" name="company" class="form-control" /><br/>
+    <label for="ftp">URL:</label>
+    <input type="text" name="ftp" class="form-control" ><br/>
+    <label for="update_at">リンクを送った日:</label>
+    <input type="date" name="company" class="form-control"><br/>
+    <label for="pay">リンク先URL:</label>
+    <input type="text" name="pay" class="form-control" ><br/>
+    <label for="ftp">リンク先サイト名:</label>
+    <input type="text" name="ftp" class="form-control" ><br/>
+    <label for="ftp">リンク位置:</label>
+    <input type="text" name="ftp" class="form-control" ><br/>
+    <input type="submit" value="登録" class="btn btn-default">
+</form>
+
+ {% endblock %}

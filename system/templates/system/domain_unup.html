@@ -14,15 +14,20 @@
         <th>代表サイト</th>
         <th>更新</th>
     </tr>
+    {% for raw in data %}
     <tr>
         <td><input type="checkbox" name="domain" value=""></td>
-        <td>aaaaa</td>
-        <td>bbbbb</td>
-        <td>ccccc</td>
-        <td>ddddd</td>
+        <td>{{ raw.domain }}</td>
+        <td>{{ raw.japanese }}</td>
+        <td>{{ raw.updated_at }}</td>
+        <td>{{ raw.company }}</td>
         <td>eeeee</td>
-        <td>fffff</td>
+        <td>
+            <a href="" class="btn-warning btn-xs">更新する</a><br/>
+            <a href="" class="btn-info btn-xs">削除</a>
+        </td>
     </tr>
+    {% endfor %}
 </table>
 <input class="pull-right" type="submit" value="削除">
 </form>

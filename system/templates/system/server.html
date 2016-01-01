@@ -20,11 +20,18 @@
         <th>ホスト名</th>
         <th>更新</th>
     </tr>
+    {% for raw in data %}
     <tr>
-        <td>aaaaa</td>
-        <td>bbbbb</td>
-        <td>ccccc</td>
-        <td>ddddd</td>
+        <td><a href="/server/detail?server_id={{ raw.id }}">{{ raw.company }}</a></td>
+        <td>{{ raw.updated_at }}</td>
+        <td>{{ raw.host }}</td>
+        <td>
+            <a href="/server/update?server_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>
+            <a href="" class="btn-info btn-xs">更新しない</a>
+        </td>
     </tr>
+    {% endfor %}
 </table>
+<br/>
+<a class="btn btn-default pull-right" href="{% url 'system.views.create_server' %}">追加</a>
  {% endblock %}

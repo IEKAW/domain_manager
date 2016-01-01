@@ -1,0 +1,19 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>ドメイン更新ページ</h1>
+<h2>{{ data.server }}</h2>
+
+<form action="{% url 'system.views.update_server' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" value="{{ data.id }}" name="id"/>
+    <table class="table-striped table-bordered table-hover">
+        <tr>
+            <td>更新日</td>
+            <td><input type="date" class="form-control" name="update_at" value="{{ data.update_at }}" /></td>
+        </tr>
+    </table><br/>
+    <input type="submit" value="更新" class="btn btn-info" />
+    <a href="/server" class="btn btn-warning">キャンセル</a>
+</form>
+ {% endblock %}

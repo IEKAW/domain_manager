@@ -1,0 +1,36 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>サイト管理</h1>
+
+<a class="btn btn-default pull-right" href="{% url 'system.views.create_site' %}">登録</a><br/><br/>
+
+<table class="table table-striped table-bordered table-hover">
+    <tr>
+        <th>グループ
+        <div class="btn-group">
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">全表示
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu">
+                <li>aaaaa</li>
+                <li>bbbbb</li>
+            </ul>
+        </div>
+        </th>
+        <th>サイトタイトル</th>
+        <th>URL</th>
+        <th>日本語</th>
+        <th>サーバー</th>
+    </tr>
+    {% for raw in data %}
+    <tr>
+        <td>{{ raw.group }}</td>
+        <td><a href="/site/detail?site_id={{ raw.id }}">{{ raw.title }}</a></td>
+        <td><a href="{{ raw.url }}">{{ raw.url }}</a></td>
+        <td>{{ raw.japanese }}</td>
+        <td>{{ raw.server }}</td>
+    </tr>
+    {% endfor %}
+</table>
+ {% endblock %}
