@@ -21,6 +21,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SITE_ROOT = abspath(os.path.join(dirname(__file__), ".."))
 # 静的ファイルを保存するフォルダ名を設定
 STATIC_URL = '/static/'
+STATIC_ROOT = '/home/mimimimim/www/domain_manager/domain_manager/domain_manager/'
 # 静的ファイルを保存するフォルダのパスを設定
 STATICFILES_DIRS = (
     os.path.join(SITE_ROOT, '/system/static'),
@@ -92,10 +93,10 @@ WSGI_APPLICATION = 'domain_manager.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': "domain_manager",
-        'USER': "root",
-        "PASSWORD": "060510shiba",
-        "HOST": "localhost",
+        'NAME': "mimimimim_domain",
+        'USER': "mimimimim",
+        "PASSWORD": "1111aaaa",
+        "HOST": "mysql406.db.sakura.ne.jp",
         "PORT": "3306"
     }
 }
