@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import os
+from os.path import abspath, dirname
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
@@ -24,6 +26,7 @@ from system.aggregate import(
 @login_required
 def home(request):
     data = {'domain': [], 'server': []}
+    data['a'] = abspath(os.path.join(dirname(__file__), ".."))
     raw_domain_datas = get_domain_info()
     for domain_data in raw_domain_datas:
         tmp = {}
