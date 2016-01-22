@@ -26,7 +26,7 @@ from system.aggregate import(
 @login_required
 def home(request):
     data = {'domain': [], 'server': []}
-    data['a'] = abspath(os.path.join(dirname(__file__), ".."))
+    data['a'] = os.path.join(abspath(os.path.join(dirname(__file__), "..")), 'static')
     raw_domain_datas = get_domain_info()
     for domain_data in raw_domain_datas:
         tmp = {}
