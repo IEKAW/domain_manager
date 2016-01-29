@@ -5,7 +5,6 @@
 <h1>期限切れ間近のドメイン</h1>
 {{ data.a }}
 <!--表を入れる -->
-<a href="/django.cgi/domain">ドメイン一覧を見る</a>
 <table class="table table-striped table-bordered table-hover">
     <tr>
         <th>ドメイン名</th>
@@ -27,7 +26,7 @@
     </tr>
     {% endfor %}
 </table>
-<a href="/django.cgi/domain">ドメイン一覧を見る</a>
+<a class="pull-right" href="/django.cgi/domain">ドメイン一覧を見る</a>
 
 <h1>期限切れ間近のサーバー</h1>
 
@@ -52,6 +51,6 @@
     </tr>
     {% endfor %}
 </table>
-<a href="/django.cgi/server">サーバー一覧を見る</a>
+<a class="pull-right" href="/django.cgi/server">サーバー一覧を見る</a>
 
  {% endblock %}
