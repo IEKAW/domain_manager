@@ -282,7 +282,7 @@ def create_domain(request):
             updated_date=update_at
         )
         domain_obj.save()
-        return HttpResponseRedirect('domain')
+        return HttpResponseRedirect('/django.cgi/domain')
 
 
 @login_required
