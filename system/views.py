@@ -190,7 +190,7 @@ def update_domain(request):
         domain_obj = Domain.objects.get(id=domain_id)
         domain_obj.updated_date = update_at
         domain_obj.save()
-        return HttpResponseRedirect('django.cgi/domain')
+        return HttpResponseRedirect('/django.cgi/domain')
 
 
 @login_required
@@ -221,7 +221,7 @@ def update_server(request):
         server_obj = Server.objects.get(id=server_id)
         server_obj.updated_date = update_at
         server_obj.save()
-        return HttpResponseRedirect('django.cgi/server')
+        return HttpResponseRedirect('/django.cgi/server')
 
 
 @login_required
@@ -263,7 +263,7 @@ def create_server(request):
             login_pass=login_pass
         )
         server_obj.save()
-        return HttpResponseRedirect('django.cgi/server')
+        return HttpResponseRedirect('/django.cgi/server')
 
 
 @login_required
@@ -315,7 +315,7 @@ def create_site(request):
             remarks=remarks
         )
         site_obj.save()
-        return HttpResponseRedirect('django.cgi/site')
+        return HttpResponseRedirect('/django.cgi/site')
 
 
 @login_required
