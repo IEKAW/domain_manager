@@ -5,6 +5,7 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect
+from datetime import datetime, timedelta
 
 from system.models import(
     Domain,
@@ -237,7 +238,9 @@ def link(request):
 @login_required
 def create_server(request):
     if request.method == 'GET':
-        return render(request, 'system/create_server.html')
+        next_year = datetime.today() + timedelta(days=365)
+        day = datetime.strftime(next_year, '%Y-%m-%d')
+        return render(request, 'system/create_server.html', {'next_year': day})
     elif request.method == 'POST':
         company = request.POST['company']
         host = request.POST['host']
@@ -269,7 +272,9 @@ def create_server(request):
 @login_required
 def create_domain(request):
     if request.method == 'GET':
-        return render(request, 'system/create_domain.html')
+        next_year = datetime.today() + timedelta(days=365)
+        day = datetime.strftime(next_year, '%Y-%m-%d')
+        return render(request, 'system/create_domain.html', {"next_year": day})
     elif request.method == 'POST':
         domain = request.POST['domain']
         japanese = request.POST['japanese']
@@ -294,7 +299,6 @@ def create_site(request):
         url = request.POST['url']
         japanese = request.POST['japanese']
         group = request.POST['group']
-        server = request.POST['server']
         update_at = request.POST['update_at']
         template = request.POST['template']
         login_url = request.POST['login_url']
@@ -306,7 +310,6 @@ def create_site(request):
             url=url,
             japanese=japanese,
             group=group,
-            server=server,
             updated_date=update_at,
             template=template,
             login_url=login_url,

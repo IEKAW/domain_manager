@@ -6,7 +6,7 @@
 <form method="POST" action="">
 <table class="table table-striped table-bordered table-hover">
     <tr>
-        <th style="width:30px;"><input type="checkbox" name="domain" value="all"/></th>
+        <th style="width:30px;"><input type="checkbox" name="domain" id="all" value="all"/></th>
         <th>ドメイン名</th>
         <th>日本語</th>
         <th>更新日<span class="glyphicon glyphicon-triangle-bottom" style="display:;"></span><span class="glyphicon glyphicon-triangle-top" style="display:none;"></span></th>
@@ -16,7 +16,7 @@
     </tr>
     {% for raw in data %}
     <tr>
-        <td><input type="checkbox" name="domain" value=""></td>
+        <td><input type="checkbox" name="record" value=""></td>
         <td>{{ raw.domain }}</td>
         <td>{{ raw.japanese }}</td>
         <td>{{ raw.updated_at }}</td>
