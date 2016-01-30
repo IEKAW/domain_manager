@@ -29,7 +29,7 @@ from system.aggregate import(
 @login_required
 def home(request):
     data = {'domain': [], 'server': []}
-    raw_domain_datas = get_domain_info()
+    raw_domain_datas = get_domain_info(None)
     for domain_data in raw_domain_datas:
         try:
             tmp = {}
@@ -160,7 +160,7 @@ def domain_unup(request):
         update_id = request.POST['id']
         Domain.objects.filter(id=update_id).update(update_method="not_update")
     data = []
-    raw_domain_datas = get_domain_info()
+    raw_domain_datas = get_domain_info(None)
     for domain_data in raw_domain_datas:
         if domain_data[6] == "not_update":
             tmp = {}
