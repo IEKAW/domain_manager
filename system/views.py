@@ -31,12 +31,26 @@ def home(request):
     data = {'domain': [], 'server': []}
     raw_domain_datas = get_domain_info()
     for domain_data in raw_domain_datas:
-        tmp = {}
-        tmp['domain'] = domain_data[1]
-        tmp['japanese'] = domain_data[2]
-        tmp['updated_at'] = domain_data[3]
-        tmp['company'] = domain_data[4]
-        data['domain'].append(tmp)
+        try:
+            tmp = {}
+            tmp['domain'] = domain_data[1]
+            tmp['japanese'] = domain_data[2]
+            tmp['updated_at'] = domain_data[3]
+            tmp['company'] = domain_data[4]
+            domaindetail = DomainDetail.objects.get(
+                domain_id=domain_data[0],
+                is_representative=True
+            )
+            tmp['representative'] = domaindetail.url
+            data['domain'].append(tmp)
+        except:
+            tmp = {}
+            tmp['domain'] = domain_data[1]
+            tmp['japanese'] = domain_data[2]
+            tmp['updated_at'] = domain_data[3]
+            tmp['company'] = domain_data[4]
+            tmp['representative'] = "not selected"
+            data['domain'].append(tmp)
     raw_server_datas = get_server_info()
     for server_data in raw_server_datas:
         tmp = {}
