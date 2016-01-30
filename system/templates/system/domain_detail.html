@@ -14,7 +14,16 @@
     <tr>
         <td>{{ detail.url }}</td>
         <td>{{ detail.title }}</td>
-        <td>{{ detail.is_represetative }}</td>
+        {% if detail.is_represetative == 1 %}
+            <td>{{ detail.is_represetative }}</td>
+        {% else %}
+            <form action="{% url 'system.views.domain_detail' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="domain_id" value="{{ detail.domain_id }}">
+                <input type="hidden" name="id" value="{{ detail.id }}" />
+                <td><input class="btn btn-default" type="submit" value="変更"/></td>
+            </form>
+        {% endif %}
     </tr>
     {% endfor %}
 </table>

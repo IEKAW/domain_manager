@@ -20,7 +20,11 @@
         <td>{{ raw.japanese }}</td>
         <td>{{ raw.updated_at }}</td>
         <td>{{ raw.company }}</td>
-        <td>eeeee</td>
+        {% if raw.representative != 'not selected' %}
+            <td><a href="{{ raw.representative }}">{{ raw.representative }}</a></td>
+        {% else %}
+            <td>{{ raw.representative }}</td>
+        {% endif %}
         <td>
             <a href="{% url 'system.views.update_domain' %}?domain_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>
             <form method="POST" action="{% url 'system.views.domain_unup' %}">

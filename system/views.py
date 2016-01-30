@@ -6,12 +6,14 @@ import json
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
+from django.core.urlresolvers import reverse
 from datetime import datetime, timedelta
 
 from system.models import(
     Domain,
     Server,
-    Site
+    Site,
+    DomainDetail
 )
 
 from system.aggregate import(
@@ -85,14 +87,30 @@ def domain(request):
     raw_domain_datas = get_domain_info()
     for domain_data in raw_domain_datas:
         if domain_data[6] != "not_update":
-            tmp = {}
-            tmp['id'] = domain_data[0]
-            tmp['domain'] = domain_data[1]
-            tmp['japanese'] = domain_data[2]
-            tmp['updated_at'] = domain_data[3]
-            tmp['company'] = domain_data[4]
-            tmp['company_url'] = domain_data[5]
-            data.append(tmp)
+            try:
+                tmp = {}
+                tmp['id'] = domain_data[0]
+                tmp['domain'] = domain_data[1]
+                tmp['japanese'] = domain_data[2]
+                tmp['updated_at'] = domain_data[3]
+                tmp['company'] = domain_data[4]
+                tmp['company_url'] = domain_data[5]
+                domaindetail = DomainDetail.objects.get(
+                    domain_id=domain_data[0],
+                    is_representative=True
+                )
+                tmp['representative'] = domaindetail.url
+                data.append(tmp)
+            except:
+                tmp = {}
+                tmp['id'] = domain_data[0]
+                tmp['domain'] = domain_data[1]
+                tmp['japanese'] = domain_data[2]
+                tmp['updated_at'] = domain_data[3]
+                tmp['company'] = domain_data[4]
+                tmp['company_url'] = domain_data[5]
+                tmp['representative'] = "not selected"
+                data.append(tmp)
     result = {'data': data}
     return render(request, 'system/domain.html', result)
 
@@ -138,22 +156,56 @@ def domain_unup(request):
 
 @login_required
 def domain_detail(request):
-    data = {'detail': []}
-    domain_id = request.GET['domain_id']
-    domain = get_special_domain(domain_id)
-    details = get_domain_detail(domain_id)
-    for raw in domain:
-        data['domain'] = raw[1]
-        data['updated_at'] = raw[3]
-        data['company'] = raw[4]
-    for detail in details:
-        tmp = {}
-        tmp['url'] = detail[2]
-        tmp['title'] = detail[3]
-        tmp['is_represetative'] = detail[4]
-        data['detail'].append(tmp)
-    result = {'data': data}
-    return render(request, 'system/domain_detail.html', result)
+    if request.method == 'POST':
+        domain_id = request.POST['domain_id']
+        representative = DomainDetail.objects.get(
+            domain_id=domain_id,
+            is_representative=True
+        )
+        representative.is_representative = False
+        representative.save()
+        detail_id = request.POST['id']
+        domain_obj = DomainDetail.objects.get(
+            id=detail_id
+        )
+        domain_obj.is_representative = True
+        domain_obj.save()
+        data = {'detail': []}
+        domain = get_special_domain(domain_id)
+        details = get_domain_detail(domain_id)
+        for raw in domain:
+            data['domain'] = raw[1]
+            data['updated_at'] = raw[3]
+            data['company'] = raw[4]
+        for detail in details:
+            tmp = {}
+            tmp['id'] = detail[0]
+            tmp['domain_id'] = detail[1]
+            tmp['url'] = detail[2]
+            tmp['title'] = detail[3]
+            tmp['is_represetative'] = detail[4]
+            data['detail'].append(tmp)
+        result = {'data': data}
+        return render(request, 'system/domain_detail.html', result)
+    elif request.method == 'GET':
+        data = {'detail': []}
+        domain_id = request.GET['domain_id']
+        domain = get_special_domain(domain_id)
+        details = get_domain_detail(domain_id)
+        for raw in domain:
+            data['domain'] = raw[1]
+            data['updated_at'] = raw[3]
+            data['company'] = raw[4]
+        for detail in details:
+            tmp = {}
+            tmp['id'] = detail[0]
+            tmp['domain_id'] = detail[1]
+            tmp['url'] = detail[2]
+            tmp['title'] = detail[3]
+            tmp['is_represetative'] = detail[4]
+            data['detail'].append(tmp)
+        result = {'data': data}
+        return render(request, 'system/domain_detail.html', result)
 
 
 @login_required
@@ -335,7 +387,25 @@ def create_site(request):
             remarks=remarks
         )
         site_obj.save()
+        try:
+            domain_name = url.split('/')[2]
+            domain = Domain.objects.get(domain_name=domain_name)
+            domain_detail = DomainDetail(
+                domain_id=domain.id,
+                url=url,
+                title=title,
+                is_representative=False
+            )
+            domain_detail.save()
+        except:
+            return redirect(reverse('system.views.domain_warning'))
         return HttpResponseRedirect('/django.cgi/site')
+
+
+@login_required
+def domain_warning(request):
+    data = {'message': 'There is something wrong with domain names'}
+    return render(request, 'system/warning.html', data)
 
 
 @login_required
