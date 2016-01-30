@@ -80,8 +80,11 @@ def server(request):
 
 @login_required
 def site(request):
+    search_index = None
+    if request.method == 'POST':
+        search_index = request.POST['search']
     data = []
-    raw_site_datas = get_site_info()
+    raw_site_datas = get_site_info(search_index)
     for site_data in raw_site_datas:
         tmp = {}
         tmp['id'] = site_data[0]
@@ -97,8 +100,11 @@ def site(request):
 
 @login_required
 def domain(request):
+    search_index = None
+    if request.method == 'POST':
+        search_index = request.POST['search']
     data = []
-    raw_domain_datas = get_domain_info()
+    raw_domain_datas = get_domain_info(search_index)
     for domain_data in raw_domain_datas:
         if domain_data[6] != "not_update":
             try:

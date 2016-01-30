@@ -3,13 +3,34 @@
 from django.db import connection
 
 
-def get_domain_info():
-    sql = """
-        SELECT
-            *
-        FROM
-            system_domain
-    """
+def get_domain_info(search_index):
+    if search_index is None:
+        sql = """
+            SELECT
+                *
+            FROM
+                system_domain
+        """
+    else:
+        search_index = '%' + search_index + '%'
+        sql = """
+            SELECT
+                *
+            FROM
+                system_domain
+            WHERE
+                domain_company
+            LIKE
+                '%s'
+            OR
+                domain_name
+            LIKE
+                '%s'
+            OR
+                japanese
+            LIKE
+                '%s'
+        """ % (search_index, search_index, search_index)
     cursor = connection.cursor()
     cursor.execute(sql)
     for row in cursor.fetchall():
@@ -29,13 +50,48 @@ def get_server_info():
         yield row
 
 
-def get_site_info():
-    sql = """
-        SELECT
-            *
-        FROM
-            system_site
-    """
+def get_site_info(search_index):
+    if search_index is None:
+        sql = """
+            SELECT
+                *
+            FROM
+                system_site
+        """
+    else:
+        search_index = '%' + search_index + '%'
+        sql = """
+            SELECT
+                *
+            FROM
+                system_site
+            WHERE
+                site_title
+            LIKE
+                '%s'
+            OR
+                url
+            LIKE
+                '%s'
+            OR
+                site_title
+            LIKE
+                '%s'
+            OR
+                japanese
+            LIKE
+                '%s'
+            OR
+                server
+            LIKE
+                '%s'
+        """ % (
+            search_index,
+            search_index,
+            search_index,
+            search_index,
+            search_index
+        )
     cursor = connection.cursor()
     cursor.execute(sql)
     for row in cursor.fetchall():
