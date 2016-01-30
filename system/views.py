@@ -65,7 +65,12 @@ def home(request):
 @login_required
 def server(request):
     data = []
-    raw_server_datas = get_server_info()
+    search_index = None
+    try:
+        search_index = request.GET['search']
+    except:
+        pass
+    raw_server_datas = get_server_info(search_index)
     for server_data in raw_server_datas:
         if server_data[11] != "not_update":
             tmp = {}
@@ -80,11 +85,15 @@ def server(request):
 
 @login_required
 def site(request):
+    data = []
     search_index = None
     if request.method == 'POST':
         search_index = request.POST['search']
-    data = []
-    raw_site_datas = get_site_info(search_index)
+    try:
+        search_index = request.GET['search']
+        raw_site_datas = get_site_info(search_index, False)
+    except:
+        raw_site_datas = get_site_info(search_index)
     for site_data in raw_site_datas:
         tmp = {}
         tmp['id'] = site_data[0]
@@ -141,7 +150,12 @@ def server_unup(request):
         update_id = request.POST['id']
         Server.objects.filter(id=update_id).update(update_method="not_update")
     data = []
-    raw_server_datas = get_server_info()
+    search_index = None
+    try:
+        search_index = request.GET['search']
+    except:
+        pass
+    raw_server_datas = get_server_info(search_index)
     for server_data in raw_server_datas:
         if server_data[11] == "not_update":
             tmp = {}

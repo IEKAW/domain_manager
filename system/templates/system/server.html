@@ -11,8 +11,9 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-                <li>aaaaa</li>
-                <li>bbbbb</li>
+                {% for raw in data %}
+                    <li><a href="{% url 'system.views.server' %}?search={{ raw.company }}">{{ raw.company }}</a></li>
+                {% endfor %}
             </ul>
         </div>
         </th>

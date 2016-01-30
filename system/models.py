@@ -15,7 +15,7 @@ class Domain(models.Model):
 
 class Site(models.Model):
     """docstring for Site"""
-    group = models.CharField(max_length=255)
+    group_name = models.CharField(max_length=255)
     site_title = models.CharField(max_length=255)
     url = models.CharField(max_length=255)
     japanese = models.CharField(max_length=255)
