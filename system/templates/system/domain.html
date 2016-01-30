@@ -16,13 +16,13 @@
     </tr>
     {% for raw in data %}
     <tr>
-        <td><a href="/domain/detail?domain_id={{ raw.id }}">{{ raw.domain }}</a></td>
+        <td><a href="{% url 'system.views.domain_detail' %}?domain_id={{raw.id}}">{{ raw.domain }}</a></td>
         <td>{{ raw.japanese }}</td>
         <td>{{ raw.updated_at }}</td>
         <td>{{ raw.company }}</td>
         <td>eeeee</td>
         <td>
-            <a href="/domain/update?domain_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>
+            <a href="{% url 'system.views.update_domain' %}?domain_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>
             <form method="POST" action="{% url 'system.views.domain_unup' %}">
                 {% csrf_token %}
                 <input type="hidden" name="kind" value="domain"/>

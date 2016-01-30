@@ -22,11 +22,11 @@
     </tr>
     {% for raw in data %}
     <tr>
-        <td><a href="/server/detail?server_id={{ raw.id }}">{{ raw.company }}</a></td>
+        <td><a href="{% url 'system.views.server_detail' %}?server_id={{raw.id}}">{{ raw.company }}</a></td>
         <td>{{ raw.updated_at }}</td>
         <td>{{ raw.host }}</td>
         <td>
-            <a href="/server/update?server_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>
+            <a href="{% url 'system.views.update_server' %}?server_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>
             <form method="POST" action="{% url 'system.views.server_unup' %}">
                 {% csrf_token %}
                 <input type="hidden" name="id" value="{{ raw.id }}"/>
