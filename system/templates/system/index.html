@@ -18,6 +18,11 @@
         <td>{{ domain.domain }}</td>
         <td>{{ domain.updated_at }}</td>
         <td>{{ domain.company }}</td>
+        {% if domain.representative != 'not selected' %}
+            <td><a href="{{ domain.representative }}">{{ domain.representative }}</a></td>
+        {% else %}
+            <td>{{ domain.representative }}</td>
+        {% endif %}
         <td>
             <a href="" class="btn-warning btn-xs">更新する</a><br/>
             <a href="" class="btn-info btn-xs">更新しない</a>
