@@ -15,7 +15,8 @@ function delete_data(kind){
             'kind': kind,
             'id': delete_ids[i]
         };
-        if (location.host == 'http://mimimimim.sakura.ne.jp/') {
+        console.log(location.host);
+        if (location.host == 'mimimimim.sakura.ne.jp') {
             base_url = [location.protocol, '/', location.host, 'django.cgi', 'delete_all'].join('/');
         } else {
             base_url = [location.protocol, '/', location.host, 'delete_all'].join('/');
