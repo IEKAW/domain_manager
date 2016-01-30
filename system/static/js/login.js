@@ -15,7 +15,11 @@ function delete_data(kind){
             'kind': kind,
             'id': delete_ids[i]
         };
-        base_url = [location.protocol, '/', location.host, 'delete_all'].join('/');
+        if (location.host == 'http://mimimimim.sakura.ne.jp/') {
+            base_url = [location.protocol, '/', location.host, 'django.cgi', 'delete_all'].join('/');
+        } else {
+            base_url = [location.protocol, '/', location.host, 'delete_all'].join('/');
+        };
         url = [base_url, $.param(query_params)].join('?');
         communicate_http(url);
     };
