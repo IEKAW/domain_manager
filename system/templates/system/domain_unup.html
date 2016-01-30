@@ -3,7 +3,6 @@
 {% block content %}
 <h1>更新しないドメイン</h1>
 
-<form method="POST" action="">
 <table class="table table-striped table-bordered table-hover">
     <tr>
         <th style="width:30px;"><input type="checkbox" name="domain" id="all" value="all"/></th>
@@ -16,19 +15,23 @@
     </tr>
     {% for raw in data %}
     <tr>
-        <td><input type="checkbox" name="record" value=""></td>
+        <td><input type="checkbox" name="record" value="{{ raw.id }}"></td>
         <td>{{ raw.domain }}</td>
         <td>{{ raw.japanese }}</td>
         <td>{{ raw.updated_at }}</td>
         <td>{{ raw.company }}</td>
         <td>eeeee</td>
         <td>
-            <a href="" class="btn-warning btn-xs">更新する</a><br/>
-            <a href="" class="btn-info btn-xs">削除</a>
+            <a href="/domain/update?domain_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>
+            <form method="POST" action="{% url 'system.views.delete' %}">
+                {% csrf_token %}
+                <input type="hidden" name="kind" value="domain"/>
+                <input type="hidden" name="id" value="{{ raw.id }}"/>
+                <button class="btn-info btn-xs">削除</button>
+            </form>
         </td>
     </tr>
     {% endfor %}
 </table>
-<input class="pull-right" type="submit" value="削除">
-</form>
+<button class="btn btn-default pull-right" onclick="delete_data('domain')">削除</button>
  {% endblock %}

@@ -10,6 +10,7 @@ class Domain(models.Model):
     updated_date = models.DateField()
     domain_company = models.CharField(max_length=255)
     domain_company_url = models.CharField(max_length=255, null=True)
+    update_method = models.CharField(max_length=255, null=True)
 
 
 class Site(models.Model):
@@ -39,6 +40,7 @@ class Server(models.Model):
     remarks = models.TextField(null=True)
     login_id = models.CharField(max_length=255, null=True)
     login_pass = models.CharField(max_length=255, null=True)
+    update_method = models.CharField(max_length=255, null=True)
 
 
 class SiteComment(models.Model):

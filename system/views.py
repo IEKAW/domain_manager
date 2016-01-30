@@ -1,10 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import json
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponse
 from datetime import datetime, timedelta
 
 from system.models import(
@@ -50,12 +51,13 @@ def server(request):
     data = []
     raw_server_datas = get_server_info()
     for server_data in raw_server_datas:
-        tmp = {}
-        tmp['id'] = server_data[0]
-        tmp['company'] = server_data[1]
-        tmp['updated_at'] = server_data[2]
-        tmp['host'] = server_data[3]
-        data.append(tmp)
+        if server_data[11] != "not_update":
+            tmp = {}
+            tmp['id'] = server_data[0]
+            tmp['company'] = server_data[1]
+            tmp['updated_at'] = server_data[2]
+            tmp['host'] = server_data[3]
+            data.append(tmp)
     result = {'data': data}
     return render(request, 'system/server.html', result)
 
@@ -82,43 +84,54 @@ def domain(request):
     data = []
     raw_domain_datas = get_domain_info()
     for domain_data in raw_domain_datas:
-        tmp = {}
-        tmp['id'] = domain_data[0]
-        tmp['domain'] = domain_data[1]
-        tmp['japanese'] = domain_data[2]
-        tmp['updated_at'] = domain_data[3]
-        tmp['company'] = domain_data[4]
-        tmp['company_url'] = domain_data[5]
-        data.append(tmp)
+        if domain_data[6] != "not_update":
+            tmp = {}
+            tmp['id'] = domain_data[0]
+            tmp['domain'] = domain_data[1]
+            tmp['japanese'] = domain_data[2]
+            tmp['updated_at'] = domain_data[3]
+            tmp['company'] = domain_data[4]
+            tmp['company_url'] = domain_data[5]
+            data.append(tmp)
     result = {'data': data}
     return render(request, 'system/domain.html', result)
 
 
 @login_required
 def server_unup(request):
+    if request.method == "POST":
+        update_id = request.POST['id']
+        Server.objects.filter(id=update_id).update(update_method="not_update")
     data = []
     raw_server_datas = get_server_info()
     for server_data in raw_server_datas:
-        tmp = {}
-        tmp['company'] = server_data[1]
-        tmp['updated_at'] = server_data[2]
-        tmp['host'] = server_data[3]
-        data.append(tmp)
+        if server_data[11] == "not_update":
+            tmp = {}
+            tmp['id'] = server_data[0]
+            tmp['company'] = server_data[1]
+            tmp['updated_at'] = server_data[2]
+            tmp['host'] = server_data[3]
+            data.append(tmp)
     result = {'data': data}
     return render(request, 'system/server_unup.html', result)
 
 
 @login_required
 def domain_unup(request):
+    if request.method == "POST":
+        update_id = request.POST['id']
+        Domain.objects.filter(id=update_id).update(update_method="not_update")
     data = []
     raw_domain_datas = get_domain_info()
     for domain_data in raw_domain_datas:
-        tmp = {}
-        tmp['domain'] = domain_data[1]
-        tmp['japanese'] = domain_data[2]
-        tmp['updated_at'] = domain_data[3]
-        tmp['company'] = domain_data[4]
-        data.append(tmp)
+        if domain_data[6] == "not_update":
+            tmp = {}
+            tmp['id'] = domain_data[0]
+            tmp['domain'] = domain_data[1]
+            tmp['japanese'] = domain_data[2]
+            tmp['updated_at'] = domain_data[3]
+            tmp['company'] = domain_data[4]
+            data.append(tmp)
     result = {'data': data}
     return render(request, 'system/domain_unup.html', result)
 
@@ -190,6 +203,7 @@ def update_domain(request):
         update_at = request.POST['update_at']
         domain_obj = Domain.objects.get(id=domain_id)
         domain_obj.updated_date = update_at
+        domain_obj.update_method = "hand"
         domain_obj.save()
         return HttpResponseRedirect('/django.cgi/domain')
 
@@ -221,6 +235,7 @@ def update_server(request):
         update_at = request.POST['update_at']
         server_obj = Server.objects.get(id=server_id)
         server_obj.updated_date = update_at
+        server_obj.update_method = "hand"
         server_obj.save()
         return HttpResponseRedirect('/django.cgi/server')
 
@@ -280,11 +295,13 @@ def create_domain(request):
         japanese = request.POST['japanese']
         company = request.POST['company']
         update_at = request.POST['update_at']
+        update_method = request.POST['update_method']
         domain_obj = Domain(
             domain_name=domain,
             japanese=japanese,
             domain_company=company,
-            updated_date=update_at
+            updated_date=update_at,
+            update_method=update_method
         )
         domain_obj.save()
         return HttpResponseRedirect('/django.cgi/domain')
@@ -329,3 +346,31 @@ def create_link(request):
 @login_required
 def setting(request):
     return render(request, 'system/setting.html')
+
+
+@login_required
+def delete(request):
+    deleted_id = request.POST['id']
+    if request.POST['kind'] == 'domain':
+        obj = Domain.objects.filter(id=deleted_id)
+        obj.delete()
+        return redirect('system.views.domain_unup')
+    elif request.POST['kind'] == 'server':
+        obj = Server.objects.filter(id=deleted_id)
+        obj.delete()
+    return redirect('system.views.server_unup')
+
+
+@login_required
+def delete_all(request):
+    json_data = {
+        "kind": request.GET['kind'],
+        "id": request.GET['id']
+    }
+    if json_data['kind'] == 'domain':
+        obj = Domain.objects.filter(id=json_data['id'])
+        obj.delete()
+    elif json_data['kind'] == 'server':
+        obj = Server.objects.filter(id=json_data['id'])
+        obj.delete()
+    return HttpResponse(json.dumps(json_data), content_type='application/json')

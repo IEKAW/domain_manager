@@ -18,5 +18,7 @@ urlpatterns = [
     url(r'^server/create$', views.create_server),
     url(r'^link/create$', views.create_link),
     url(r'^site/create$', views.create_site),
-    url(r'^setting$', views.setting)
+    url(r'^setting$', views.setting),
+    url(r'^delete$', views.delete),
+    url(r'^delete_all$', views.delete_all)
 ]

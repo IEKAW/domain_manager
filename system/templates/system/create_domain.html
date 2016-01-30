@@ -13,7 +13,14 @@
     <input type="text" name="company" class="form-control" ><br/>
     <label for="update_at">更新日:</label>
     <input type="date" name="update_at" class="form-control" value="{{ next_year }}"><br/>
+    <label for="update_method">自動更新</label>
+    <select name="update_method" class="form-control">
+        <option value="auto">自動</option>
+        <option value="hand">手動</option>
+    </select>
     <h2>サーバー詳細</h2>
+    <label for="company">サーバー会社:</label>
+    <input type="text" name="company" class="form-control" /><br/>
     <label for="host">FTP􏰌􏰍􏰎􏰍􏰏サーバー(ホスト名):</label>
     <input type="text" name="host" class="form-control" ><br/>
     <label for="id">ログインID:</label>

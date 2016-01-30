@@ -23,7 +23,12 @@
         <td>eeeee</td>
         <td>
             <a href="/domain/update?domain_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>
-            <a href="" class="btn-info btn-xs">更新しない</a>
+            <form method="POST" action="{% url 'system.views.domain_unup' %}">
+                {% csrf_token %}
+                <input type="hidden" name="kind" value="domain"/>
+                <input type="hidden" name="id" value="{{ raw.id }}"/>
+                <button class="btn-info btn-xs">更新しない</button>
+            </form>
         </td>
     </tr>
     {% endfor %}
