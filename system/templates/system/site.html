@@ -31,7 +31,7 @@
     {% for raw in data %}
     <tr>
         <td>{{ raw.group }}</td>
-        <td><a href="/site/detail?site_id={{ raw.id }}">{{ raw.title }}</a></td>
+        <td><a href="{% url 'system.views.site_detail' %}?site_id={{ raw.id }}">{{ raw.title }}</a></td>
         <td><a href="{{ raw.url }}">{{ raw.url }}</a></td>
         <td>{{ raw.japanese }}</td>
         <td>{{ raw.server }}</td>
