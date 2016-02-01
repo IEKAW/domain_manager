@@ -523,9 +523,10 @@ def delete_all(request):
 def comment_delete(request):
     site_id = request.POST['site_id']
     comment_id = request.POST['comment_id']
-    redirect_url = '/django.cgi/site/detail?site_id=' + site_id
-    return HttpResponseRedirect(redirect_url)
-    site_comment_obj = SiteComment.objects.filter(site_id=site_id, id=comment_id)
+    site_comment_obj = SiteComment.objects.filter(
+        id=comment_id,
+        site_id=site_id
+    )
     site_comment_obj.delete()
     redirect_url = '/django.cgi/site/detail?site_id=' + site_id
     return HttpResponseRedirect(redirect_url)
