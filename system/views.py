@@ -13,7 +13,8 @@ from system.models import(
     Domain,
     Server,
     Site,
-    DomainDetail
+    DomainDetail,
+    SiteComment
 )
 
 from system.aggregate import(
@@ -22,7 +23,9 @@ from system.aggregate import(
     get_site_info,
     get_special_domain,
     get_domain_detail,
-    get_special_server
+    get_special_server,
+    get_site_detail,
+    get_site_comment
 )
 
 
@@ -51,7 +54,7 @@ def home(request):
             tmp['company'] = domain_data[4]
             tmp['representative'] = "not selected"
             data['domain'].append(tmp)
-    raw_server_datas = get_server_info()
+    raw_server_datas = get_server_info(None)
     for server_data in raw_server_datas:
         tmp = {}
         tmp['company'] = server_data[1]
@@ -328,7 +331,43 @@ def update_server(request):
 
 @login_required
 def site_detail(request):
-    return render(request, 'system/site_detail.html')
+    data = {}
+    if request.method == 'POST':
+        site_id = request.POST['site_id']
+        comment = request.POST['memo']
+        site_comment_obj = SiteComment(
+            site_id=site_id,
+            comment=comment,
+            created_at=datetime.now()
+        )
+        site_comment_obj.save()
+    else:
+        site_id = request.GET['site_id']
+    site = get_site_detail(site_id)
+    for raw in site:
+        data['site_id'] = raw[0]
+        data['group_name'] = raw[1]
+        data['site_title'] = raw[2]
+        data['url'] = raw[3]
+        data['japanese'] = raw[4]
+        data['server'] = raw[5]
+        data['login_id'] = raw[6]
+        data['login_pass'] = raw[7]
+        data['login_url'] = raw[8]
+        data['remarks'] = raw[9]
+        data['template'] = raw[10]
+        data['updated_date'] = raw[11]
+    comment = []
+    site_comments = get_site_comment(site_id)
+    for raw in site_comments:
+        tmp = {}
+        tmp['id'] = raw[0]
+        tmp['site_id'] = raw[1]
+        tmp['comment'] = raw[2]
+        tmp['created_at'] = raw[3]
+        comment.append(tmp)
+    result = {"data": data, "comment": comment, "site_id": site_id}
+    return render(request, 'system/site_detail.html', result)
 
 
 @login_required
@@ -478,3 +517,54 @@ def delete_all(request):
         obj = Server.objects.filter(id=json_data['id'])
         obj.delete()
     return HttpResponse(json.dumps(json_data), content_type='application/json')
+
+
+@login_required
+def comment_delete(request):
+    print "aa"
+    site_id = request.POST['site_id']
+    comment_id = request.POST['comment_id']
+    site_comment_obj = SiteComment.objects.filter(site_id=site_id, id=comment_id)
+    site_comment_obj.delete()
+    redirect_url = 'django.cgi/site/detail?site_id=' + site_id
+    return HttpResponseRedirect(redirect_url)
+
+
+@login_required
+def comment_edit(request):
+    if request.method == 'GET':
+        comment = request.GET['comment']
+        comment_id = request.GET['comment_id']
+        site_id = request.GET['site_id']
+        return render(
+            request,
+            'system/comment_edit.html',
+            {'comment_id': comment_id, 'site_id': site_id, 'comment': comment}
+        )
+    elif request.method == 'POST':
+        comment_id = request.POST['comment_id']
+        site_id = request.POST['site_id']
+        comment = request.POST['comment']
+        created_at = datetime.now()
+        SiteComment.objects.filter(
+            id=comment_id,
+            site_id=site_id
+        ).update(comment=comment, created_at=created_at)
+        redirect_url = '/site/detail?site_id=' + site_id
+        return HttpResponseRedirect(redirect_url)
+
+
+@login_required
+def comment_all(request):
+    site_id = request.GET['site_id']
+    raw_comment_data = get_site_comment(site_id)
+    comments = []
+    for raw in raw_comment_data:
+        tmp = {}
+        tmp['id'] = raw[0]
+        tmp['site_id'] = raw[1]
+        tmp['comment'] = raw[2]
+        tmp['created_at'] = raw[3]
+        comments.append(tmp)
+    result = {'comment': comments}
+    return render(request, 'system/comment_all.html', result)

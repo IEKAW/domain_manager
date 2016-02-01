@@ -1,0 +1,19 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>全コメント</h1>
+
+<table class="table table-striped table-bordered table-hover">
+    <tr>
+        <th>comment</th>
+        <th>投稿時間</th>
+    </tr>
+    {% for data in comment %}
+    <tr>
+        <td>{{ data.comment }}</td>
+        <td>{{ data.created_at }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+ {% endblock %}

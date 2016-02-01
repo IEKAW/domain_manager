@@ -1,0 +1,17 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>コメント編集</h1>
+
+<form action="{% url 'system.views.comment_edit' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="comment_id" value="{{ comment_id }}">
+    <input type="hidden" name="site_id" value="{{ site_id }}">
+    <h3>以前の投稿</h3>
+    <p>{{ comment }}</p>
+    <label for="domain">コメント編集</label><br/>
+    <textarea name="comment"></textarea><br/>
+    <input type="submit" value="登録" class="btn btn-default">
+</form>
+
+ {% endblock %}

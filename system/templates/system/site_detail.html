@@ -1,36 +1,86 @@
 {% extends "layouts/base.html" %}
 {% block title %} Home {% endblock %}
 {% block content %}
-<h1>サイト管理</h1>
+<h1>{{ data.site_title }}</h1>
+<h3><a href="{{ data.url }}">{{ data.url }}</a></h3>
 
-<a class="btn btn-default pull-right" href="{% url 'system.views.create_site' %}">登録</a><br/><br/>
-
+<div class="col-md-4">
 <table class="table table-striped table-bordered table-hover">
     <tr>
-        <th>グループ
-        <div class="btn-group">
-            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">全表示
-                <span class="caret"></span>
-            </button>
-            <ul class="dropdown-menu" role="menu">
-                <li>aaaaa</li>
-                <li>bbbbb</li>
-            </ul>
-        </div>
-        </th>
-        <th>サイトタイトル</th>
-        <th>URL</th>
-        <th>日本語</th>
-        <th>サーバー</th>
+        <th>グループ</th>
+        <th>{{ data.group_name }}</th>
     </tr>
-    {% for raw in data %}
     <tr>
-        <td>{{ raw.group }}</td>
-        <td><a href="/site/detail?site_id={{ raw.id }}">{{ raw.title }}</a></td>
-        <td><a href="{{ raw.url }}">{{ raw.url }}</a></td>
-        <td>{{ raw.japanese }}</td>
-        <td>{{ raw.server }}</td>
+        <th>日本語</th>
+        <th>{{ data.japanese }}</th>
     </tr>
-    {% endfor %}
+    <tr>
+        <th>サーバー</th>
+        <th>{{ server }}</th>
+    </tr>
+    <tr>
+        <th>作成日</th>
+        <th>{{ updated_at }}</th>
+    </tr>
+    <tr>
+        <th>テンプレート</th>
+        <th>{{ template }}</th>
+    </tr>
+    <tr>
+        <th>ログインURL</th>
+        <th>{{ login_url }}</th>
+    </tr>
+    <tr>
+        <th>ログインID</th>
+        <th>{{ login_id }}</th>
+    </tr>
+    <tr>    
+        <th>ログインパスワード</th>
+        <th>{{ login_pass }}</th>
+    </tr>
 </table>
- {% endblock %}
+<h2>備考</h2>
+<p>{{ data.remarks }}</p>
+<a href="" class="btn btn-default">リンク構造</a>
+<a href="" class="btn btn-default">リンクを貼る</a>
+</div>
+<div class="col-md-6 col-md-offset-2">
+    <!--chat ui -->
+    <div class="panel panel-primary">
+                <div class="panel-body">
+                    <ul class="chat">
+                        {% for raw in comment %}
+                        <li class="left clearfix" style="word-break:break-all;">
+                            <div class="chat-body clearfix">
+                                <div class="header">
+                                    <small class="pull-right text-muted">
+                                        <span class="glyphicon glyphicon-time"></span>{{ raw.created_at }}</small>
+                                </div><br/>
+                                <div style="width:300px; height:20px;">
+                                {{ raw.comment }}
+                                </div>
+                                <br/>
+                                <p>
+                                    <form action="{% url 'system.views.comment_delete' %}" method="POST" class="pull-right">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="site_id" value="{{ raw.site_id }}">
+                                        <input type="hidden" name="comment_id" value="{{ raw.id }}">
+                                        <input type="submit" class="btn btn-danger" value="削除">
+                                    </form>
+                                    <a class="pull-right btn btn-warning" href="{% url 'system.views.comment_edit' %}?site_id={{ raw.site_id }}&comment_id={{ raw.id }}&comment={{ raw.comment }}">編集</a>
+                                </p>
+                            </div>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+    <a href="{% url 'system.views.comment_all' %}?site_id={{ site_id }}">全表示</a>
+    <form method="POST" action="{% url 'system.views.site_detail' %}">
+        {% csrf_token %}
+        <input type="hidden" name="site_id" value="{{ data.site_id }}">
+        <textarea name="memo" cols="50" rows="10"></textarea><br/>
+        <input type="submit" value="送信">        
+    </form>
+</div>
+{% endblock %}

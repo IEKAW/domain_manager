@@ -46,8 +46,8 @@ class Server(models.Model):
 class SiteComment(models.Model):
     """docstring for SiteComment"""
     site_id = models.IntegerField()
-    comment = models.CharField(max_length=255)
-    created_at = models.DateField()
+    comment = models.CharField(max_length=255, null=True)
+    created_at = models.DateTimeField()
 
 
 class Link(models.Model):

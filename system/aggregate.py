@@ -167,3 +167,35 @@ def get_special_server(server_id):
     cursor.execute(sql)
     for row in cursor.fetchall():
         yield row
+
+
+def get_site_detail(site_id):
+    sql = """
+        SELECT
+            *
+        FROM
+            system_site
+        WHERE
+            id =  %s
+    """ % site_id
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    for row in cursor.fetchall():
+        yield row
+
+
+def get_site_comment(site_id):
+    sql = """
+        SELECT
+            *
+        FROM
+            system_sitecomment
+        WHERE
+            site_id = %s
+        ORDER BY
+            created_at
+    """ % site_id
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    for row in cursor.fetchall():
+        yield row
