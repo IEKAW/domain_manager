@@ -526,7 +526,7 @@ def comment_delete(request):
     comment_id = request.POST['comment_id']
     site_comment_obj = SiteComment.objects.filter(site_id=site_id, id=comment_id)
     site_comment_obj.delete()
-    redirect_url = 'django.cgi/site/detail?site_id=' + site_id
+    redirect_url = '/django.cgi/site/detail?site_id=' + site_id
     return HttpResponseRedirect(redirect_url)
 
 
@@ -550,7 +550,7 @@ def comment_edit(request):
             id=comment_id,
             site_id=site_id
         ).update(comment=comment, created_at=created_at)
-        redirect_url = 'django.cgi/site/detail?site_id=' + site_id
+        redirect_url = '/django.cgi/site/detail?site_id=' + site_id
         return HttpResponseRedirect(redirect_url)
 
 
