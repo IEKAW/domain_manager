@@ -550,7 +550,7 @@ def comment_edit(request):
             id=comment_id,
             site_id=site_id
         ).update(comment=comment, created_at=created_at)
-        redirect_url = '/site/detail?site_id=' + site_id
+        redirect_url = 'django.cgi/site/detail?site_id=' + site_id
         return HttpResponseRedirect(redirect_url)
 
 
