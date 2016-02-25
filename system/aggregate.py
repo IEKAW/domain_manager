@@ -199,3 +199,30 @@ def get_site_comment(site_id):
     cursor.execute(sql)
     for row in cursor.fetchall():
         yield row
+
+
+def get_site_list():
+    sql = """
+        SELECT
+            site_title,
+            url
+        FROM
+            system_site
+    """
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    for row in cursor.fetchall():
+        yield row
+
+
+def raw_get_site_from_url(url):
+    sql = """
+        SELECT
+            site_title
+        FROM
+            system_site
+    """
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    for row in cursor.fetchall():
+        yield row

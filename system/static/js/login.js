@@ -1,3 +1,7 @@
+/*
+check項目を削除するスクリプト
+ */
+
 // 全チェックの処理
 $('#all').click(function(){
 	$('input[name=record]').prop('checked', this.checked);
@@ -26,6 +30,18 @@ function delete_data(kind){
     };
     location.href="./unupdate";
 }
+
+// urlから自動でsite_titleを取得してくれる
+function get_site(){
+    url = $('input[name=link_url]').val();
+    query_params = {
+        'url': url
+    };
+    base_url = [location.protocol, '/', location.host, 'url_site'].join('/');
+    http_url = [base_url, $.param(query_params)].join('?');
+    sites = communicate_http(http_url);
+}
+
 
 function communicate_http(url){
     $.ajax({

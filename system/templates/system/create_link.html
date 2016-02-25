@@ -3,19 +3,28 @@
 {% block content %}
 <h1>新規リンク追加</h1>
 
-<form>
-    <label for="company">サイトタイトル:</label>
-    <input type="text" name="company" class="form-control" /><br/>
-    <label for="ftp">URL:</label>
-    <input type="text" name="ftp" class="form-control" ><br/>
-    <label for="update_at">リンクを送った日:</label>
-    <input type="date" name="company" class="form-control"><br/>
-    <label for="pay">リンク先URL:</label>
-    <input type="text" name="pay" class="form-control" ><br/>
-    <label for="ftp">リンク先サイト名:</label>
-    <input type="text" name="ftp" class="form-control" ><br/>
-    <label for="ftp">リンク位置:</label>
-    <input type="text" name="ftp" class="form-control" ><br/>
+<form action="{% url 'system.views.create_link' %}" method="POST">
+    {% csrf_token %}
+    <label for="site_title">サイトタイトル:</label>
+    <select name="site_title" class="form-control">
+        {% for link in site %}
+            <option value="{{ link }}">{{ link }}</option>
+        {% endfor %}
+    </select>
+    <label for="url">URL:</label>
+    <input type="text" name="url" class="form-control"><br/>
+    <label for="send_day">リンクを送った日:</label>
+    <input type="date" name="send_day" class="form-control" value="{{ day }}"><br/>
+    <label for="link_url">リンク先URL:</label>
+    <select name="link_url" class="form-control">
+        {% for link in url %}
+            <option value="{{ link }}">{{ link }}</option>
+        {% endfor %}
+    </select>
+    <label for="link_site">リンク先サイト名:</label>
+    <input type="text" name="link_site" class="form-control" onclick="get_site()"><br/>
+    <label for="link_pos">リンク位置:</label>
+    <input type="text" name="link_pos" class="form-control" ><br/>
     <input type="submit" value="登録" class="btn btn-default">
 </form>
 

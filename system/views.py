@@ -14,7 +14,8 @@ from system.models import(
     Server,
     Site,
     DomainDetail,
-    SiteComment
+    SiteComment,
+    Link
 )
 
 from system.aggregate import(
@@ -25,7 +26,9 @@ from system.aggregate import(
     get_domain_detail,
     get_special_server,
     get_site_detail,
-    get_site_comment
+    get_site_comment,
+    get_site_list,
+    raw_get_site_from_url,
 )
 
 
@@ -451,7 +454,7 @@ def create_site(request):
             site_title=title,
             url=url,
             japanese=japanese,
-            group=group,
+            group_name=group,
             updated_date=update_at,
             template=template,
             login_url=login_url,
@@ -462,7 +465,9 @@ def create_site(request):
         site_obj.save()
         try:
             domain_name = url.split('/')[2]
-            domain = Domain.objects.get(domain_name=domain_name)
+            domain = Domain.objects.get(
+                domain_name=domain_name
+            )
             domain_detail = DomainDetail(
                 domain_id=domain.id,
                 url=url,
@@ -483,7 +488,34 @@ def domain_warning(request):
 
 @login_required
 def create_link(request):
-    return render(request, 'system/create_link.html')
+    if request.method == 'GET':
+        raw_site_list = get_site_list()
+        data = {}
+        data['site'] = []
+        data['url'] = []
+        today = datetime.today()
+        data['day'] = datetime.strftime(today, '%Y-%m-%d')
+        for site in raw_site_list:
+            data['site'].append(site[0])
+            data['url'].append(site[1])
+        return render(request, 'system/create_link.html', data)
+    elif request.method == 'POST':
+        site_title = request.POST['site_title']
+        url = request.POST['url']
+        send_day = request.POST['send_day']
+        link_url = request.POST['link_url']
+        link_site = request.POST['link_site']
+        link_pos = request.POST['link_pos']
+        link_obj = Link(
+            site_title=site_title,
+            url=url,
+            created_at=send_day,
+            to_url=link_url,
+            to_site=link_site,
+            link_position=link_pos
+        )
+        link_obj.save()
+        return HttpResponseRedirect('/link')
 
 
 @login_required
@@ -570,3 +602,14 @@ def comment_all(request):
         comments.append(tmp)
     result = {'comment': comments}
     return render(request, 'system/comment_all.html', result)
+
+
+@login_required
+def url_to_site(request):
+    url = request.GET['url']
+    site_names = raw_get_site_from_url(url)
+    data = {}
+    data['site'] = []
+    for site_name in site_names:
+        data['site'].append(site_name[0])
+    return HttpResponse(json.dumps(data), content_type='application/json')

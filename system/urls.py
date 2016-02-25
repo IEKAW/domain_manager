@@ -24,5 +24,6 @@ urlpatterns = [
     url(r'^warning$', views.domain_warning),
     url(r'^comment/edit$', views.comment_edit),
     url(r'^comment/delete$', views.comment_delete),
-    url(r'^comment/all$', views.comment_all)
+    url(r'^comment/all$', views.comment_all),
+    url(r'^url_site$', views.url_to_site),
 ]

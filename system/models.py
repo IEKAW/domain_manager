@@ -52,9 +52,11 @@ class SiteComment(models.Model):
 
 class Link(models.Model):
     """docstring for Link"""
-    from_site = models.IntegerField()
-    to_site = models.IntegerField()
-    link_position = models.CharField(max_length=255)
+    site_title = models.CharField(max_length=255, null=True)
+    url = models.CharField(max_length=255, null=True)
+    to_url = models.CharField(max_length=255, null=True)
+    to_site = models.CharField(max_length=255, null=True)
+    link_position = models.CharField(max_length=255, null=True)
     created_at = models.DateField()
 
 
