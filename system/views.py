@@ -382,8 +382,10 @@ def link(request, site_id):
 @login_required
 def link_json(request):
     site_id = request.GET["site_id"]
-    from_obj = Link.objects.get(from_id=site_id)
-    print from_obj
+    try:
+        from_obj = Link.objects.get(from_id=site_id)
+    except:
+        pass
     while(True):
         try:
             from_obj = Link.objects.get(from_id=from_obj.to_id)
@@ -391,14 +393,17 @@ def link_json(request):
             break
         if from_obj is None:
             break
-    top_id = from_obj.to_id
-    json_data = {}
-    json_data["name"] = "root"
-    json_data["title"] = from_obj.site_title
-    json_data["url"] = from_obj.url
-    json_data["created_at"] = datetime.strftime(from_obj.created_at, "%Y-%m-%d")
-    json_data["server"] = from_obj.server
-    json_data["children"] = add_tree(top_id)
+    try:
+        top_id = from_obj.to_id
+        json_data = {}
+        json_data["name"] = "root"
+        json_data["title"] = from_obj.site_title
+        json_data["url"] = from_obj.url
+        json_data["created_at"] = datetime.strftime(from_obj.created_at, "%Y-%m-%d")
+        json_data["server"] = from_obj.server
+        json_data["children"] = add_tree(top_id)
+    except:
+        pass
     return HttpResponse(json.dumps(json_data), content_type='application/json')
 
 
