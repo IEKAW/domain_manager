@@ -403,7 +403,7 @@ def link_json(request):
         json_data["server"] = from_obj.server
         json_data["children"] = add_tree(top_id)
     except:
-        pass
+        json_data = {}
     return HttpResponse(json.dumps(json_data), content_type='application/json')
 
 
