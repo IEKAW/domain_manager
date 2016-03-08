@@ -374,8 +374,49 @@ def site_detail(request):
 
 
 @login_required
-def link(request):
+def link(request, site_id):
+    print site_id
     return render(request, 'system/link.html')
+
+
+@login_required
+def link_json(request):
+    site_id = request.GET["site_id"]
+    from_obj = Link.objects.get(from_id=site_id)
+    print from_obj
+    while(True):
+        try:
+            from_obj = Link.objects.get(from_id=from_obj.to_id)
+        except:
+            break
+        if from_obj is None:
+            break
+    top_id = from_obj.to_id
+    json_data = {}
+    json_data["name"] = "root"
+    json_data["title"] = from_obj.site_title
+    json_data["url"] = from_obj.url
+    json_data["created_at"] = datetime.strftime(from_obj.created_at, "%Y-%m-%d")
+    json_data["server"] = from_obj.server
+    json_data["children"] = add_tree(top_id)
+    return HttpResponse(json.dumps(json_data), content_type='application/json')
+
+
+def add_tree(top_id):
+    top_objs = Link.objects.filter(to_id=top_id).all()
+    result = []
+    for top_obj in top_objs:
+        tmp = {}
+        tmp["name"] = "leaf"
+        tmp["title"] = top_obj.site_title
+        tmp["url"] = top_obj.url
+        tmp["created_at"] = datetime.strftime(top_obj.created_at, "%Y-%m-%d")
+        tmp["server"] = top_obj.server
+        tmp["to_site"] = top_obj.to_site
+        tmp["link_position"] = top_obj.link_position
+        tmp["children"] = add_tree(top_obj.from_id)
+        result.append(tmp)
+    return result
 
 
 @login_required
@@ -489,8 +530,11 @@ def domain_warning(request):
 @login_required
 def create_link(request):
     if request.method == 'GET':
+        site_id = request.GET["site_id"]
+        site = Site.objects.get(id=site_id)
         raw_site_list = get_site_list()
         data = {}
+        data["me"] = {"url": site.url, "title": site.site_title}
         data['site'] = []
         data['url'] = []
         today = datetime.today()
@@ -506,16 +550,25 @@ def create_link(request):
         link_url = request.POST['link_url']
         link_site = request.POST['link_site']
         link_pos = request.POST['link_pos']
+        server = request.POST['server']
+        from_obj = Site.objects.get(url=url, site_title=site_title)
+        from_id = from_obj.id
+        to_obj = Site.objects.get(url=link_url, site_title=link_site)
+        to_id = to_obj.id
         link_obj = Link(
             site_title=site_title,
             url=url,
             created_at=send_day,
             to_url=link_url,
             to_site=link_site,
-            link_position=link_pos
+            link_position=link_pos,
+            server=server,
+            from_id=from_id,
+            to_id=to_id
         )
         link_obj.save()
-        return HttpResponseRedirect('/link')
+        url = reverse('link', kwargs={'site_id': from_id})
+        return HttpResponseRedirect(url)
 
 
 @login_required

@@ -9,7 +9,7 @@ $('#all').click(function(){
 
 // checkedになっている項目岳削除する
 function delete_data(kind){
-    delete_ids = []
+    delete_ids = [];
     $('[name=record]:checked').each(function(){
         delete_ids.push($(this).val());
     });
@@ -37,9 +37,10 @@ function get_site(){
     query_params = {
         'url': url
     };
-    base_url = [location.protocol, '/', location.host, 'url_site'].join('/');
+    base_url = [location.protocol, '/', location.host, "url_site.json"].join('/');
     http_url = [base_url, $.param(query_params)].join('?');
-    sites = communicate_http(http_url);
+    sites = sync_communicate_http(http_url);
+    $('input[name=link_site]').attr("value", JSON.parse(sites)["site"][0]);
 }
 
 
@@ -54,4 +55,12 @@ function communicate_http(url){
             return data_json;
           }
     });
+}
+
+function sync_communicate_http(url){
+
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", url, false);
+    xmlHttp.send(null);
+    return xmlHttp.responseJSON;
 }

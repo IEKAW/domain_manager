@@ -8,21 +8,27 @@
     <label for="site_title">サイトタイトル:</label>
     <select name="site_title" class="form-control">
         {% for link in site %}
-            <option value="{{ link }}">{{ link }}</option>
+            {% if link != me.url %}
+                <option value="{{ link }}">{{ link }}</option>
+            {% else %}
+                <option value="{{ link }}" selected >{{ link }}</option>
+            {% endif %}
         {% endfor %}
     </select>
     <label for="url">URL:</label>
-    <input type="text" name="url" class="form-control"><br/>
+    <input type="text" name="url" class="form-control" value="{{ me.title }}"><br/>
     <label for="send_day">リンクを送った日:</label>
     <input type="date" name="send_day" class="form-control" value="{{ day }}"><br/>
+    <label for="server">サーバー:</label>
+    <input type="text" name="server" class="form-control"><br/>
     <label for="link_url">リンク先URL:</label>
-    <select name="link_url" class="form-control">
+    <select name="link_url" class="form-control" onchange="get_site()">
         {% for link in url %}
             <option value="{{ link }}">{{ link }}</option>
         {% endfor %}
     </select>
     <label for="link_site">リンク先サイト名:</label>
-    <input type="text" name="link_site" class="form-control" onclick="get_site()"><br/>
+    <input type="text" name="link_site" class="form-control" ><br/>
     <label for="link_pos">リンク位置:</label>
     <input type="text" name="link_pos" class="form-control" ><br/>
     <input type="submit" value="登録" class="btn btn-default">

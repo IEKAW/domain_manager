@@ -54,9 +54,12 @@ class Link(models.Model):
     """docstring for Link"""
     site_title = models.CharField(max_length=255, null=True)
     url = models.CharField(max_length=255, null=True)
+    server = models.CharField(max_length=255, null=True)
     to_url = models.CharField(max_length=255, null=True)
     to_site = models.CharField(max_length=255, null=True)
     link_position = models.CharField(max_length=255, null=True)
+    from_id = models.IntegerField(null=True)
+    to_id = models.IntegerField(null=True)
     created_at = models.DateField()
 
 
