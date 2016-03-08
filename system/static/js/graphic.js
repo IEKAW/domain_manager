@@ -9,7 +9,7 @@ window.addEventListener("load", function(){
         .attr("height",800)
         .attr("viewBox", "0,-25,200,200");
     query_params = {site_id: 2};
-    base_url = [location.protocol, '/', location.host, "link.json"].join('/');
+    base_url = [location.protocol, '/', location.host, "django.cgi", "link.json"].join('/');
     http_url = [base_url, $.param(query_params)].join('?');
     var data = JSON.parse(sync_communicate_http(http_url));
     var tree = d3.layout.tree().size([200,150]);
