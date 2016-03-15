@@ -31,7 +31,7 @@ function delete_data(kind){
     location.href="./unupdate";
 }
 
-function sync_communicate_http(url){
+function sync_communicate_https(url){
 
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", url, false);
@@ -47,7 +47,7 @@ function get_site(){
     };
     base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
     http_url = [base_url, $.param(query_params)].join('?');
-    sites = sync_communicate_http(http_url);
+    sites = sync_communicate_https(http_url);
     $('input[name=link_site]').val(JSON.parse(sites)["site"][0]);
 }
 
