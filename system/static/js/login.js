@@ -31,13 +31,6 @@ function delete_data(kind){
     location.href="./unupdate";
 }
 
-function sync_communicate_https(url){
-
-    xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", url, false);
-    xmlHttp.send(null);
-    return xmlHttp.responseJSON;
-}
 
 // urlから自動でsite_titleを取得してくれる
 function get_site(){
@@ -53,7 +46,7 @@ function get_site(){
 }
 
 
-function communicate_http(url){
+function communicate_https(url){
     $.ajax({
           url: url,
           dataType: 'json',
