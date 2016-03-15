@@ -45,7 +45,7 @@ function get_site(){
     query_params = {
         'url': url
     };
-    base_url = [location.protocol, '/', location.host, "django.cgi", url_site.json"].join('/');
+    base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
     http_url = [base_url, $.param(query_params)].join('?');
     sites = sync_communicate_http(http_url);
     $('input[name=link_site]').attr("value", JSON.parse(sites)["site"][0]);
