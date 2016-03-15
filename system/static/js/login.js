@@ -31,9 +31,17 @@ function delete_data(kind){
     location.href="./unupdate";
 }
 
+function sync_communicate_http(url){
+
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", url, false);
+    xmlHttp.send(null);
+    return xmlHttp.responseJSON;
+}
+
 // urlから自動でsite_titleを取得してくれる
 function get_site(){
-    url = $('input[name=link_url]').val();
+    url = $('select[name=link_url]').val();
     query_params = {
         'url': url
     };
@@ -57,10 +65,3 @@ function communicate_http(url){
     });
 }
 
-function sync_communicate_http(url){
-
-    xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", url, false);
-    xmlHttp.send(null);
-    return xmlHttp.responseJSON;
-}
