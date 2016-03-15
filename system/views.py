@@ -556,7 +556,7 @@ def create_link(request):
         link_site = request.POST['link_site']
         link_pos = request.POST['link_pos']
         server = request.POST['server']
-        from_obj = Site.objects.get(url=url, site_title=site_title)
+        from_obj = Site.objects.get(url=url.encode('utf8'), site_title=site_title.encode('utf8'))
         from_id = from_obj.id
         to_obj = Site.objects.get(url=link_url, site_title=link_site)
         to_id = to_obj.id
