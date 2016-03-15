@@ -22,7 +22,7 @@
     <label for="server">サーバー:</label>
     <input type="text" name="server" class="form-control"><br/>
     <label for="link_url">リンク先URL:</label>
-    <select name="link_url" class="form-control" onchange="get_site()">
+    <select name="link_url" class="form-control" onchange="get_site">
         {% for link in url %}
             <option value="{{ link }}">{{ link }}</option>
         {% endfor %}
