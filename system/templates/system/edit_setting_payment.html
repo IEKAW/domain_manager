@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>支払い方法編集</h1>
+
+<form action="{% url 'system.views.payment_edit' %}" method="POST">
+    {% csrf_token %}
+    <label for="payment">支払い名:</label>
+    <input type="hidden" name="payment_id" value="{{ payment_id }}">
+    <input type="text" name="payment" value="{{ name }}" class="form-control" /><br/>
+    <input type="submit" value="登録" class="btn btn-default" />
+</form>
+
+{% endblock %}

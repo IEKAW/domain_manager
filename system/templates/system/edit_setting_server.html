@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>サーバー編集</h1>
+
+<form action="{% url 'system.views.server_edit' %}" method="POST">
+    {% csrf_token %}
+    <label for="payment">サーバー名:</label>
+    <input type="hidden" name="server_id" value="{{ server_id }}">
+    <input type="text" name="server" value="{{ name }}" class="form-control" /><br/>
+    <input type="submit" value="登録" class="btn btn-default" />
+</form>
+
+{% endblock %}

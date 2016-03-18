@@ -1,0 +1,13 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>新規リンク追加</h1>
+
+<form action="{% url 'system.views.create_setting_link' %}" method="POST">
+    {% csrf_token %}
+    <label for="link">リンク:</label>
+    <input type="text" name="link" value="" class="form-control" /><br/>
+ 	<input type="submit" value="登録" class="btn btn-default" />
+</form>
+
+{% endblock %}    

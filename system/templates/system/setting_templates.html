@@ -1,0 +1,27 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+
+<h1>テンプレート一覧</h1>
+
+<form action="{% url 'system.views.setting_templates' %}" method="POST" >
+	{% csrf_token %}
+
+<a class="btn btn-default pull-right" href="{% url 'system.views.create_setting_templates' %}">新規追加</a><br/><br/>	
+
+<table class="table table-striped table-bordered table-hover">
+
+	<tr>
+        <th>テンプレート名</th>
+        <th></th>
+    </tr>
+    {% for name in templates %}
+    <tr>
+        <td>{{ name.tempaltes }}</td>
+        <td><a class="btn btn-warning" href="{% url 'system.views.templates_edit' %}?templates_id={{ name.id }}">編集</a></td>
+    </tr>
+    {% endfor %}
+
+
+</table>
+ {% endblock %}

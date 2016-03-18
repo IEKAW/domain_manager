@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>テンプレート編集</h1>
+
+<form action="{% url 'system.views.templates_edit' %}" method="POST">
+    {% csrf_token %}
+    <label for="templates">テンプレート名:</label>
+    <input type="hidden" name="templates_id" value="{{ templates_id }}">
+    <input type="text" name="templates" value="{{ name }}" class="form-control" /><br/>
+    <input type="submit" value="登録" class="btn btn-default" />
+</form>
+
+{% endblock %}

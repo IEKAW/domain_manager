@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>新規支払い方法追加</h1>
+
+<form action="{% url 'system.views.create_setting_payment' %}" method="POST">
+    {% csrf_token %}
+    <label for="payment">支払い方法:</label>
+    <input type="text" name="payment" value="" class="form-control" /><br/>
+    <input type="submit" value="登録" class="btn btn-default" />
+</form>
+
+
+{% endblock %}    
