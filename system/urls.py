@@ -27,4 +27,10 @@ urlpatterns = [
     url(r'^comment/delete$', views.comment_delete),
     url(r'^comment/all$', views.comment_all),
     url(r'^url_site.json$', views.url_to_site),
+    url(r'^setting/group/edit$', views.group_edit),
+    url(r'^setting/templates/edit$', views.templates_edit),
+    url(r'^setting/link/edit$', views.link_edit),
+    url(r'^setting/payment/edit$', views.payment_edit),
+    # url(r'^setting/domain/edit$', views.domain_edit),
+    url(r'^setting/server/edit$', views.server_edit),
 ]

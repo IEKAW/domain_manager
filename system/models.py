@@ -69,3 +69,36 @@ class DomainDetail(models.Model):
     url = models.CharField(max_length=255, null=True)
     title = models.CharField(max_length=255, null=True)
     is_representative = models.BooleanField(default=False)
+
+
+class Group(models.Model):
+    group = models.CharField(max_length=255)
+
+class Payment(models.Model):
+    payment = models.CharField(max_length=255)
+
+class Setting_Link(models.Model):
+    link = models.CharField(max_length=255)
+
+class Templates(models.Model):
+    templates = models.CharField(max_length=255)
+
+class Setting_Server(models.Model):
+    server_company = models.CharField(max_length=255)
+    login_url = models.CharField(max_length=255)
+    login_id = models.CharField(max_length=255, null=True)
+    login_pass = models.CharField(max_length=255, null=True)
+    nameserver1 = models.CharField(max_length=255, null=True)
+    nameserver2 = models.CharField(max_length=255, null=True)
+    nameserver3 = models.CharField(max_length=255, null=True)
+    nameserver4= models.CharField(max_length=255, null=True)
+    nameserver5 = models.CharField(max_length=255, null=True)
+
+
+
+class Setting_Domain(models.Model):
+    domain_company = models.CharField(max_length=255)
+    login_url = models.CharField(max_length=255)
+    login_id = models.CharField(max_length=255, null=True)
+    login_pass = models.CharField(max_length=255, null=True)
+

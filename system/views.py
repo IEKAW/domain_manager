@@ -556,7 +556,7 @@ def create_link(request):
         link_site = request.POST['link_site']
         link_pos = request.POST['link_pos']
         server = request.POST['server']
-        from_obj = Site.objects.get(url=url.encode('utf8'), site_title=site_title.encode('utf8'))
+        from_obj = Site.objects.get(url=url, site_title=site_title)
         from_id = from_obj.id
         to_obj = Site.objects.get(url=link_url, site_title=link_site)
         to_id = to_obj.id
@@ -579,6 +579,123 @@ def create_link(request):
 @login_required
 def setting(request):
     return render(request, 'system/setting.html')
+
+
+@login_required
+def setting_templates(request):
+    templates = Templates.objects.all()
+    return render(request, 'system/setting_templates.html',{'templates' : templates})
+
+@login_required
+def setting_link(request):
+    link = Setting_Link.objects.all()
+    return render(request, 'system/setting_link.html',{'link' : link})
+
+@login_required
+def setting_group(request):
+    group = Group.objects.all()
+    return render(request, 'system/setting_group.html',{'group' : group})
+
+
+@login_required
+def setting_payment(request):
+    payment = Payment.objects.all()
+    return render(request, 'system/setting_payment.html',{'payment' : payment})
+
+
+@login_required
+def setting_domain(request):
+    return render(request, 'system/setting_domain.html')
+
+@login_required
+def setting_server(request):
+    server = Setting_Server.objects.all()
+    return render(request, 'system/setting_server.html',{'server_company' : server_company, 'login_id' : login_id, 'login_url' : login_url, 'login_pass' : login_pass, 'nameserver1' : nameserver1, 'nameserver2' : nameserver2, 'nameserver3' : nameserver3, 'nameserver4' : nameserver4, 'nameserver5' : nameserver5})
+
+
+@login_required
+def create_setting_group(request):
+    if request.method == 'GET':
+        return render(request, 'system/create_setting_group.html')
+    elif request.method == 'POST':
+        group = request.POST['group']
+        group_obj = Group(
+            group = group
+        )
+        group_obj.save()
+        return HttpResponseRedirect('/setting/group')
+
+@login_required
+def create_setting_server(request):
+    if request.method == 'GET':
+        return render(request, 'system/create_setting_server.html')
+    elif request.method == 'POST':
+        server_company = request.POST['server_company']
+        login_url = request.POST['login_url']
+        login_id = request.POST['login_id']
+        login_pass = request.POST['login_pass']
+        nameserver1 = request.POST['nameserver1']
+        nameserver2 = request.POST['nameserver2']
+        nameserver3 = request.POST['nameserver3']
+        nameserver4 = request.POST['nameserver4']
+        nameserver5 = request.POST['nameserver5']
+        server_obj = Setting_Server(
+            server_company = server_company,
+            login_url = login_url,
+            login_id = login_id,
+            login_pass = login_pass,
+            nameserver1 = nameserver1,
+            nameserver2 = nameserver2,
+            nameserver3 = nameserver3,
+            nameserver4 = nameserver4,
+            nameserver5 = nameserver5,
+        )
+        server_obj.save()
+        return HttpResponseRedirect('/setting/server')
+
+
+@login_required
+def create_setting_domain(request):
+    return render(request, 'system/create_setting_domain.html')
+
+
+@login_required
+def create_setting_payment(request):
+    if request.method == 'GET':
+        return render(request, 'system/create_setting_payment.html')
+    elif request.method == 'POST':
+        payment = request.POST['payment']
+        payment_obj = Payment(
+            payment = payment
+        )
+        payment_obj.save()
+        return HttpResponseRedirect('/setting/payment')
+
+
+@login_required
+def create_setting_templates(request):
+    if request.method == 'GET':
+        return render(request, 'system/create_setting_templates.html')
+    elif request.method == 'POST':
+        templates = request.POST['templates']
+        templates_obj = Templates(
+            templates = templates
+        )
+        templates_obj.save()
+        return HttpResponseRedirect('/setting/templates')
+
+
+@login_required
+def create_setting_link(request):
+    if request.method == 'GET':
+        return render(request, 'system/create_setting_link.html')
+    elif request.method == 'POST':
+        link = request.POST['link']
+        link_obj = Setting_Link(
+            link = link
+        )
+        link_obj.save()
+        return HttpResponseRedirect('/setting/link')
 
 
 @login_required
@@ -671,3 +788,119 @@ def url_to_site(request):
     for site_name in site_names:
         data['site'].append(site_name[0])
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@login_required
+def group_edit(request):
+    if request.method == "GET":
+        group_id = request.GET['group_id']
+        group_obj = get_exact_group(group_id)
+        group_a = {}
+        for group in group_obj:
+            group_a['group'] = group[1]
+        data = {
+            "group_id": group_id,
+            "name": group_a["group"]
+        }
+        return render(request, 'system/edit_setting_group.html', data)
+    elif request.method == "POST":
+        group_id = request.POST['group_id']
+        name = request.POST['group']
+        obj = Group.objects.get(id=group_id)
+        obj.group = name
+        obj.save()
+        return redirect('system.views.setting_group')
+
+
+
+@login_required
+def templates_edit(request):
+    if request.method == "GET":
+        templates_id = request.GET['templates_id']
+        templates_obj = get_exact_templates(templates_id)
+        templates_a = {}
+        for templates in templates_obj:
+            templates_a['templates'] = templates[1]
+        data = {
+            "templates_id": templates_id,
+            "name": templates_a["templates"]
+        }
+        return render(request, 'system/edit_setting_templates.html', data)
+    elif request.method == "POST":
+        templates_id = request.POST['templates_id']
+        name = request.POST['templates']
+        obj = Templates.objects.get(id=templates_id)
+        obj.tempaltes = name
+        obj.save()
+        return redirect('system.views.setting_templates')
+
+@login_required
+def link_edit(request):
+    if request.method == "GET":
+        link_id = request.GET['link_id']
+        link_obj = get_exact_link(link_id)
+        link_test = {}
+        for link in link_obj:
+            link_test['group'] = link[1]
+        data = {
+            "link_id": link_id,
+            "name": link_test["link"]
+        }
+        return render(request, 'system/edit_setting_link.html', data)
+    elif request.method == "POST":
+        link_id = request.POST['link_id']
+        name = request.POST['link']
+        obj = Link.objects.get(id=link_id)
+        obj.link = name
+        obj.save()
+        return redirect('system.views.setting_link')
+
+
+@login_required
+def payment_edit(request):
+    if request.method == "GET":
+        payment_id = request.GET['payment_id']
+        payment_obj = get_exact_payment(payment_id)
+        payment_a = {}
+        for payment in payment_obj:
+            payment_a['payment'] = payment[1]
+        data = {
+            "payment_id": payment_id,
+            "name": payment_a["payment"]
+        }
+        return render(request, 'system/edit_setting_payment.html', data)
+    elif request.method == "POST":
+        payment_id = request.POST['payment_id']
+        name = request.POST['payment']
+        obj = Payment.objects.get(id=payment_id)
+        obj.payment = name
+        obj.save()
+        return redirect('system.views.setting_payment')
+
+
+@login_required
+def server_edit(request):
+    if request.method == "GET":
+        server_id = request.GET['server_id']
+        server_obj = get_exact_server(server_id)
+        server_a = {}
+        for server in server_obj:
+            server_a['server'] = server[1]
+        data = {
+            "server_id": server_id,
+            "name": server_a["server"]
+        }
+        return render(request, 'system/edit_setting_server.html', data)
+    elif request.method == "POST":
+        server_id = request.POST['server_id']
+        name = request.POST['server']
+        obj = Setting_Server.objects.get(id=server_id)
+        obj.server = name
+        obj.save()
+        return redirect('system.views.setting_server')
+
+
+
+
+
+
