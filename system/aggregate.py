@@ -21,7 +21,7 @@ def get_domain_info(search_index, reverse):
                 FROM
                     system_domain
                 ORDER BY
-                    updated_date ASC
+                    updated_date DESC
             """
     else:
         search_index = '%' + search_index + '%'
