@@ -3,12 +3,28 @@
 {% block content %}
 <h1>サーバー編集</h1>
 
-<form action="{% url 'system.views.server_edit' %}" method="POST">
+<form action="{% url 'system.views.setting_server_edit' %}" method="POST">
     {% csrf_token %}
-    <label for="payment">サーバー名:</label>
-    <input type="hidden" name="server_id" value="{{ server_id }}">
-    <input type="text" name="server" value="{{ name }}" class="form-control" /><br/>
-    <input type="submit" value="登録" class="btn btn-default" />
+    <input type="hidden" name="server_id" value="{{ data.id }}">
+    <label for="server_company">サーバー会社:</label>
+    <input type="text" name="server_company" class="form-control" value="{{ data.server_company }}" /><br/>
+    <label for="login_url">ログインURL:</label>
+    <input type="text" name="login_url" class="form-control" value="{{ data.login_url }}" ><br/>
+    <label for="login_id">ログインid:</label>
+    <input type="text" name="login_id" class="form-control" value="{{ data.login_id }}"><br/>
+    <label for="login_pass">ログインパスワード:</label>
+    <input type="text" name="login_pass" class="form-control" value="{{ data.login_pass }}"><br/>
+    <label for="nameserver1">ネームサーバー１:</label>
+    <input type="text" name="nameserver1" class="form-control" value="{{ data.nameserver1 }}"><br/>
+    <label for="nameserver2">ネームサーバー２:</label>
+    <input type="text" name="nameserver2" class="form-control" value="{{ data.nameserver2 }}"><br/>
+    <label for="nameserver3">ネームサーバー３:</label>
+    <input type="text" name="nameserver3" class="form-control" value="{{ data.nameserver3 }}"><br/>
+    <label for="nameserver4">ネームサーバー４:</label>
+    <input type="text" name="nameserver4" class="form-control" value="{{ data.nameserver4 }}"><br/>
+    <label for="nameserver5">ネームサーバー５:</label>
+    <input type="text" name="nameserver5" class="form-control" value="{{ data.nameserver5 }}"><br/>
+    <input type="submit" value="追加" class="btn btn-default">
 </form>
 
 {% endblock %}

@@ -11,7 +11,15 @@
     <link type="text/css" rel="stylesheet" href="{% static 'css/chat.css' %}"/>
     <link type="text/css" rel="stylesheet" href="{% static 'css/login.css' %}"/>
 </head>
-<body>
+{% if method == 'site' %}
+    <body style="background-color: #FFCDFE">
+{% elif method == 'domain' %}
+    <body style="background: #FFCDFE;">
+{% elif method == 'server' %}
+    <body style="background: #F3F3AA;">
+{% else %}
+    <body>
+{% endif %}
     <div id="header">
         {% include "layouts/_header.html" %}
     </div>

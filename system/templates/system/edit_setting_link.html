@@ -3,7 +3,7 @@
 {% block content %}
 <h1>リンク編集</h1>
 
-<form action="{% url 'system.views.link_edit' %}" method="POST">
+<form action="{% url 'system.views.setting_link_edit' %}" method="POST">
     {% csrf_token %}
     <label for="link">グループ名:</label>
     <input type="hidden" name="link_id" value="{{ link_id }}">

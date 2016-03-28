@@ -10,82 +10,33 @@
 <a class="btn btn-default pull-right" href="{% url 'system.views.create_setting_server' %}">新規追加</a><br/><br/>	
 
 <table class="table table-striped table-bordered table-hover">
-
         <tr>
                 <th>サーバー会社</th>
-                <th></th>
-        {% for company in server %}
-        <tr>
-                <td>{{ company.server }}</td>
-                <td><a class="btn btn-warning" href="{% url 'system.views.server_edit' %}?server_id={{ company.id }}">編集</a></td>
-        </tr>
-        {% endfor %}
                 <th>ログインURL</th>
-                <th></th>
-        {% for url in server %}
-        <tr>
-                <td>{{ url.server }}</td>
-                <td><a class="btn btn-warning" href="{% url 'system.views.server_edit' %}?server_id={{ url.id }}">編集</a></td>
-        </tr>
-        {% endfor %}
                 <th>ログインid</th>
-                <th></th>
-        {% for login_id in server %}
-        <tr>
-                <td>{{ login_id.server }}</td>
-                <td><a class="btn btn-warning" href="{% url 'system.views.server_edit' %}?server_id={{ login_id.id }}">編集</a></td>
-        </tr>
-        {% endfor %}
                 <th>ログインパスワード</th>
-                <th></th>
-        {% for pass in server %}
-        <tr>
-                <td>{{ pass.server }}</td>
-                <td><a class="btn btn-warning" href="{% url 'system.views.server_edit' %}?server_id={{ pass.id }}">編集</a></td>
-        </tr>
-        {% endfor %}
                 <th>ネームサーバー１</th>
-                <th></th>
-        {% for 1 in server %}
-        <tr>
-                <td>{{ 1.server }}</td>
-                <td><a class="btn btn-warning" href="{% url 'system.views.server_edit' %}?server_id={{ 1.id }}">編集</a></td>
-        </tr>
-        {% endfor %}
                 <th>ネームサーバー２</th>
-                <th></th>
-        {% for 2 in server %}
-        <tr>
-                <td>{{ 2.server }}</td>
-                <td><a class="btn btn-warning" href="{% url 'system.views.server_edit' %}?server_id={{ 2.id }}">編集</a></td>
-        </tr>
-        {% endfor %}
                 <th>ネームサーバー３</th>
-                <th></th>
-        {% for 3 in server %}
-        <tr>
-                <td>{{ 3.server }}</td>
-                <td><a class="btn btn-warning" href="{% url 'system.views.server_edit' %}?server_id={{ 3.id }}">編集</a></td>
-        </tr>
-        {% endfor %}
                 <th>ネームサーバー４</th>
-                <th></th>
-        {% for 4 in server %}
-        <tr>
-                <td>{{ 4.server }}</td>
-                <td><a class="btn btn-warning" href="{% url 'system.views.server_edit' %}?server_id={{ 4.id }}">編集</a></td>
-        </tr>
-        {% endfor %}
                 <th>ネームサーバー５</th>
-                <th></th>
-        {% for 5 in server %}
+                <th>編集</th>
+        </tr>
         <tr>
-                <td>{{ 5.server }}</td>
-                <td><a class="btn btn-warning" href="{% url 'system.views.server_edit' %}?server_id={{ 5.id }}">編集</a></td>
+        {% for r in data %}
+        <tr>
+                <td>{{ r.server_company }}</td>
+                <td>{{ r.login_url }}</td>
+                <td>{{ r.login_id }}</td>
+                <td>{{ r.login_pass }}</td>
+                <td>{{ r.nameserver1 }}</td>
+                <td>{{ r.nameserver2 }}</td>
+                <td>{{ r.nameserver3 }}</td>
+                <td>{{ r.nameserver4 }}</td>
+                <td>{{ r.nameserver5 }}</td>
+                <td><a class="btn btn-warning" href="{% url 'system.views.setting_server_edit' %}?server_id={{ r.id }}">編集</a></td>
         </tr>
         {% endfor %}
-	</tr>
-
-
+	    </tr>
 </table>
  {% endblock %}

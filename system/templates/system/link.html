@@ -1,56 +1,59 @@
 {% extends "layouts/base.html" %}
 {% block title %} Home {% endblock %}
 {% block content %}
-{#<div class="container">#}
-{#    <div id="link" class="col-md-4 col-md-offset-3">#}
-{#        <table class="table" border="3">#}
-{#            <tr>#}
-{#                <th style="background-color: #2aabd2">サイトタイトル</th>#}
-{#                <td>a</td>#}
-{#            </tr>#}
-{#            <tr>#}
-{#                <th style="background-color: #2aabd2">URL</th>#}
-{#                <td>sa</td>#}
-{#            </tr>#}
-{#            <tr>#}
-{#                <th style="background-color: #2aabd2">作成日</th>#}
-{#                <td>s</td>#}
-{#            </tr>#}
-{#            <tr>#}
-{#                <th style="background-color: #2aabd2">サーバー</th>#}
-{#                 <td>fds</td>#}
-{#            </tr>#}
-{#        </table>#}
-{#    </div>#}
-{#    <div id="link" class="col-md-4 col-md-offset-3">#}
-{#        <table class="table" border="3">#}
-{#            <tr>#}
-{#                <th style="background-color: #ce8483">サイトタイトル</th>#}
-{#                <td>a</td>#}
-{#            </tr>#}
-{#            <tr>#}
-{#                <th style="background-color: #ce8483">URL</th>#}
-{#                <td>sa</td>#}
-{#            </tr>#}
-{#            <tr>#}
-{#                <th style="background-color: #ce8483">リンクを貰った日</th>#}
-{#                <td>s</td>#}
-{#            </tr>#}
-{#            <tr>#}
-{#                <th style="background-color: #ce8483">サーバー</th>#}
-{#                 <td>fds</td>#}
-{#            </tr>#}
-{#            <tr>#}
-{#                <th style="background-color: #ce8483">リンク先</th>#}
-{#                 <td>fds</td>#}
-{#            </tr>#}
-{#            <tr>#}
-{#                <th style="background-color: #ce8483">リンク位置</th>#}
-{#                 <td>fds</td>#}
-{#            </tr>#}
-{#        </table>#}
-{#    </div>#}
-{#</div>#}
-<div class="link col-md-6"></div>
-<div class="col-md-6" id="table"></div>
+<h1>リンク</h1>
+
+<div class="col-md-5">
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th>日付</th>
+            <th>URL</th>
+            <th>サテライトサイト</th>
+            {% for r in check %}
+                <th>{{ r }}</th>
+            {% endfor %}
+        </tr>
+        {% for raw in data %}
+        <tr class="{{ raw.color }}">
+            <td>{{ raw.date }}</td>
+            <td>{{ raw.url }}</td>
+            <td>{{ raw.title }}</td>
+            {% for r in check %}
+                {% if raw.position == r %}
+                    <td>🔴</td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>
+
+<div class="col-md-5 col-md-offset-2">
+    <table class="table table-bordered table-hover">
+        <tr>
+            <th>日付</th>
+            <th>URL</th>
+            <th>サイト</th>
+            {% for r in children_check %}
+                <th>{{ r }}</th>
+            {% endfor %}
+        </tr>
+        {% for raw in data %}
+        <tr class="{{ raw.color }}">
+            <td>{{ raw.date }}</td>
+            <td>{{ raw.url }}</td>
+            <td>{{ raw.title }}</td>
+            {% for r in children_check %}
+                {% if raw.position == r %}
+                    <td>🔴</td>
+                {% else %}
+                    <td></td>
+                {% endif %}
+            {% endfor %}
+        </tr>
+        {% endfor %}
+    </table>
+</div>
  {% endblock %}

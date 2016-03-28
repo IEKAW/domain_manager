@@ -6,7 +6,11 @@
 <form action="{% url 'system.views.create_server' %}" method="POST" >
     {% csrf_token %}
     <label for="company">サーバー会社:</label>
-    <input type="text" name="company" class="form-control" /><br/>
+    <select name="company" class="form-control">
+        {% for r in server %}
+            <option value="{{ r.server_company }}">{{ r.server_company }}</option>
+        {% endfor %}
+    </select>
     <label for="host">FTP􏰌􏰍􏰎􏰍􏰏サーバー(ホスト名):</label>
     <input type="text" name="host" class="form-control" ><br/>
     <label for="id">ログインID:</label>
@@ -22,7 +26,11 @@
     <label for="update_at">更新日:</label>
     <input type="date" name="update_at" class="form-control" value="{{ next_year }}"><br/>
     <label for="pay">支払い方法:</label>
-    <input type="text" name="pay" class="form-control" ><br/>
+    <select name="pay" class="form-control">
+        {% for r in pay %}
+            <option value="{{ r.payment }}">{{ r.payment }}</option>
+        {% endfor %}
+    </select>
     <label for="remark">備考:</label>
     <input type="text" name="remark" class="form-control" ><br/>
     <input type="submit" value="登録" class="btn btn-default">

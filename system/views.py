@@ -8,6 +8,10 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
 from django.core.urlresolvers import reverse
 from datetime import datetime, timedelta
+from util.common import (
+    url_idna_quote,
+    url_pyu_quote
+)
 
 from system.models import(
     Domain,
@@ -15,7 +19,14 @@ from system.models import(
     Site,
     DomainDetail,
     SiteComment,
-    Link
+    Link,
+    Payment,
+    Templates,
+    Setting_Link,
+    Setting_Server,
+    Group,
+    Setting_Domain,
+    Keywords
 )
 
 from system.aggregate import(
@@ -29,13 +40,26 @@ from system.aggregate import(
     get_site_comment,
     get_site_list,
     raw_get_site_from_url,
+    get_exact_group,
+    get_exact_server,
+    get_exact_payment,
+    get_exact_link,
+    get_exact_templates,
+    get_link_info,
 )
 
+COLOR_LIST = [
+    'info',
+    'success',
+    'warning',
+    'danger',
+    'active'
+]
 
 @login_required
 def home(request):
     data = {'domain': [], 'server': []}
-    raw_domain_datas = get_domain_info(None)
+    raw_domain_datas = get_domain_info(None, False)
     for domain_data in raw_domain_datas:
         try:
             tmp = {}
@@ -85,7 +109,7 @@ def server(request):
             tmp['updated_at'] = server_data[2]
             tmp['host'] = server_data[3]
             data.append(tmp)
-    result = {'data': data}
+    result = {'data': data, 'method': 'server'}
     return render(request, 'system/server.html', result)
 
 
@@ -108,18 +132,41 @@ def site(request):
         tmp['group'] = site_data[1]
         tmp['japanese'] = site_data[4]
         tmp['server'] = site_data[5]
+        tmp['server_id'] = None
+        try:
+            server_id = Server.objects.get(server_company=site_data[5])
+            tmp['server_id'] = server_id['id']
+        except:
+            pass
         data.append(tmp)
-    result = {'data': data}
+    result = {'data': data, 'method': 'site'}
     return render(request, 'system/site.html', result)
 
 
 @login_required
 def domain(request):
+    reverse = False
     search_index = None
     if request.method == 'POST':
         search_index = request.POST['search']
+    elif request.method == 'GET':
+        try:
+            if request.GET['search_index'] == 'None':
+                search_index = None
+            else:
+                search_index = request.GET['search_index']
+        except:
+            search_index = None
+    if request.method == 'GET':
+        try:
+            if request.GET['reverse'] == 'False':
+                reverse = False
+            else:
+                reverse = True
+        except:
+            reverse = False
     data = []
-    raw_domain_datas = get_domain_info(search_index)
+    raw_domain_datas = get_domain_info(search_index, reverse)
     for domain_data in raw_domain_datas:
         if domain_data[6] != "not_update":
             try:
@@ -146,7 +193,7 @@ def domain(request):
                 tmp['company_url'] = domain_data[5]
                 tmp['representative'] = "not selected"
                 data.append(tmp)
-    result = {'data': data}
+    result = {'data': data, 'method': 'domain', 'search_index': search_index, 'reverse': reverse}
     return render(request, 'system/domain.html', result)
 
 
@@ -176,11 +223,20 @@ def server_unup(request):
 
 @login_required
 def domain_unup(request):
+    reverse = False
     if request.method == "POST":
         update_id = request.POST['id']
         Domain.objects.filter(id=update_id).update(update_method="not_update")
+    if request.method == 'GET':
+        try:
+            if request.GET['reverse'] == 'False':
+                reverse = False
+            else:
+                reverse = True
+        except:
+            reverse = False
     data = []
-    raw_domain_datas = get_domain_info(None)
+    raw_domain_datas = get_domain_info(None, reverse)
     for domain_data in raw_domain_datas:
         if domain_data[6] == "not_update":
             tmp = {}
@@ -190,7 +246,7 @@ def domain_unup(request):
             tmp['updated_at'] = domain_data[3]
             tmp['company'] = domain_data[4]
             data.append(tmp)
-    result = {'data': data}
+    result = {'data': data, 'reverse': reverse}
     return render(request, 'system/domain_unup.html', result)
 
 
@@ -244,7 +300,7 @@ def domain_detail(request):
             tmp['title'] = detail[3]
             tmp['is_represetative'] = detail[4]
             data['detail'].append(tmp)
-        result = {'data': data}
+        result = {'data': data, 'method': 'domain'}
         return render(request, 'system/domain_detail.html', result)
 
 
@@ -264,7 +320,7 @@ def server_detail(request):
         data['remarks'] = raw[8]
         data['login_id'] = raw[9]
         data['login_pass'] = raw[10]
-    result = {'data': data}
+    result = {'data': data, 'method': 'server'}
     return render(request, 'system/server_detail.html', result)
 
 
@@ -369,42 +425,50 @@ def site_detail(request):
         tmp['comment'] = raw[2]
         tmp['created_at'] = raw[3]
         comment.append(tmp)
-    result = {"data": data, "comment": comment, "site_id": site_id}
+    result = {"data": data, "comment": comment, "site_id": site_id, 'method': 'site'}
     return render(request, 'system/site_detail.html', result)
 
 
 @login_required
 def link(request, site_id):
-    print site_id
-    return render(request, 'system/link.html')
+    links = get_link_info(site_id)
+    data = []
+    children_data = []
+    for i, link in enumerate(links):
+        tmp = {}
+        tmp['date'] = link[3]
+        tmp['url'] = link[5]
+        tmp['title'] = link[1]
+        tmp['position'] = link[2]
+        tmp['color'] = COLOR_LIST[i]
+        print i
+        print tmp['color']
+        data.append(tmp)
+        children = get_link_info(link[9])
+        for child in children:
+            tmp_child = {}
+            tmp_child['date'] = child[3]
+            tmp_child['url'] = child[5]
+            tmp_child['title'] = child[1]
+            tmp_child['position'] = child[2]
+            tmp_child['color'] = COLOR_LIST[i]
+            children_data.append(tmp_child)
+    check_list = []
+    for r in data:
+        if r['position'] not in check_list:
+            check_list.append(r['position'])
+    children_list = []
+    for r in children_data:
+        if r['position'] not in children_list:
+            children_list.append(r['position'])
+    result = {
+        'data': data,
+        'children': children_data,
+        'check': check_list,
+        'children_check': children_list,
+    }
 
-
-@login_required
-def link_json(request):
-    site_id = request.GET["site_id"]
-    try:
-        from_obj = Link.objects.get(from_id=site_id)
-    except:
-        pass
-    while(True):
-        try:
-            from_obj = Link.objects.get(from_id=from_obj.to_id)
-        except:
-            break
-        if from_obj is None:
-            break
-    try:
-        top_id = from_obj.to_id
-        json_data = {}
-        json_data["name"] = "root"
-        json_data["title"] = from_obj.site_title
-        json_data["url"] = from_obj.url
-        json_data["created_at"] = datetime.strftime(from_obj.created_at, "%Y-%m-%d")
-        json_data["server"] = from_obj.server
-        json_data["children"] = add_tree(top_id)
-    except:
-        json_data = {}
-    return HttpResponse(json.dumps(json_data), content_type='application/json')
+    return render(request, 'system/link.html', result)
 
 
 def add_tree(top_id):
@@ -429,7 +493,9 @@ def create_server(request):
     if request.method == 'GET':
         next_year = datetime.today() + timedelta(days=365)
         day = datetime.strftime(next_year, '%Y-%m-%d')
-        return render(request, 'system/create_server.html', {'next_year': day})
+        server = Setting_Server.objects.all()
+        pay = Payment.objects.all()
+        return render(request, 'system/create_server.html', {'next_year': day, 'server': server, 'pay': pay})
     elif request.method == 'POST':
         company = request.POST['company']
         host = request.POST['host']
@@ -463,10 +529,17 @@ def create_domain(request):
     if request.method == 'GET':
         next_year = datetime.today() + timedelta(days=365)
         day = datetime.strftime(next_year, '%Y-%m-%d')
-        return render(request, 'system/create_domain.html', {"next_year": day})
+        company = Setting_Domain.objects.all()
+        return render(request, 'system/create_domain.html', {"next_year": day, "company": company})
     elif request.method == 'POST':
         domain = request.POST['domain']
-        japanese = request.POST['japanese']
+        japanese = None
+        if domain != '':
+            japanese = url_pyu_quote('http://' + domain).encode('utf8')
+        else:
+            japanese = request.POST['japanese']
+            japanese = japanese.encode('utf8')
+            domain = url_idna_quote('http://' + japanese)
         company = request.POST['company']
         update_at = request.POST['update_at']
         update_method = request.POST['update_method']
@@ -484,12 +557,24 @@ def create_domain(request):
 @login_required
 def create_site(request):
     if request.method == 'GET':
-        return render(request, 'system/create_site.html')
+        server = Server.objects.all()
+        group = Group.objects.all()
+        template = Templates.objects.all()
+        today = datetime.today()
+        day = datetime.strftime(today, '%Y-%m-%d')
+        return render(request, 'system/create_site.html', {'server': server, 'group': group, 'template': template, 'day': day})
     elif request.method == 'POST':
         title = request.POST['title']
         url = request.POST['url']
-        japanese = request.POST['japanese']
+        japanese = None
+        if url != '':
+            japanese = 'http://' + url_pyu_quote('http://' + url).encode('utf8')
+        else:
+            japanese = request.POST['japanese']
+            japanese = japanese.encode('utf8')
+            url = 'http://' + url_idna_quote('http://' + japanese)
         group = request.POST['group']
+        server = request.POST['server']
         update_at = request.POST['update_at']
         template = request.POST['template']
         login_url = request.POST['login_url']
@@ -501,6 +586,7 @@ def create_site(request):
             url=url,
             japanese=japanese,
             group_name=group,
+            server=server,
             updated_date=update_at,
             template=template,
             login_url=login_url,
@@ -605,13 +691,26 @@ def setting_payment(request):
 
 @login_required
 def setting_domain(request):
-    return render(request, 'system/setting_domain.html')
+    if request.method == 'POST':
+        title = request.POST['title']
+        url = request.POST['url']
+        id = request.POST['id']
+        password = request.POST['pass']
+        obj = Setting_Domain(
+            domain_company=title,
+            login_url=url,
+            login_id=id,
+            login_pass=password,
+        )
+        obj.save()
+    data = Setting_Domain.objects.all()
+    return render(request, 'system/setting_domain.html', {'data': data})
 
 @login_required
 def setting_server(request):
     server = Setting_Server.objects.all()
-    return render(request, 'system/setting_server.html',{'server_company' : server_company, 'login_id' : login_id, 'login_url' : login_url, 'login_pass' : login_pass, 'nameserver1' : nameserver1, 'nameserver2' : nameserver2, 'nameserver3' : nameserver3, 'nameserver4' : nameserver4, 'nameserver5' : nameserver5})
-
+    print server
+    return render(request, 'system/setting_server.html',{'data': server})
 
 @login_required
 def create_setting_group(request):
@@ -835,7 +934,7 @@ def templates_edit(request):
         return redirect('system.views.setting_templates')
 
 @login_required
-def link_edit(request):
+def setting_link_edit(request):
     if request.method == "GET":
         link_id = request.GET['link_id']
         link_obj = get_exact_link(link_id)
@@ -844,13 +943,13 @@ def link_edit(request):
             link_test['group'] = link[1]
         data = {
             "link_id": link_id,
-            "name": link_test["link"]
+            "name": link_test["group"]
         }
         return render(request, 'system/edit_setting_link.html', data)
     elif request.method == "POST":
         link_id = request.POST['link_id']
         name = request.POST['link']
-        obj = Link.objects.get(id=link_id)
+        obj = Setting_Link.objects.get(id=link_id)
         obj.link = name
         obj.save()
         return redirect('system.views.setting_link')
@@ -879,28 +978,45 @@ def payment_edit(request):
 
 
 @login_required
-def server_edit(request):
+def setting_server_edit(request):
     if request.method == "GET":
         server_id = request.GET['server_id']
-        server_obj = get_exact_server(server_id)
-        server_a = {}
-        for server in server_obj:
-            server_a['server'] = server[1]
-        data = {
-            "server_id": server_id,
-            "name": server_a["server"]
-        }
-        return render(request, 'system/edit_setting_server.html', data)
+        server_obj = Setting_Server.objects.get(id=server_id)
+        return render(request, 'system/edit_setting_server.html', {'data': server_obj})
     elif request.method == "POST":
         server_id = request.POST['server_id']
-        name = request.POST['server']
         obj = Setting_Server.objects.get(id=server_id)
-        obj.server = name
+        obj.server_company = request.POST['server_company']
+        obj.login_url = request.POST['login_url']
+        obj.login_id = request.POST['login_id']
+        obj.login_pass = request.POST['login_pass']
+        obj.nameserver1 = request.POST['nameserver1']
+        obj.nameserver2 = request.POST['nameserver2']
+        obj.nameserver3 = request.POST['nameserver3']
+        obj.nameserver4 = request.POST['nameserver4']
+        obj.nameserver5 = request.POST['nameserver5']
         obj.save()
-        return redirect('system.views.setting_server')
+        return HttpResponseRedirect('/setting/server')
+
+def rank(request):
+    site_id = request.GET['site_id']
+    data = Keywords.objects.filter(site_id=site_id).all()
+    return render(request, 'system/rank.html', {'data': data, 'site_id': site_id})
 
 
-
-
-
-
+def create_keyword(request):
+    if request.method == 'GET':
+        site_id = request.GET['site_id']
+        return render(request, 'system/create_keyword.html', {'site_id': site_id})
+    elif request.method == 'POST':
+        site_id = request.POST['site_id']
+        keyword = request.POST['keyword']
+        created_date = datetime.now()
+        obj = Keywords(
+            site_id=int(site_id),
+            keyword=keyword,
+            created_date=created_date
+        )
+        obj.save()
+        redirect_url = '/keyword?site_id=' + str(site_id)
+        return HttpResponseRedirect(redirect_url)

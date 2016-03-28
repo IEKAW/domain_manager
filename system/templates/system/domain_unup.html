@@ -8,7 +8,17 @@
         <th style="width:30px;"><input type="checkbox" name="domain" id="all" value="all"/></th>
         <th>ドメイン名</th>
         <th>日本語</th>
-        <th>更新日<span class="glyphicon glyphicon-triangle-bottom" style="display:;"></span><span class="glyphicon glyphicon-triangle-top" style="display:none;"></span></th>
+        <th>更新日
+            {% if reverse == False %}
+            <a href="/domain/unupdate?reverse=True">
+                <span class="glyphicon glyphicon-triangle-bottom" style="display:;"></span>
+            </a>
+            {% else %}
+            <a href="/domain/unupdate?reverse=False">
+                <span class="glyphicon glyphicon-triangle-top" style="display:;"></span>
+            </a>
+            {% endif %}
+        </th>
         <th>ドメイン会社</th>
         <th>代表サイト</th>
         <th>更新</th>

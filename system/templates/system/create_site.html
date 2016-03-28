@@ -12,11 +12,25 @@
     <label for="japanese">日本語:</label>
     <input type="text" name="japanese" class="form-control" ><br/>
     <label for="group">グループ:</label>
-    <input type="text" name="group" class="form-control" ><br/>
+    <select name="group" class="form-control">
+        {% for r in group %}
+            <option value="{{ r.group }}">{{ r.group }}</option>
+        {% endfor %}
+    </select>
+    <label for="server">サーバー会社</label>
+        <select name="server" class="form-control">
+            {% for r in server %}
+                <option value="{{ r.server_company }}">{{ r.server_company }}</option>
+            {% endfor %}
+        </select>
     <label for="update_at">作成日:</label>
-    <input type="date" name="update_at" class="form-control"><br/>
+    <input type="date" name="update_at" class="form-control" value="{{ day }}"><br/>
     <label for="template">テンプレート:</label>
-    <input type="text" name="template" class="form-control" ><br/>
+    <select name="template" class="form-control">
+        {% for r in template %}
+            <option value="{{ r.templates }}">{{ r.templates }}</option>
+        {% endfor %}
+    </select>
     <label for="login_url">ログインURL:</label>
     <input type="text" name="login_url" class="form-control" ><br/>
     <label for="login_id">ログインID:</label>

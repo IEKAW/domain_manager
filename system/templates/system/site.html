@@ -9,7 +9,7 @@
 </form>
 <a class="btn btn-default pull-right" href="{% url 'system.views.create_site' %}">登録</a><br/><br/>
 
-<table class="table table-striped table-bordered table-hover">
+<table class="table table-bordered table-hover">
     <tr>
         <th>グループ
         <div class="btn-group">
@@ -34,7 +34,11 @@
         <td><a href="{% url 'system.views.site_detail' %}?site_id={{ raw.id }}">{{ raw.title }}</a></td>
         <td><a href="{{ raw.url }}">{{ raw.url }}</a></td>
         <td>{{ raw.japanese }}</td>
-        <td>{{ raw.server }}</td>
+        {% if raw.server_id == None %}
+            <td><a href="">{{ raw.server }}</a></td>
+        {% else %}
+            <td><a href="/server/detail?server_id={{ raw.server_id }}">{{ raw.server }}</a></td>
+        {% endif %}
     </tr>
     {% endfor %}
 </table>

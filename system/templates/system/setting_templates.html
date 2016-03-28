@@ -17,7 +17,7 @@
     </tr>
     {% for name in templates %}
     <tr>
-        <td>{{ name.tempaltes }}</td>
+        <td>{{ name.templates }}</td>
         <td><a class="btn btn-warning" href="{% url 'system.views.templates_edit' %}?templates_id={{ name.id }}">編集</a></td>
     </tr>
     {% endfor %}

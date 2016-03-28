@@ -4,20 +4,23 @@
 
 <h1>ドメイン一覧</h1>
 
-<form action="{% url 'system.views.setting_domain' %}" method="POST" >
-	{% csrf_token %}
-
 <a class="btn btn-default pull-right" href="{% url 'system.views.create_setting_domain' %}">新規追加</a><br/><br/>	
 
 <table class="table table-striped table-bordered table-hover">
 
-        <tr>
+    <tr>
         <th>ドメイン会社</th>
         <th>ログインURL</th>
         <th>ログインid</th>
         <th>ログインパスワード</th>
 	</tr>
-
-
+    {% for r in data %}
+    <tr>
+        <td>{{ r.domain_company }}</td>
+        <td>{{ r.login_url }}</td>
+        <td>{{ r.login_id }}</td>
+        <td>{{ r.login_pass }}</td>
+    </tr>
+    {% endfor %}
 </table>
  {% endblock %}

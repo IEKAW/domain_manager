@@ -3,34 +3,70 @@
 from django.db import connection
 
 
-def get_domain_info(search_index):
+def get_domain_info(search_index, reverse):
     if search_index is None:
-        sql = """
-            SELECT
-                *
-            FROM
-                system_domain
-        """
+        if reverse is True:
+            sql = """
+                SELECT
+                    *
+                FROM
+                    system_domain
+                ORDER BY
+                    updated_date
+            """
+        else:
+            sql = """
+                SELECT
+                    *
+                FROM
+                    system_domain
+                ORDER BY
+                    updated_date ASC
+            """
     else:
         search_index = '%' + search_index + '%'
-        sql = """
-            SELECT
-                *
-            FROM
-                system_domain
-            WHERE
-                domain_company
-            LIKE
-                '%s'
-            OR
-                domain_name
-            LIKE
-                '%s'
-            OR
-                japanese
-            LIKE
-                '%s'
-        """ % (search_index, search_index, search_index)
+        if reverse is True:
+            sql = """
+                SELECT
+                    *
+                FROM
+                    system_domain
+                WHERE
+                    domain_company
+                ORDER BY
+                    updated_date
+                LIKE
+                    '%s'
+                OR
+                    domain_name
+                LIKE
+                    '%s'
+                OR
+                    japanese
+                LIKE
+                    '%s'
+            """ % (search_index, search_index, search_index)
+        else:
+            sql = """
+                SELECT
+                    *
+                FROM
+                    system_domain
+                WHERE
+                    domain_company
+                ORDER BY
+                    updated_date dec
+                LIKE
+                    '%s'
+                OR
+                    domain_name
+                LIKE
+                    '%s'
+                OR
+                    japanese
+                LIKE
+                    '%s'
+            """ % (search_index, search_index, search_index)
     cursor = connection.cursor()
     cursor.execute(sql)
     for row in cursor.fetchall():
@@ -73,6 +109,8 @@ def get_site_info(search_index, is_all=True):
                 system_site
             WHERE
                 group_name
+            ORDER BY
+                updated_date
             LIKE
                 '%s'
         """ % (search_index)
@@ -93,6 +131,8 @@ def get_site_info(search_index, is_all=True):
                     system_site
                 WHERE
                     site_title
+                ORDER BY
+                    updated_date
                 LIKE
                     '%s'
                 OR
@@ -222,6 +262,93 @@ def raw_get_site_from_url(url):
         FROM
             system_site
     """
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    for row in cursor.fetchall():
+        yield row
+
+
+def get_exact_group(site_id):
+    sql = """
+        SELECT
+            *
+        FROM
+            system_group
+        WHERE
+            id = %s
+    """ % site_id
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    for row in cursor.fetchall():
+        yield row
+
+def get_exact_templates(site_id):
+    sql = """
+        SELECT
+            *
+        FROM
+            system_templates
+        WHERE
+            id = %s
+    """ % site_id
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    for row in cursor.fetchall():
+        yield row
+
+def get_exact_link(site_id):
+    sql = """
+        SELECT
+            *
+        FROM
+            system_setting_link
+        WHERE
+            id = %s
+    """ % site_id
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    for row in cursor.fetchall():
+        yield row
+
+def get_exact_payment(site_id):
+    sql = """
+        SELECT
+            *
+        FROM
+            system_payment
+        WHERE
+            id = %s
+    """ % site_id
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    for row in cursor.fetchall():
+        yield row
+
+
+def get_exact_server(site_id):
+    sql = """
+        SELECT
+            *
+        FROM
+            system_setting_server
+        WHERE
+            id = %s
+    """ % site_id
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    for row in cursor.fetchall():
+        yield row
+
+
+def get_link_info(site_id):
+    sql = """
+        SELECT
+            *
+        FROM
+            system_link
+        WHERE
+            from_id = %s
+    """ % site_id
     cursor = connection.cursor()
     cursor.execute(sql)
     for row in cursor.fetchall():

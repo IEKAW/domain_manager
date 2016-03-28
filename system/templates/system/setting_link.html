@@ -4,9 +4,6 @@
 
 <h1>リンク一覧</h1>
 
-<form action="{% url 'system.views.setting_link' %}" method="POST" >
-	{% csrf_token %}
-
 <a class="btn btn-default pull-right" href="{% url 'system.views.create_setting_link' %}">新規追加</a><br/><br/>	
 
 <table class="table table-striped table-bordered table-hover">
@@ -18,7 +15,7 @@
     {% for name in link %}
     <tr>
         <td>{{ name.link }}</td>
-        <td><a class="btn btn-warning" href="{% url 'system.views.link_edit' %}?link_id={{ name.id }}">編集</a></td>
+        <td><a class="btn btn-warning" href="{% url 'system.views.setting_link_edit' %}?link_id={{ name.id }}">編集</a></td>
     </tr>
     {% endfor %}
 

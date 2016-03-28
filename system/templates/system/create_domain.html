@@ -10,7 +10,11 @@
     <label for="japanese">日本語:</label>
     <input type="text" name="japanese" class="form-control" /><br/>
     <label for="company">ドメイン会社:</label>
-    <input type="text" name="company" class="form-control" ><br/>
+    <select name="company" class="form-control">
+        {% for r in company %}
+            <option value="{{ r.domain_company }}">{{ r.domain_company }}</option>
+        {% endfor %}
+    </select>
     <label for="update_at">更新日:</label>
     <input type="date" name="update_at" class="form-control" value="{{ next_year }}"><br/>
     <label for="update_method">自動更新</label>

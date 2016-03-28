@@ -1,0 +1,14 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>キーワード追加</h1>
+
+<form method="POST" action="{% url 'system.views.create_keyword' %}">
+    {% csrf_token %}
+    <input type="hidden" name="site_id" value="{{ site_id }}"/>
+    <label for="keyword">新規キーワード:</label></br>
+    <input class="form-control" type="text" name="keyword"/>
+    <input class="btn btn-default" type="submit" value="登録">
+</form>
+
+ {% endblock %}

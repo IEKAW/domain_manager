@@ -1,4 +1,4 @@
-<nav class="navbar navbar-default">
+<nav class="navbar navbar-inverse">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="/django.cgi">Domain Manager</a>
@@ -10,7 +10,7 @@
         <li><a href="{% url 'system.views.server' %}">サーバー管理</a></li>
         <li><a href="{% url 'system.views.site' %}">サイト管理</a></li>
         <li><a href="{% url 'system.views.domain_unup' %}">更新しないドメイン</a></li>
-        <li><a href="{% url 'system.views.server_unup' %}">更新しないサーバー</a></li>                
+        <li><a href="{% url 'system.views.server_unup' %}">更新しないサーバー</a></li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li><a href="{% url 'system.views.setting' %}">Settings</a></li>
