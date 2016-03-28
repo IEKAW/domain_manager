@@ -15,11 +15,11 @@
         <th>日本語</th>
         <th>更新日
             {% if reverse == False %}
-            <a href="/domain?search_index={{ search_index }}&reverse=True">
+            <a href="django.cgi/domain?search_index={{ search_index }}&reverse=True">
                 <span class="glyphicon glyphicon-triangle-bottom" style="display:;"></span>
             </a>
             {% else %}
-            <a href="/domain?search_index={{ search_index }}&reverse=False">
+            <a href="django.cgi/domain?search_index={{ search_index }}&reverse=False">
                 <span class="glyphicon glyphicon-triangle-top" style="display:;"></span>
             </a>
             {% endif %}
