@@ -658,6 +658,14 @@ def create_link(request):
             to_id=to_id
         )
         link_obj.save()
+        created_date = datetime.now()
+        comment = link_site + ' ' + url +'からリンクをもらう'
+        obj = SiteComment(
+            site_id=from_id,
+            comment=comment,
+            created_at = created_date
+        )
+        obj.save()
         url = reverse('link', kwargs={'site_id': from_id})
         return HttpResponseRedirect(url)
 
@@ -1016,6 +1024,13 @@ def create_keyword(request):
             site_id=int(site_id),
             keyword=keyword,
             created_date=created_date
+        )
+        obj.save()
+        comment = 'キーワード:' + keyword + 'を追加しました。'
+        obj = SiteComment(
+            site_id=site_id,
+            comment=comment,
+            created_at = created_date
         )
         obj.save()
         redirect_url = '/django.cgi/keyword?site_id=' + str(site_id)
