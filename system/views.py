@@ -659,7 +659,7 @@ def create_link(request):
         )
         link_obj.save()
         created_date = datetime.now()
-        comment = link_site + ' ' + url +'からリンクをもらう'
+        comment = link_site + ' ' + url + u'からリンクをもらう'
         obj = SiteComment(
             site_id=from_id,
             comment=comment,
