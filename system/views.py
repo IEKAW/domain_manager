@@ -1029,7 +1029,7 @@ def create_keyword(request):
         comment = 'キーワード:' + keyword + 'を追加しました。'
         obj = SiteComment(
             site_id=site_id,
-            comment=comment,
+            comment=comment.encode('utf8'),
             created_at = created_date
         )
         obj.save()
