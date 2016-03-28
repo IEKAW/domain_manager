@@ -1018,5 +1018,5 @@ def create_keyword(request):
             created_date=created_date
         )
         obj.save()
-        redirect_url = '/keyword?site_id=' + str(site_id)
+        redirect_url = '/django.cgi/keyword?site_id=' + str(site_id)
         return HttpResponseRedirect(redirect_url)
