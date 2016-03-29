@@ -82,17 +82,25 @@ def get_server_info(search_index):
                 system_server
         """
     else:
-        search_index = '%' + search_index + '%'
-        sql = """
-            SELECT
-                *
-            FROM
-                system_server
-            WHERE
-                server_company
-            LIKE
-                '%s'
-        """ % (search_index)
+        if search_index == 'all':
+            sql = """
+                SELECT
+                    *
+                FROM
+                    system_server
+            """
+        else:
+            search_index = '%' + search_index + '%'
+            sql = """
+                SELECT
+                    *
+                FROM
+                    system_server
+                WHERE
+                    server_company
+                LIKE
+                    '%s'
+            """ % (search_index)
     cursor = connection.cursor()
     cursor.execute(sql)
     for row in cursor.fetchall():

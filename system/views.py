@@ -226,7 +226,7 @@ def server_unup(request):
             tmp['updated_at'] = server_data[2]
             tmp['host'] = server_data[3]
             data.append(tmp)
-    result = {'data': data}
+    result = {'data': data, 'index':search_index}
     return render(request, 'system/server_unup.html', result)
 
 
