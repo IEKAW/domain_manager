@@ -12,6 +12,7 @@ from util.common import (
     url_idna_quote,
     url_pyu_quote
 )
+from datetime import datetime as dt
 
 from system.models import(
     Domain,
@@ -244,16 +245,37 @@ def domain_unup(request):
         except:
             reverse = False
     data = []
+    today = datetime.now()
     raw_domain_datas = get_domain_info(None, reverse)
     for domain_data in raw_domain_datas:
         if domain_data[6] == "not_update":
-            tmp = {}
-            tmp['id'] = domain_data[0]
-            tmp['domain'] = domain_data[1]
-            tmp['japanese'] = domain_data[2]
-            tmp['updated_at'] = domain_data[3]
-            tmp['company'] = domain_data[4]
-            data.append(tmp)
+            try:
+                tmp = {}
+                tmp['id'] = domain_data[0]
+                tmp['domain'] = domain_data[1]
+                tmp['japanese'] = domain_data[2]
+                tmp['updated_at'] = domain_data[3]
+                tmp['company'] = domain_data[4]
+                tmp['company_url'] = domain_data[5]
+                domaindetail = DomainDetail.objects.get(
+                        domain_id=domain_data[0],
+                        is_representative=True
+                )
+                tmp['representative'] = domaindetail.url
+                tmp['site_id'] = domaindetail.id
+                tmp['pass'] = (today > dt.strptime(dt.strftime(today, '%Y-%m-%d'), '%Y-%m-%d'))
+                data.append(tmp)
+            except:
+                tmp = {}
+                tmp['id'] = domain_data[0]
+                tmp['domain'] = domain_data[1]
+                tmp['japanese'] = domain_data[2]
+                tmp['updated_at'] = domain_data[3]
+                tmp['company'] = domain_data[4]
+                tmp['company_url'] = domain_data[5]
+                tmp['pass'] = (today < dt.strptime(dt.strftime(today, '%Y-%m-%d'), '%Y-%m-%d'))
+                tmp['representative'] = "not selected"
+                data.append(tmp)
     result = {'data': data, 'reverse': reverse}
     return render(request, 'system/domain_unup.html', result)
 

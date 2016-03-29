@@ -26,13 +26,21 @@
     {% for raw in data %}
     <tr>
         <td><input type="checkbox" name="record" value="{{ raw.id }}"></td>
-        <td>{{ raw.domain }}</td>
+        <td><a href="{% url 'system.views.domain_detail' %}?domain_id={{raw.id}}">{{ raw.domain }}</a></td>
         <td>{{ raw.japanese }}</td>
-        <td>{{ raw.updated_at }}</td>
-        <td>{{ raw.company }}</td>
-        <td>eeeee</td>
+        {% if raw.pass == True %}
+            <td class="active">{{ raw.updated_at }}</td>
+        {% else %}
+            <td>{{ raw.updated_at }}</td>
+        {% endif %}
+        <td><a href="http://{{ raw.company }}">{{ raw.company }}</a></td>
+        {% if raw.representative != 'not selected' %}
+            <td><a href="{% url 'system.views.site_detail' %}?site_id={{ raw.site_id }}">{{ raw.representative }}</a></td>
+        {% else %}
+            <td>{{ raw.representative }}</td>
+        {% endif %}
         <td>
-            <a href="/domain/update?domain_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>
+            <a href="/django.cgi/domain/update?domain_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>
             <form method="POST" action="{% url 'system.views.delete' %}">
                 {% csrf_token %}
                 <input type="hidden" name="kind" value="domain"/>

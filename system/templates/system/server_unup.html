@@ -23,13 +23,13 @@
         <th>更新</th>
     </tr>
     {% for raw in data %}
-    <tr>
+    <tr>{{ raw.pass }}
         <td><input type="checkbox" name="record" value="{{ raw.id }}"></td>
-        <td>{{ raw.company }}</td>
+        <td><a href="{% url 'system.views.server_detail' %}?server_id={{raw.id}}">{{ raw.company }}</a></td>
         <td>{{ raw.updated_at }}</td>
         <td>{{ raw.host }}</td>
         <td>
-            <a href="/server/update?server_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>
+            <a href="/django.cgi/server/update?server_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>
             <form method="POST" action="{% url 'system.views.delete' %}">
                 {% csrf_token %}
                 <input type="hidden" name="kind" value="server"/>
