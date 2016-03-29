@@ -765,7 +765,7 @@ def create_setting_server(request):
             nameserver5 = nameserver5,
         )
         server_obj.save()
-        return HttpResponseRedirect('django.cgi/setting/server')
+        return HttpResponseRedirect('/django.cgi/setting/server')
 
 
 @login_required
