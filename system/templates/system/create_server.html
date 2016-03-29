@@ -6,10 +6,11 @@
 <form action="{% url 'system.views.create_server' %}" method="POST" >
     {% csrf_token %}
     <label for="company">サーバー会社:</label>
-    <select name="company" class="form-control">
+    <select name="company" id="server_comp" class="form-control" onchange="dropsort()">
         {% for r in server %}
             <option value="{{ r.server_company }}">{{ r.server_company }}</option>
         {% endfor %}
+        <option value="new">新規登録</option>
     </select>
     <label for="host">FTP􏰌􏰍􏰎􏰍􏰏サーバー(ホスト名):</label>
     <input type="text" name="host" class="form-control" ><br/>

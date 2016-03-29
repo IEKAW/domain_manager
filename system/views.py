@@ -46,6 +46,8 @@ from system.aggregate import(
     get_exact_link,
     get_exact_templates,
     get_link_info,
+    get_domain_near_info,
+    get_server_near_info,
 )
 
 COLOR_LIST = [
@@ -59,10 +61,13 @@ COLOR_LIST = [
 @login_required
 def home(request):
     data = {'domain': [], 'server': []}
-    raw_domain_datas = get_domain_info(None, False)
+    today = datetime.today() + timedelta(weeks=4)
+    day = datetime.strftime(today, '%Y-%m-%d')
+    raw_domain_datas = get_domain_near_info(day)
     for domain_data in raw_domain_datas:
         try:
             tmp = {}
+            tmp['id'] = domain_data[0]
             tmp['domain'] = domain_data[1]
             tmp['japanese'] = domain_data[2]
             tmp['updated_at'] = domain_data[3]
@@ -75,15 +80,17 @@ def home(request):
             data['domain'].append(tmp)
         except:
             tmp = {}
+            tmp['id'] = domain_data[0]
             tmp['domain'] = domain_data[1]
             tmp['japanese'] = domain_data[2]
             tmp['updated_at'] = domain_data[3]
             tmp['company'] = domain_data[4]
             tmp['representative'] = "not selected"
             data['domain'].append(tmp)
-    raw_server_datas = get_server_info(None)
+    raw_server_datas = get_server_near_info(day)
     for server_data in raw_server_datas:
         tmp = {}
+        tmp['id'] = server_data[0]
         tmp['company'] = server_data[1]
         tmp['updated_at'] = server_data[2]
         tmp['host'] = server_data[3]
@@ -182,6 +189,7 @@ def domain(request):
                     is_representative=True
                 )
                 tmp['representative'] = domaindetail.url
+                tmp['site_id'] = domaindetail.id
                 data.append(tmp)
             except:
                 tmp = {}

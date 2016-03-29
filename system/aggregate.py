@@ -12,7 +12,7 @@ def get_domain_info(search_index, reverse):
                 FROM
                     system_domain
                 ORDER BY
-                    updated_date
+                    updated_date DESC
             """
         else:
             sql = """
@@ -21,7 +21,7 @@ def get_domain_info(search_index, reverse):
                 FROM
                     system_domain
                 ORDER BY
-                    updated_date DESC
+                    updated_date
             """
     else:
         search_index = '%' + search_index + '%'
@@ -34,7 +34,7 @@ def get_domain_info(search_index, reverse):
                 WHERE
                     domain_company
                 ORDER BY
-                    updated_date
+                    updated_date DESC
                 LIKE
                     '%s'
                 OR
@@ -55,7 +55,7 @@ def get_domain_info(search_index, reverse):
                 WHERE
                     domain_company
                 ORDER BY
-                    updated_date dec
+                    updated_date
                 LIKE
                     '%s'
                 OR
@@ -93,6 +93,38 @@ def get_server_info(search_index):
             LIKE
                 '%s'
         """ % (search_index)
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    for row in cursor.fetchall():
+        yield row
+
+
+def get_domain_near_info(day):
+    sql = """
+        SELECT
+            *
+        FROM
+            system_domain
+        WHERE
+            updated_date <= %s
+        ORDER BY
+            updated_date DESC
+    """ % day
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    for row in cursor.fetchall():
+        yield row
+
+
+def get_server_near_info(day):
+    sql = """
+        SELECT
+            *
+        FROM
+            system_server
+        WHERE
+            updated_date <= %s
+    """ % day
     cursor = connection.cursor()
     cursor.execute(sql)
     for row in cursor.fetchall():
