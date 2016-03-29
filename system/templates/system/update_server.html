@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %}
 {% block title %} Home {% endblock %}
 {% block content %}
-<h1>ドメイン更新ページ</h1>
+<h1>サーバー更新ページ</h1>
 <h2>{{ data.server }}</h2>
 
 <form action="{% url 'system.views.update_server' %}" method="POST">
