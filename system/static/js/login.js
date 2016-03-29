@@ -8,18 +8,21 @@ $('#all').click(function(){
 });
 
 // checkedになっている項目岳削除する
-function delete_data(kind){
+function delete_data(kind, id){
     delete_ids = [];
-    $('[name=record]:checked').each(function(){
-        delete_ids.push($(this).val());
-    });
+    if (id == null) {
+        $('[name=record]:checked').each(function () {
+            delete_ids.push($(this).val());
+        });
+    } else {
+        delete_ids.push(id);
+    }
     console.log(delete_ids);
     for (var i = delete_ids.length - 1; i >= 0; i--) {
         query_params = {
             'kind': kind,
             'id': delete_ids[i]
         };
-        console.log(location.host);
         if (location.host == 'mimimimim.sakura.ne.jp') {
             base_url = [location.protocol, '/', location.host, 'django.cgi', 'delete_all'].join('/');
         } else {
@@ -28,7 +31,11 @@ function delete_data(kind){
         url = [base_url, $.param(query_params)].join('?');
         communicate_http(url);
     };
-    location.href="./unupdate";
+    if (kind == 'domain' || kind == 'server') {
+        location.href = "./unupdate";
+    } else {
+        console.log("aaa");
+    }
 }
 
 

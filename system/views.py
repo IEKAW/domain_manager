@@ -759,7 +759,7 @@ def create_setting_group(request):
             group = group
         )
         group_obj.save()
-        return HttpResponseRedirect('/setting/group')
+        return HttpResponseRedirect('/django.cgi/setting/group')
 
 @login_required
 def create_setting_server(request):
@@ -805,7 +805,7 @@ def create_setting_payment(request):
             payment = payment
         )
         payment_obj.save()
-        return HttpResponseRedirect('/setting/payment')
+        return HttpResponseRedirect('/django.cgi/setting/payment')
 
 
 @login_required
@@ -818,7 +818,7 @@ def create_setting_templates(request):
             templates = templates
         )
         templates_obj.save()
-        return HttpResponseRedirect('/setting/templates')
+        return HttpResponseRedirect('/django.cgi/setting/templates')
 
 
 @login_required
@@ -831,7 +831,7 @@ def create_setting_link(request):
             link = link
         )
         link_obj.save()
-        return HttpResponseRedirect('/setting/link')
+        return HttpResponseRedirect('/django.cgi/setting/link')
 
 
 @login_required
@@ -843,6 +843,24 @@ def delete(request):
         return redirect('system.views.domain_unup')
     elif request.POST['kind'] == 'server':
         obj = Server.objects.filter(id=deleted_id)
+        obj.delete()
+    elif request.POST['kind'] == 'set_domain':
+        obj = Setting_Domain.objects.filter(id=deleted_id)
+        obj.delete()
+    elif request.POST['kind'] == 'set_group':
+        obj = Group.objects.filter(id=deleted_id)
+        obj.delete()
+    elif request.POST['kind'] == 'link':
+        obj = Link.objects.filter(id=deleted_id)
+        obj.delete()
+    elif request.POST['kind'] == 'payment':
+        obj = Payment.objects.filter(id=deleted_id)
+        obj.delete()
+    elif request.POST['kind'] == 'set_server':
+        obj = Setting_Server.objects.filter(id=deleted_id)
+        obj.delete()
+    elif request.POST['kind'] == 'template':
+        obj = Templates.objects.filter(id=deleted_id)
         obj.delete()
     return redirect('system.views.server_unup')
 
@@ -858,6 +876,24 @@ def delete_all(request):
         obj.delete()
     elif json_data['kind'] == 'server':
         obj = Server.objects.filter(id=json_data['id'])
+        obj.delete()
+    elif json_data['kind'] == 'set_domain':
+        obj = Setting_Domain.objects.filter(id=json_data['id'])
+        obj.delete()
+    elif json_data['kind'] == 'set_group':
+        obj = Group.objects.filter(id=json_data['id'])
+        obj.delete()
+    elif json_data['kind'] == 'link':
+        obj = Link.objects.filter(id=json_data['id'])
+        obj.delete()
+    elif json_data['kind'] == 'payment':
+        obj = Payment.objects.filter(id=json_data['id'])
+        obj.delete()
+    elif json_data['kind'] == 'set_server':
+        obj = Setting_Server.objects.filter(id=json_data['id'])
+        obj.delete()
+    elif json_data['kind'] == 'template':
+        obj = Templates.objects.filter(id=json_data['id'])
         obj.delete()
     return HttpResponse(json.dumps(json_data), content_type='application/json')
 
@@ -1064,3 +1100,30 @@ def create_keyword(request):
         obj.save()
         redirect_url = '/django.cgi/keyword?site_id=' + str(site_id)
         return HttpResponseRedirect(redirect_url)
+
+
+@login_required
+def domain_edit(request):
+    if request.method == "GET":
+        domain_id = request.GET['domain_id']
+        data = Setting_Domain.objects.get(id=domain_id)
+        r = {}
+        r['id'] = domain_id
+        r['domain_company'] = data.domain_company
+        r['login_id'] = data.login_id
+        r['login_url'] = data.login_url
+        r['login_pass'] = data.login_pass
+        return render(request, 'system/edit_setting_domain.html', r)
+    elif request.method == "POST":
+        group_id = request.POST['domain_id']
+        domain = request.POST['title']
+        login_url = request.POST['url']
+        login_id = request.POST['id']
+        login_pass = request.POST['pass']
+        obj = Setting_Domain.objects.get(id=group_id)
+        obj.domain_company = domain
+        obj.login_url = login_url
+        obj.login_id = login_id
+        obj.login_pass = login_pass
+        obj.save()
+        return redirect('system.views.setting_domain')

@@ -15,7 +15,8 @@
     {% for name in link %}
     <tr>
         <td>{{ name.link }}</td>
-        <td><a class="btn btn-warning" href="{% url 'system.views.setting_link_edit' %}?link_id={{ name.id }}">編集</a></td>
+        <td><a class="btn btn-warning" href="{% url 'system.views.setting_link_edit' %}?link_id={{ name.id }}">編集</a>
+        <button class="btn btn-danger" onclick="delete_data('link', {{ name.id }})">削除</button></td>
     </tr>
     {% endfor %}
 

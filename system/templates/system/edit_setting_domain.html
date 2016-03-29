@@ -1,0 +1,20 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>新規ドメイン編集</h1>
+
+<form method="POST" action="{% url 'system.views.domain_edit' %}">
+    {% csrf_token %}
+    <input type="hidden" name="domain_id" value="{{ id }}">
+    <label for="company">ドメイン会社:</label>
+    <input type="text" name="title" class="form-control" value="{{ domain_company }}" /><br/>
+    <label for="url">ログインURL:</label>
+    <input type="text" name="url" class="form-control" value="{{ login_url }}"><br/>
+    <label for="id">ログインID:</label>
+    <input type="text" name="id" class="form-control" value="{{ login_id }}" ><br/>
+    <label for="pass">ログインパスワード:</label>
+    <input type="text" name="pass" class="form-control" value="{{ login_pass }}" ><br/>
+    <input type="submit" value="追加" class="btn btn-default">
+</form>
+
+ {% endblock %}

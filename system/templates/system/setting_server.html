@@ -21,7 +21,7 @@
         </tr>
         <tr>
         {% for r in data %}
-        <tr>
+        <td>
                 <td>{{ r.server_company }}</td>
                 <td>{{ r.login_url }}</td>
                 <td>{{ r.login_id }}</td>
@@ -31,7 +31,8 @@
                 <td>{{ r.nameserver3 }}</td>
                 <td>{{ r.nameserver4 }}</td>
                 <td>{{ r.nameserver5 }}</td>
-                <td><a class="btn btn-warning" href="{% url 'system.views.setting_server_edit' %}?server_id={{ r.id }}">編集</a></td>
+                <td><a class="btn btn-warning" href="{% url 'system.views.setting_server_edit' %}?server_id={{ r.id }}">編集</a>
+        <button class="btn btn-danger" onclick="delete_data('set_server', {{ r.id }})">削除</button></td>
         </tr>
         {% endfor %}
 </table>

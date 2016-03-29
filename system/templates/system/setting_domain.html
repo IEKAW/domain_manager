@@ -2,7 +2,7 @@
 {% block title %} Home {% endblock %}
 {% block content %}
 
-<h1>ドメイン一覧</h1>
+<h1>ドメイン会社一覧</h1>
 
 <a class="btn btn-default pull-right" href="{% url 'system.views.create_setting_domain' %}">新規追加</a><br/><br/>	
 
@@ -11,15 +11,20 @@
     <tr>
         <th>ドメイン会社</th>
         <th>ログインURL</th>
-        <th>ログインid</th>
+        <th>ログインID</th>
         <th>ログインパスワード</th>
+        <th></th>
 	</tr>
     {% for r in data %}
     <tr>
         <td>{{ r.domain_company }}</td>
-        <td>{{ r.login_url }}</td>
+        <td><a href="{{ r.login_url }}">{{ r.login_url }}</a></td>
         <td>{{ r.login_id }}</td>
         <td>{{ r.login_pass }}</td>
+        <td>
+            <a href="{% url 'system.views.domain_edit' %}?domain_id={{ r.id }}" class="btn btn-default">編集</a>
+            <button onclick="delete_data('set_domain', {{ r.id }})" class="btn btn-danger">削除</button>
+        </td>
     </tr>
     {% endfor %}
 </table>

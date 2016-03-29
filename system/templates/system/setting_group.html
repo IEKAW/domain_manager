@@ -18,7 +18,8 @@
     {% for name in group %}
     <tr>
         <td>{{ name.group }}</td>
-        <td><a class="btn btn-warning" href="{% url 'system.views.group_edit' %}?group_id={{ name.id }}">編集</a></td>
+        <td><a class="btn btn-warning" href="{% url 'system.views.group_edit' %}?group_id={{ name.id }}">編集</a>
+        <button class="btn btn-danger" onclick="delete_data('set_group', {{ name.id }})">削除</button></td>
     </tr>
     {% endfor %}
 

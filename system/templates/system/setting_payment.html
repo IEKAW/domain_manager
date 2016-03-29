@@ -18,7 +18,8 @@
     {% for name in payment %}
     <tr>
         <td>{{ name.payment }}</td>
-        <td><a class="btn btn-warning" href="{% url 'system.views.payment_edit' %}?payment_id={{ name.id }}">編集</a></td>
+        <td><a class="btn btn-warning" href="{% url 'system.views.payment_edit' %}?payment_id={{ name.id }}">編集</a>
+        <button class="btn btn-danger" onclick="delete_data('payment', {{ name.id }})">削除</button></td>
     </tr>
     {% endfor %}
 

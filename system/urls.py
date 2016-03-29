@@ -43,7 +43,7 @@ urlpatterns = [
     url(r'^setting/templates/edit$', views.templates_edit),
     url(r'^setting/link/edit$', views.setting_link_edit),
     url(r'^setting/payment/edit$', views.payment_edit),
-    # url(r'^setting/domain/edit$', views.domain_edit),
+    url(r'^setting/domain/edit$', views.domain_edit),
     url(r'^setting/server/edit$', views.setting_server_edit),
     url(r'^keyword$', views.rank),
     url(r'^keyword/create$', views.create_keyword)
