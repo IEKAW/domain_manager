@@ -725,7 +725,6 @@ def setting_domain(request):
 @login_required
 def setting_server(request):
     server = Setting_Server.objects.all()
-    print server
     return render(request, 'system/setting_server.html',{'data': server})
 
 @login_required
