@@ -114,7 +114,7 @@ def get_domain_near_info(day):
         FROM
             system_domain
         WHERE
-            updated_date <= %s
+            updated_date <= '%s'
         ORDER BY
             updated_date DESC
     """ % day
@@ -131,7 +131,7 @@ def get_server_near_info(day):
         FROM
             system_server
         WHERE
-            updated_date <= %s
+            updated_date <= '%s'
     """ % day
     cursor = connection.cursor()
     cursor.execute(sql)
