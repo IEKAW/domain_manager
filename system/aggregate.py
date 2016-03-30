@@ -33,8 +33,6 @@ def get_domain_info(search_index, reverse):
                     system_domain
                 WHERE
                     domain_company
-                ORDER BY
-                    updated_date DESC
                 LIKE
                     '%s'
                 OR
@@ -45,6 +43,8 @@ def get_domain_info(search_index, reverse):
                     japanese
                 LIKE
                     '%s'
+                ORDER BY
+                    updated_date DESC
             """ % (search_index, search_index, search_index)
         else:
             sql = """
@@ -54,8 +54,6 @@ def get_domain_info(search_index, reverse):
                     system_domain
                 WHERE
                     domain_company
-                ORDER BY
-                    updated_date
                 LIKE
                     '%s'
                 OR
@@ -66,6 +64,8 @@ def get_domain_info(search_index, reverse):
                     japanese
                 LIKE
                     '%s'
+                ORDER BY
+                    updated_date
             """ % (search_index, search_index, search_index)
     cursor = connection.cursor()
     cursor.execute(sql)

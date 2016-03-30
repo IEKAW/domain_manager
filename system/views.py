@@ -180,6 +180,7 @@ def domain(request):
     search_index = None
     if request.method == 'POST':
         search_index = request.POST['search']
+        print search_index
     elif request.method == 'GET':
         try:
             if request.GET['search_index'] == 'None':
