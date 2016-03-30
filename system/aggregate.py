@@ -149,13 +149,13 @@ def get_site_info(search_index, is_all=True):
                 system_site
             WHERE
                 group_name
-            ORDER BY
-                updated_date
             LIKE
                 '%s'
+            ORDER BY
+                updated_date
         """ % (search_index)
     else:
-        if search_index is None:
+        if search_index is None or search_index == 'all':
             sql = """
                 SELECT
                     *
@@ -171,8 +171,6 @@ def get_site_info(search_index, is_all=True):
                     system_site
                 WHERE
                     site_title
-                ORDER BY
-                    updated_date
                 LIKE
                     '%s'
                 OR
@@ -191,6 +189,8 @@ def get_site_info(search_index, is_all=True):
                     server
                 LIKE
                     '%s'
+                ORDER BY
+                    updated_date
             """ % (
                 search_index,
                 search_index,

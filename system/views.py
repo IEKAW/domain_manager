@@ -59,6 +59,7 @@ COLOR_LIST = [
     'active'
 ]
 
+
 @login_required
 def home(request):
     data = {'domain': [], 'server': []}
@@ -66,36 +67,46 @@ def home(request):
     day = datetime.strftime(today, '%Y-%m-%d')
     raw_domain_datas = get_domain_near_info(day)
     for domain_data in raw_domain_datas:
-        try:
-            tmp = {}
-            tmp['id'] = domain_data[0]
-            tmp['domain'] = domain_data[1]
-            tmp['japanese'] = domain_data[2]
-            tmp['updated_at'] = domain_data[3]
-            tmp['company'] = domain_data[4]
-            domaindetail = DomainDetail.objects.get(
-                domain_id=domain_data[0],
-                is_representative=True
-            )
-            tmp['representative'] = domaindetail.url
-            data['domain'].append(tmp)
-        except:
-            tmp = {}
-            tmp['id'] = domain_data[0]
-            tmp['domain'] = domain_data[1]
-            tmp['japanese'] = domain_data[2]
-            tmp['updated_at'] = domain_data[3]
-            tmp['company'] = domain_data[4]
-            tmp['representative'] = "not selected"
-            data['domain'].append(tmp)
+        if domain_data[6] != "not_update":
+            try:
+                tmp = {}
+                tmp['id'] = domain_data[0]
+                tmp['domain'] = domain_data[1]
+                tmp['japanese'] = domain_data[2]
+                tmp['updated_at'] = domain_data[3]
+                tmp['company'] = domain_data[4]
+                setting_domain = Setting_Domain.objects.get(
+                    domain_company=domain_data[4]
+                )
+                tmp['company_url'] = setting_domain.login_url
+                domaindetail = DomainDetail.objects.get(
+                    domain_id=domain_data[0],
+                    is_representative=True
+                )
+                tmp['representative'] = domaindetail.url
+                data['domain'].append(tmp)
+            except:
+                tmp = {}
+                tmp['id'] = domain_data[0]
+                tmp['domain'] = domain_data[1]
+                tmp['japanese'] = domain_data[2]
+                tmp['updated_at'] = domain_data[3]
+                tmp['company'] = domain_data[4]
+                setting_domain = Setting_Domain.objects.get(
+                    domain_company=domain_data[4]
+                )
+                tmp['company_url'] = setting_domain.login_url
+                tmp['representative'] = "not selected"
+                data['domain'].append(tmp)
     raw_server_datas = get_server_near_info(day)
     for server_data in raw_server_datas:
-        tmp = {}
-        tmp['id'] = server_data[0]
-        tmp['company'] = server_data[1]
-        tmp['updated_at'] = server_data[2]
-        tmp['host'] = server_data[3]
-        data['server'].append(tmp)
+        if server_data[11] != "not_update":
+            tmp = {}
+            tmp['id'] = server_data[0]
+            tmp['company'] = server_data[1]
+            tmp['updated_at'] = server_data[2]
+            tmp['host'] = server_data[3]
+            data['server'].append(tmp)
     result = {'data': data}
     return render(request, 'system/index.html', result)
 
@@ -103,6 +114,7 @@ def home(request):
 @login_required
 def server(request):
     data = []
+    server = []
     search_index = None
     try:
         search_index = request.GET['search']
@@ -117,13 +129,19 @@ def server(request):
             tmp['updated_at'] = server_data[2]
             tmp['host'] = server_data[3]
             data.append(tmp)
-    result = {'data': data, 'method': 'server'}
+    raw_server = get_server_info(None)
+    for r in raw_server:
+        if server_data[11] != "not_update":
+            if r[1] not in server:
+                    server.append(r[1])
+    result = {'data': data, 'method': 'server', 'server': server}
     return render(request, 'system/server.html', result)
 
 
 @login_required
 def site(request):
     data = []
+    group = []
     search_index = None
     if request.method == 'POST':
         search_index = request.POST['search']
@@ -140,14 +158,19 @@ def site(request):
         tmp['group'] = site_data[1]
         tmp['japanese'] = site_data[4]
         tmp['server'] = site_data[5]
-        tmp['server_id'] = None
+        tmp['server_id'] = -1
         try:
             server_id = Server.objects.get(server_company=site_data[5])
-            tmp['server_id'] = server_id['id']
-        except:
+            tmp['server_id'] = server_id.id
+        except: 
             pass
         data.append(tmp)
-    result = {'data': data, 'method': 'site'}
+    groups = Group.objects.all()
+    for raw in groups:
+        if raw.group not in group:
+            group.append(raw.group)
+    print data
+    result = {'data': data, 'method': 'site', 'group': group}
     return render(request, 'system/site.html', result)
 
 
@@ -184,13 +207,20 @@ def domain(request):
                 tmp['japanese'] = domain_data[2]
                 tmp['updated_at'] = domain_data[3]
                 tmp['company'] = domain_data[4]
-                tmp['company_url'] = domain_data[5]
+                setting_domain = Setting_Domain.objects.get(
+                    domain_company=domain_data[4]
+                )
+                tmp['company_url'] = setting_domain.login_url
                 domaindetail = DomainDetail.objects.get(
                     domain_id=domain_data[0],
                     is_representative=True
                 )
                 tmp['representative'] = domaindetail.url
-                tmp['site_id'] = domaindetail.id
+                site = Site.objects.get(
+                    url=domaindetail.url,
+                    site_title=domaindetail.title
+                )
+                tmp['site_id'] = site.id
                 data.append(tmp)
             except:
                 tmp = {}
@@ -199,7 +229,10 @@ def domain(request):
                 tmp['japanese'] = domain_data[2]
                 tmp['updated_at'] = domain_data[3]
                 tmp['company'] = domain_data[4]
-                tmp['company_url'] = domain_data[5]
+                setting_domain = Setting_Domain.objects.get(
+                    domain_company=domain_data[4]
+                )
+                tmp['company_url'] = setting_domain.login_url
                 tmp['representative'] = "not selected"
                 data.append(tmp)
     result = {'data': data, 'method': 'domain', 'search_index': search_index, 'reverse': reverse}
@@ -212,6 +245,8 @@ def server_unup(request):
         update_id = request.POST['id']
         Server.objects.filter(id=update_id).update(update_method="not_update")
     data = []
+    server = []
+    today = datetime.now()
     search_index = None
     try:
         search_index = request.GET['search']
@@ -225,8 +260,17 @@ def server_unup(request):
             tmp['company'] = server_data[1]
             tmp['updated_at'] = server_data[2]
             tmp['host'] = server_data[3]
+            if (today > dt.strptime(dt.strftime(server_data[2], '%Y-%m-%d'), '%Y-%m-%d')) == True:
+                tmp['pass'] = 1
+            else:
+                tmp['pass'] = 0
             data.append(tmp)
-    result = {'data': data, 'index':search_index}
+    raw_server = get_server_info(None)
+    for r in raw_server:
+        if server_data[11] == "not_update":
+            if r[1] not in server:
+                    server.append(r[1])
+    result = {'data': data, 'index': search_index, 'server': server}
     return render(request, 'system/server_unup.html', result)
 
 
@@ -256,14 +300,22 @@ def domain_unup(request):
                 tmp['japanese'] = domain_data[2]
                 tmp['updated_at'] = domain_data[3]
                 tmp['company'] = domain_data[4]
-                tmp['company_url'] = domain_data[5]
+                setting_domain = Setting_Domain.objects.get(
+                    domain_company=domain_data[4]
+                )
+                tmp['company_url'] = setting_domain.login_url
                 domaindetail = DomainDetail.objects.get(
-                        domain_id=domain_data[0],
-                        is_representative=True
+                    domain_id=domain_data[0],
+                    is_representative=True
                 )
                 tmp['representative'] = domaindetail.url
                 tmp['site_id'] = domaindetail.id
-                tmp['pass'] = (today > dt.strptime(dt.strftime(today, '%Y-%m-%d'), '%Y-%m-%d'))
+                if (today > dt.strptime(dt.strftime(domain_data[3], '%Y-%m-%d'), '%Y-%m-%d')) == True:
+                    tmp['pass'] = 1
+                    print "aaaa"
+                else:
+                    tmp['pass'] = 0
+                    print "bbbb"
                 data.append(tmp)
             except:
                 tmp = {}
@@ -272,8 +324,14 @@ def domain_unup(request):
                 tmp['japanese'] = domain_data[2]
                 tmp['updated_at'] = domain_data[3]
                 tmp['company'] = domain_data[4]
-                tmp['company_url'] = domain_data[5]
-                tmp['pass'] = (today < dt.strptime(dt.strftime(today, '%Y-%m-%d'), '%Y-%m-%d'))
+                setting_domain = Setting_Domain.objects.get(
+                    domain_company=domain_data[4]
+                )
+                tmp['company_url'] = setting_domain.login_url
+                if (today > dt.strptime(dt.strftime(domain_data[3], '%Y-%m-%d'), '%Y-%m-%d')) == True:
+                    tmp['pass'] = 1
+                else:
+                    tmp['pass'] = 0
                 tmp['representative'] = "not selected"
                 data.append(tmp)
     result = {'data': data, 'reverse': reverse}
@@ -284,12 +342,15 @@ def domain_unup(request):
 def domain_detail(request):
     if request.method == 'POST':
         domain_id = request.POST['domain_id']
-        representative = DomainDetail.objects.get(
-            domain_id=domain_id,
-            is_representative=True
-        )
-        representative.is_representative = False
-        representative.save()
+        try:
+            representative = DomainDetail.objects.get(
+                domain_id=domain_id,
+                is_representative=True
+            )
+            representative.is_representative = False
+            representative.save()
+        except:
+            pass
         detail_id = request.POST['id']
         domain_obj = DomainDetail.objects.get(
             id=detail_id
@@ -301,8 +362,14 @@ def domain_detail(request):
         details = get_domain_detail(domain_id)
         for raw in domain:
             data['domain'] = raw[1]
+            data['japanese'] = raw[2]
             data['updated_at'] = raw[3]
             data['company'] = raw[4]
+            setting_domain = Setting_Domain.objects.get(
+                domain_company=raw[4]
+            )
+            data['company_url'] = setting_domain.login_url
+            data['server'] = raw[7]
         for detail in details:
             tmp = {}
             tmp['id'] = detail[0]
@@ -311,7 +378,7 @@ def domain_detail(request):
             tmp['title'] = detail[3]
             tmp['is_represetative'] = detail[4]
             data['detail'].append(tmp)
-        result = {'data': data}
+        result = {'data': data, 'id': domain_id}
         return render(request, 'system/domain_detail.html', result)
     elif request.method == 'GET':
         data = {'detail': []}
@@ -319,9 +386,15 @@ def domain_detail(request):
         domain = get_special_domain(domain_id)
         details = get_domain_detail(domain_id)
         for raw in domain:
-            data['domain'] = raw[1]
             data['updated_at'] = raw[3]
             data['company'] = raw[4]
+            setting_domain = Setting_Domain.objects.get(
+                domain_company=raw[4]
+            )
+            data['domain'] = raw[1]
+            data['japanese'] = raw[2]
+            data['company_url'] = setting_domain.login_url
+            data['server'] = raw[7]
         for detail in details:
             tmp = {}
             tmp['id'] = detail[0]
@@ -330,7 +403,7 @@ def domain_detail(request):
             tmp['title'] = detail[3]
             tmp['is_represetative'] = detail[4]
             data['detail'].append(tmp)
-        result = {'data': data, 'method': 'domain'}
+        result = {'data': data, 'method': 'domain', 'id': domain_id}
         return render(request, 'system/domain_detail.html', result)
 
 
@@ -341,16 +414,25 @@ def server_detail(request):
     server = get_special_server(server_id)
     for raw in server:
         data['server'] = raw[1]
-        data['update_at'] = raw[2]
+        obj = Setting_Server.objects.get(
+            server_company=raw[1]
+        )
+        data['url'] = obj.login_url
+        data['update_at'] = raw[1]
         data['host'] = raw[3]
-        data['username'] = raw[4]
+        data['username'] = raw[8]
         data['ftp_pass'] = raw[5]
-        data['db_pass'] = raw[6]
-        data['payment'] = raw[7]
-        data['remarks'] = raw[8]
-        data['login_id'] = raw[9]
-        data['login_pass'] = raw[10]
-    result = {'data': data, 'method': 'server'}
+        data['db_pass'] = raw[4]
+        data['payment'] = raw[6]
+        data['remarks'] = raw[7]
+        data['login_id'] = obj.login_id
+        data['login_pass'] = obj.login_pass
+        data['nameserver1'] = obj.nameserver1
+        data['nameserver2'] = obj.nameserver2
+        data['nameserver3'] = obj.nameserver3
+        data['nameserver4'] = obj.nameserver4
+        data['nameserver5'] = obj.nameserver5
+    result = {'data': data, 'method': 'server', 'server_id': server_id}
     return render(request, 'system/server_detail.html', result)
 
 
@@ -560,7 +642,8 @@ def create_domain(request):
         next_year = datetime.today() + timedelta(days=365)
         day = datetime.strftime(next_year, '%Y-%m-%d')
         company = Setting_Domain.objects.all()
-        return render(request, 'system/create_domain.html', {"next_year": day, "company": company})
+        server = Setting_Server.objects.all()
+        return render(request, 'system/create_domain.html', {"next_year": day, "company": company, 'server': server})
     elif request.method == 'POST':
         domain = request.POST['domain']
         japanese = None
@@ -573,12 +656,14 @@ def create_domain(request):
         company = request.POST['company']
         update_at = request.POST['update_at']
         update_method = request.POST['update_method']
+        server = request.POST['server']
         domain_obj = Domain(
             domain_name=domain,
             japanese=japanese,
             domain_company=company,
             updated_date=update_at,
-            update_method=update_method
+            update_method=update_method,
+            server_company=server
         )
         domain_obj.save()
         return HttpResponseRedirect('/django.cgi/domain')
@@ -598,38 +683,25 @@ def create_site(request):
         url = request.POST['url']
         japanese = None
         if url != '':
-            japanese = 'http://' + url_pyu_quote('http://' + url).encode('utf8')
+            japanese = url_pyu_quote('http://' + url).encode('utf8')
         else:
             japanese = request.POST['japanese']
             japanese = japanese.encode('utf8')
             url = 'http://' + url_idna_quote('http://' + japanese)
         group = request.POST['group']
-        server = request.POST['server']
         update_at = request.POST['update_at']
         template = request.POST['template']
         login_url = request.POST['login_url']
         login_id = request.POST['login_id']
         login_pass = request.POST['login_pass']
         remarks = request.POST['remarks']
-        site_obj = Site(
-            site_title=title,
-            url=url,
-            japanese=japanese,
-            group_name=group,
-            server=server,
-            updated_date=update_at,
-            template=template,
-            login_url=login_url,
-            login_id=login_id,
-            login_pass=login_pass,
-            remarks=remarks
-        )
-        site_obj.save()
         try:
             domain_name = url.split('/')[2]
             domain = Domain.objects.get(
                 domain_name=domain_name
             )
+            server = domain.server_company
+            print server
             domain_detail = DomainDetail(
                 domain_id=domain.id,
                 url=url,
@@ -637,6 +709,20 @@ def create_site(request):
                 is_representative=False
             )
             domain_detail.save()
+            site_obj = Site(
+                site_title=title,
+                url=url,
+                japanese=japanese,
+                group_name=group,
+                server=server,
+                updated_date=update_at,
+                template=template,
+                login_url=login_url,
+                login_id=login_id,
+                login_pass=login_pass,
+                remarks=remarks
+            )
+            site_obj.save()
         except:
             return redirect(reverse('system.views.domain_warning'))
         return HttpResponseRedirect('/django.cgi/site')
@@ -884,7 +970,7 @@ def delete_all(request):
         obj = Group.objects.filter(id=json_data['id'])
         obj.delete()
     elif json_data['kind'] == 'link':
-        obj = Link.objects.filter(id=json_data['id'])
+        obj = Setting_Link.objects.filter(id=json_data['id'])
         obj.delete()
     elif json_data['kind'] == 'payment':
         obj = Payment.objects.filter(id=json_data['id'])
@@ -1006,6 +1092,7 @@ def templates_edit(request):
         obj.save()
         return redirect('system.views.setting_templates')
 
+
 @login_required
 def setting_link_edit(request):
     if request.method == "GET":
@@ -1069,7 +1156,8 @@ def setting_server_edit(request):
         obj.nameserver4 = request.POST['nameserver4']
         obj.nameserver5 = request.POST['nameserver5']
         obj.save()
-        return HttpResponseRedirect('/setting/server')
+        return HttpResponseRedirect('/django.cgi/setting/server')
+
 
 def rank(request):
     site_id = request.GET['site_id']
@@ -1095,7 +1183,7 @@ def create_keyword(request):
         obj = SiteComment(
             site_id=site_id,
             comment=comment,
-            created_at = created_date
+            created_at=created_date
         )
         obj.save()
         redirect_url = '/django.cgi/keyword?site_id=' + str(site_id)
@@ -1127,3 +1215,76 @@ def domain_edit(request):
         obj.login_pass = login_pass
         obj.save()
         return redirect('system.views.setting_domain')
+
+
+@login_required
+def updomain(request):
+    if request.method == 'GET':
+        domain_id = request.GET['domain_id']
+        domain = Domain.objects.get(id=domain_id)
+        domain_day = domain.updated_date
+        year_int = domain_day.year + 1
+        year = '%d' % year_int
+        if domain_day.month < 10:
+            month = '0%d' % domain_day.month
+        else:
+            month = '%d' % domain_day.month
+        if domain_day.day < 10:
+            day = '0%d' % domain_day.day
+        else:
+            day = '%d' % domain_day.day
+        update_date = year + '-' + month + '-' + day
+        return render(request, 'system/updomain.html', {'data': domain, 'date': update_date})
+    elif request.method == 'POST':
+        domain_id = request.POST['id']
+        update_at = request.POST['update_at']
+        server = request.POST['server']
+        Domain.objects.filter(
+            id=domain_id
+        ).update(updated_date=update_at, server_company=server)
+        redirect_url = '/django.cgi/domain/detail?domain_id=' + str(domain_id)
+        return HttpResponseRedirect(redirect_url)
+
+
+@login_required
+def upserver(request):
+    if request.method == 'GET':
+        server_id = request.GET['server_id']
+        server = Server.objects.get(id=server_id)
+        setserver = Setting_Server.objects.get(server_company=server.server_company)
+        server_day = server.updated_date
+        year_int = server_day.year + 1
+        year = '%d' % year_int
+        if server_day.month < 10:
+            month = '0%d' % server_day.month
+        else:
+            month = '%d' % server_day.month
+        if server_day.day < 10:
+            day = '0%d' % server_day.day
+        else:
+            day = '%d' % server_day.day
+        update_date = year + '-' + month + '-' + day
+        pay = Payment.objects.all()
+        return render(request, 'system/upserver.html', {'data': server, 'set': setserver,'date': update_date, 'pay': pay, 'server_id': server_id})
+    elif request.method == 'POST':
+        server_id = request.POST['server_id']
+        login_id = request.POST['login_id']
+        login_pass = request.POST['login_pass']
+        account = request.POST['account']
+        ftp_pass = request.POST['ftp_pass']
+        db_pass = request.POST['db_pass']
+        update_at = request.POST['update_at']
+        pay = request.POST['pay']
+        remarks = request.POST['remark']
+        obj = Server.objects.get(id=server_id)
+        obj.login_id = login_id
+        obj.login_pass = login_pass
+        obj.username = account
+        obj.ftp_pass = ftp_pass
+        obj.db_pass = db_pass
+        obj.updated_date = update_at
+        obj.payment = pay
+        obj.remarks = remarks
+        obj.save()
+        redirect_url = '/django.cgi/server/detail?server_id=' + str(server_id)
+        return HttpResponseRedirect(redirect_url)

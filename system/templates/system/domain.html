@@ -33,7 +33,7 @@
         <td><a href="{% url 'system.views.domain_detail' %}?domain_id={{raw.id}}">{{ raw.domain }}</a></td>
         <td>{{ raw.japanese }}</td>
         <td>{{ raw.updated_at }}</td>
-        <td><a href="http://{{ raw.company }}">{{ raw.company }}</a></td>
+        <td><a href="{{ raw.company_url }}">{{ raw.company }}</a></td>
         {% if raw.representative != 'not selected' %}
             <td><a href="{% url 'system.views.site_detail' %}?site_id={{ raw.site_id }}">{{ raw.representative }}</a></td>
         {% else %}

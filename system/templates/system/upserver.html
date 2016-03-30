@@ -1,0 +1,39 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>サーバー編集</h1>
+
+<form action="{% url 'system.views.upserver' %}" method="POST" >
+    {% csrf_token %}
+    <input type="hidden" name="server_id" value="{{ server_id }}" />
+    <label for="host">FTPサーバー(ホスト名)</label>
+    <input type="text" name="host" class="form-control" value="{{ data.host }}" ><br/>
+    <label for="id">ログインID:</label>
+    <input type="text" name="login_id" class="form-control" value="{{ set.login_id }}" ><br/>
+    <label for="pass">ログインパスワード:</label>
+    <input type="text" name="login_pass" class="form-control" value="{{ set.login_pass }}"><br/>
+    <label for="account">ユーザー名(アカウント名):</label>
+    <input type="text" name="account" class="form-control" value="{{ data.username }}" ><br/>
+    <label for="ftp_pass">FTPパスワード:</label>
+    <input type="text" name="ftp_pass" class="form-control" value="{{ data.ftp_pass }}" ><br/>
+    <label for="db_pass">データベースパスワード:</label>
+    <input type="text" name="db_pass" class="form-control" value="{{data.db_pass}}" ><br/>
+    <label for="update_at">更新日:</label>
+    <input type="date" name="update_at" class="form-control" value="{{ date }}"><br/>
+    <label for="pay">支払い方法:</label>
+    <select name="pay" class="form-control">
+        {% for r in pay %}
+            {% if r.payment == data.payment %}
+            <option value="{{ r.payment }}" selected="">{{ r.payment }}</option>
+            } 
+            {% else %}
+            <option value="{{ r.payment }}">{{ r.payment }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+    <label for="remark">備考:</label>
+    <input type="text" name="remark" class="form-control" value="{{ data.remarks }}" ><br/>
+    <input type="submit" value="登録" class="btn btn-default">
+</form>
+
+ {% endblock %}

@@ -11,8 +11,9 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-                {% for raw in data %}
-                    <li><a href="{% url 'system.views.server' %}?search={{ raw.company }}">{{ raw.company }}</a></li>
+                <li><a href="{% url 'system.views.server' %}?search=all">全表示</a></li>
+                {% for raw in server %}
+                    <li><a href="{% url 'system.views.server' %}?search={{ raw }}">{{ raw }}</a></li>
                 {% endfor %}
             </ul>
         </div>

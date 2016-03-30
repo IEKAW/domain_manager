@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %}
 {% block title %} Home {% endblock %}
 {% block content %}
-<h1>{{ data.domain }}</h1><br/>
+<h1>{{ data.domain }} / {{data.japanese}}(日本語ドメイン)</h1><br/>
 
 <div class="col-md-6">
 <table class="table table-bordered table-hover" style="background-color: white" border="1">
@@ -12,10 +12,10 @@
     </tr>
     {% for detail in data.detail %}
     <tr>
-        <td>{{ detail.url }}</td>
+        <td><a href="{{ detail.url }}">{{ detail.url }}</a></td>
         <td>{{ detail.title }}</td>
         {% if detail.is_represetative == 1 %}
-            <td>{{ detail.is_represetative }}</td>
+            <td>✔︎</td>
         {% else %}
             <form action="{% url 'system.views.domain_detail' %}" method="POST">
                 {% csrf_token %}
@@ -27,12 +27,16 @@
     </tr>
     {% endfor %}
 </table>
+<a class="btn btn-default" href="{% url 'system.views.create_site' %}">サイト追加</a>
 </div>
 
 <div class="col-md-5 col-md-offset-1">
 <h2>更新日</h2><br/>
 <p>{{ data.updated_at }}</p>
 <h2>ドメイン会社</h2><br/>
-<p>{{ data.company }}</p>
+<p><a href="{{ data.company_url }}">{{ data.company }}</a></p>
+<h2>サーバー</h2><br/>
+<p>{{ data.server }}</p>
+<a class="btn btn-default" href="{% url 'system.views.updomain' %}?domain_id={{ id }}">編集</a>
 </div>
  {% endblock %}

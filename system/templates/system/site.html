@@ -17,8 +17,9 @@
                 <span class="caret"></span>
             </button>
             <ul class="dropdown-menu" role="menu">
-                {% for raw in data %}
-                    <li><a href="{% url 'system.views.site' %}?search={{ raw.group }}">{{ raw.group }}</a></li>
+                <li><a href="{% url 'system.views.site' %}?search=">全表示</a></li>
+                {% for raw in group %}
+                    <li><a href="{% url 'system.views.site' %}?search={{ raw }}">{{ raw }}</a></li>
                 {% endfor %}
             </ul>
         </div>
@@ -34,8 +35,8 @@
         <td><a href="{% url 'system.views.site_detail' %}?site_id={{ raw.id }}">{{ raw.title }}</a></td>
         <td><a href="{{ raw.url }}">{{ raw.url }}</a></td>
         <td>{{ raw.japanese }}</td>
-        {% if raw.server_id == None %}
-            <td><a href="">{{ raw.server }}</a></td>
+        {% if raw.server_id == -1 %}
+            <td>{{ raw.server }}</td>
         {% else %}
             <td><a href="/server/detail?server_id={{ raw.server_id }}">{{ raw.server }}</a></td>
         {% endif %}

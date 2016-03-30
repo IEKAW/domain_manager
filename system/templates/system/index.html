@@ -19,7 +19,7 @@
         <td><a href="{% url 'system.views.domain_detail' %}?domain_id={{domain.id}}">{{ domain.domain }}</a></td>
         <td>{{ domain.japanese }}</td>
         <td>{{ domain.updated_at }}</td>
-        <td><a href="http://{{ domain.company }}">{{ domain.company }}</a></td>
+        <td><a href="{{ domain.company_url }}">{{ domain.company }}</a></td>
         {% if domain.representative != 'not selected' %}
             <td><a href="{{ domain.representative }}">{{ domain.representative }}</a></td>
         {% else %}

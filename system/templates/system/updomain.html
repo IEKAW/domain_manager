@@ -1,0 +1,22 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>編集ページ</h1>
+
+<form action="{% url 'system.views.updomain' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" value="{{ data.id }}" name="id"/>
+    <table class="table-striped table-bordered table-hover">
+        <tr>
+            <td>更新日</td>
+            <td><input type="date" class="form-control" name="update_at" value="{{ date }}" /></td>
+        </tr>
+        <tr>
+            <td>サーバー</td>
+            <td><input type="text" class="form-control" name="server" value="{{ data.server }}" /></td>
+        </tr>
+    </table><br/>
+    <input type="submit" value="更新" class="btn btn-info" />
+    <a href="/domain/detail?domain_id={{ data.id }}" class="btn btn-warning">キャンセル</a>
+</form>
+ {% endblock %}

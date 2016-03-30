@@ -46,5 +46,7 @@ urlpatterns = [
     url(r'^setting/domain/edit$', views.domain_edit),
     url(r'^setting/server/edit$', views.setting_server_edit),
     url(r'^keyword$', views.rank),
-    url(r'^keyword/create$', views.create_keyword)
+    url(r'^keyword/create$', views.create_keyword),
+    url(r'^updomain$', views.updomain),
+    url(r'^upserver$', views.upserver),
 ]

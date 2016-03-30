@@ -3,7 +3,7 @@
 {% block content %}
 <h1>更新しないドメイン</h1>
 
-<table class="table table-striped table-bordered table-hover">
+<table class="table table-bordered table-hover">
     <tr>
         <th style="width:30px;"><input type="checkbox" name="domain" id="all" value="all"/></th>
         <th>ドメイン名</th>
@@ -28,12 +28,12 @@
         <td><input type="checkbox" name="record" value="{{ raw.id }}"></td>
         <td><a href="{% url 'system.views.domain_detail' %}?domain_id={{raw.id}}">{{ raw.domain }}</a></td>
         <td>{{ raw.japanese }}</td>
-        {% if raw.pass == True %}
-            <td class="active">{{ raw.updated_at }}</td>
+        {% if raw.pass == 1 %}
+            <td class="danger">{{ raw.updated_at }}</td>
         {% else %}
             <td>{{ raw.updated_at }}</td>
         {% endif %}
-        <td><a href="http://{{ raw.company }}">{{ raw.company }}</a></td>
+        <td><a href="{{ raw.company_url }}">{{ raw.company }}</a></td>
         {% if raw.representative != 'not selected' %}
             <td><a href="{% url 'system.views.site_detail' %}?site_id={{ raw.site_id }}">{{ raw.representative }}</a></td>
         {% else %}

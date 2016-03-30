@@ -22,27 +22,13 @@
         <option value="auto">自動</option>
         <option value="hand">手動</option>
     </select>
-    <h2>サーバー詳細</h2>
     <label for="company">サーバー会社:</label>
-    <input type="text" name="server_company" class="form-control" /><br/>
-    <label for="host">FTP􏰌􏰍􏰎􏰍􏰏サーバー(ホスト名):</label>
-    <input type="text" name="host" class="form-control" ><br/>
-    <label for="id">ログインID:</label>
-    <input type="text" name="id" class="form-control" ><br/>
-    <label for="pass">ログインパスワード:</label>
-    <input type="text" name="pass" class="form-control" ><br/>
-    <label for="account">ユーザー名(アカウント名):</label>
-    <input type="text" name="account" class="form-control" ><br/>
-    <label for="ftp_pass">FTPパスワード:</label>
-    <input type="text" name="ftp_pass" class="form-control" ><br/>
-    <label for="db_pass">データベースパスワード:</label>
-    <input type="text" name="db_pass" class="form-control" ><br/>
-    <label for="update_at">更新日:</label>
-    <input type="date" name="update_at" class="form-control" value="{{ next_year }}"><br/>
-    <label for="pay">支払い方法:</label>
-    <input type="text" name="pay" class="form-control" ><br/>
-    <label for="remark">備考:</label>
-    <input type="text" name="remark" class="form-control" ><br/>
+    <select name="server" id="server_comp" class="form-control" onchange="dropsort()">
+        {% for r in server %}
+            <option value="{{ r.server_company }}">{{ r.server_company }}</option>
+        {% endfor %}
+        <option value="new">新規登録</option>
+    </select>
     <input type="submit" value="登録" class="btn btn-default">
 </form>
 

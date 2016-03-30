@@ -10,6 +10,7 @@ class Domain(models.Model):
     updated_date = models.DateField()
     domain_company = models.CharField(max_length=255)
     domain_company_url = models.CharField(max_length=255, null=True)
+    server_company = models.CharField(max_length=255, null=True)
     update_method = models.CharField(max_length=255, null=True)
 
 
@@ -104,6 +105,7 @@ class Setting_Domain(models.Model):
     login_url = models.CharField(max_length=255)
     login_id = models.CharField(max_length=255, null=True)
     login_pass = models.CharField(max_length=255, null=True)
+
 
 class Keywords(models.Model):
     keyword = models.CharField(max_length=255)
