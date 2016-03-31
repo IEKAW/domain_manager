@@ -3,3 +3,4 @@ function dropsort() {
         location.href = 'http://mimimimim.sakura.ne.jp/django.cgi/setting/server/create'
     }
 }
+

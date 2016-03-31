@@ -45,11 +45,16 @@ function get_site(){
     query_params = {
         'url': url
     };
-    base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
+    id = $('select[name=link_url] option:selected').attr('id');
+    base_url = [location.protocol, '/', location.host, "url_site.json"].join('/');
+    // base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
     http_url = [base_url, $.param(query_params)].join('?');
-    sites = sync_communicate_http(http_url);
-    console.log(sites);
-    $('input[name=link_site]').val(JSON.parse(sites)["site"][0]);
+    var xmlHttp;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", http_url, false);
+    xmlHttp.send(null);
+    console.log(xmlHttp.responseText);
+    $('input[name=link_site]').val(JSON.parse(xmlHttp.responseText)["site"][id]);
 }
 
 

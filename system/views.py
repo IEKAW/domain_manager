@@ -554,8 +554,6 @@ def link(request, site_id):
         tmp['title'] = link[1]
         tmp['position'] = link[2]
         tmp['color'] = COLOR_LIST[i]
-        print i
-        print tmp['color']
         data.append(tmp)
         children = get_link_info(link[9])
         for child in children:
@@ -621,8 +619,15 @@ def create_server(request):
         pay = request.POST['pay']
         remark = request.POST['remark']
         update_at = request.POST['update_at']
+        server_count = Server.objects.filter(server=company).count()
+        print server_count
+        if server_count > 0:
+            server_company = company + '-' + str(server_count + 1)
+        else:
+            server_company = company
         server_obj = Server(
-            server_company=company,
+            server_company=server_company,
+            server=company,
             updated_date=update_at,
             host=host,
             db_pass=db_pass,
@@ -688,7 +693,7 @@ def create_site(request):
         else:
             japanese = request.POST['japanese']
             japanese = japanese.encode('utf8')
-            url = 'http://' + url_idna_quote('http://' + japanese)
+            url = url_idna_quote('http://' + japanese)
         group = request.POST['group']
         update_at = request.POST['update_at']
         template = request.POST['template']
@@ -739,17 +744,19 @@ def domain_warning(request):
 def create_link(request):
     if request.method == 'GET':
         site_id = request.GET["site_id"]
-        site = Site.objects.get(id=site_id)
+        sites = Site.objects.get(id=site_id)
         raw_site_list = get_site_list()
         data = {}
-        data["me"] = {"url": site.url, "title": site.site_title}
+        data["me"] = {"url": sites.url, "title": sites.site_title}
         data['site'] = []
         data['url'] = []
         today = datetime.today()
         data['day'] = datetime.strftime(today, '%Y-%m-%d')
-        for site in raw_site_list:
+        for i, site in enumerate(raw_site_list):
             data['site'].append(site[0])
-            data['url'].append(site[1])
+            data['url'].append({'num': i, 'site': site[1]})
+        position = Setting_Link.objects.all()
+        data['position'] = position
         return render(request, 'system/create_link.html', data)
     elif request.method == 'POST':
         site_title = request.POST['site_title']
@@ -780,7 +787,7 @@ def create_link(request):
         obj = SiteComment(
             site_id=from_id,
             comment=comment,
-            created_at = created_date
+            created_at=created_date
         )
         obj.save()
         url = reverse('link', kwargs={'site_id': from_id})
@@ -831,10 +838,12 @@ def setting_domain(request):
     data = Setting_Domain.objects.all()
     return render(request, 'system/setting_domain.html', {'data': data})
 
+
 @login_required
 def setting_server(request):
     server = Setting_Server.objects.all()
     return render(request, 'system/setting_server.html',{'data': server})
+
 
 @login_required
 def create_setting_group(request):
@@ -843,10 +852,11 @@ def create_setting_group(request):
     elif request.method == 'POST':
         group = request.POST['group']
         group_obj = Group(
-            group = group
+            group=group
         )
         group_obj.save()
         return HttpResponseRedirect('/django.cgi/setting/group')
+
 
 @login_required
 def create_setting_server(request):
@@ -1071,7 +1081,6 @@ def group_edit(request):
         return redirect('system.views.setting_group')
 
 
-
 @login_required
 def templates_edit(request):
     if request.method == "GET":
@@ -1269,6 +1278,7 @@ def upserver(request):
         return render(request, 'system/upserver.html', {'data': server, 'set': setserver,'date': update_date, 'pay': pay, 'server_id': server_id})
     elif request.method == 'POST':
         server_id = request.POST['server_id']
+        host = request.POST['host']
         login_id = request.POST['login_id']
         login_pass = request.POST['login_pass']
         account = request.POST['account']
@@ -1279,6 +1289,7 @@ def upserver(request):
         remarks = request.POST['remark']
         obj = Server.objects.get(id=server_id)
         obj.login_id = login_id
+        obj.host = host
         obj.login_pass = login_pass
         obj.username = account
         obj.ftp_pass = ftp_pass
@@ -1289,3 +1300,49 @@ def upserver(request):
         obj.save()
         redirect_url = '/django.cgi/server/detail?server_id=' + str(server_id)
         return HttpResponseRedirect(redirect_url)
+
+
+@login_required
+def site_delete(request):
+    site_id = request.GET['site_id']
+    obj = Site.objects.filter(id=site_id)
+    obj.delete()
+    return HttpResponseRedirect('/django.cgi/site')
+
+
+@login_required
+def site_edit(request):
+    if request.method == 'GET':
+        site_id = request.GET['site_id']
+        obj = Site.objects.get(id=site_id)
+        data = {}
+        data['site_id'] = obj.id
+        data['group_name'] = obj.group_name
+        data['site_title'] = obj.site_title
+        data['url'] = obj.url
+        data['japanese'] = obj.japanese
+        data['server'] = obj.server
+        data['login_id'] = obj.login_id
+        data['login_pass'] = obj.login_pass
+        data['login_url'] = obj.login_url
+        data['remarks'] = obj.remarks
+        data['template'] = obj.template
+        data['updated_date'] = datetime.strftime(obj.updated_date, '%Y-%m-%d')
+        print type(obj.updated_date)
+        group = Group.objects.all()
+        template = Templates.objects.all()
+        return render(request, 'system/site_edit.html', {'data': data, 'group': group, 'template': template})
+    elif request.method == 'POST':
+        site_id = request.POST['site_id']
+        Site.objects.filter(id=site_id).update(
+            group_name=request.POST['group'],
+            japanese=request.POST['japanese'],
+            server=request.POST['server'],
+            login_url=request.POST['login_url'],
+            login_id=request.POST['login_id'],
+            login_pass=request.POST['login_pass'],
+            remarks=request.POST['remarks'],
+            template=request.POST['template'],
+            updated_date=request.POST['update_at']
+        )
+        return HttpResponseRedirect('/django.cgi/site/detail?site_id=' + str(site_id))

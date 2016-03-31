@@ -1,0 +1,46 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>{{ data.title }}</h1>
+
+<form method="POST" action="{% url 'system.views.site_edit' %}">
+    {% csrf_token %}
+    <input type="hidden" name="site_id" value="{{data.site_id}}">
+    <label for="group">グループ</label>
+    <select name="group" class="form-control">
+        {% for row in group %}
+            {% if row.group == data.group %}
+                <option value="{{row.group}}" selected>{{row.group}}</option>
+            {% else %}
+                <option value="{{row.group}}">{{row.group}}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+    <label for="japanese">日本語:</label>
+    <input type="text" name="japanese" class="form-control" value="{{data.japanese}}" ><br/>
+    <label for="server">サーバー:</label>
+    <input type="text" name="server" class="form-control" value="{{data.server}}"><br/>
+    <label for="update_at">作成日:</label>
+    <input type="date" name="update_at" class="form-control" value="{{data.updated_date}}"><br/>
+    <label for="template">テンプレート:</label>
+    <select name="template" class="form-control">
+        {% for row in template %}
+            {% if row.templates == data.template %}
+                <option value="{{ row.templates }}" selected="">{{ row.templates }}</option>
+            {% else %}
+                <option value="{{ row.templates }}">{{ row.templates }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+    <label for="login_url">ログインURL:</label>
+    <input type="text" name="login_url" class="form-control" value="{{data.login_url}}" ><br/>
+    <label for="login_id">ログインID:</label>
+    <input type="text" name="login_id" class="form-control" value="{{ data.login_id }}" ><br/>
+    <label for="login_pass">ログインパスワード:</label>
+    <input type="text" name="login_pass" class="form-control" value="{{ data.login_pass }}" ><br/>
+    <label for="remarks">備考:</label>
+    <input type="text" name="remarks" class="form-control" value="{{ data.remarks }}" ><br/>
+    <input type="submit" value="登録" class="btn btn-default">
+</form>
+
+ {% endblock %}

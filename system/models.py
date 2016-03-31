@@ -32,6 +32,7 @@ class Site(models.Model):
 class Server(models.Model):
     """docstring for Server"""
     server_company = models.CharField(max_length=255)
+    server = models.CharField(max_length=255, null=True)
     updated_date = models.DateField()
     host = models.CharField(max_length=255)
     username = models.CharField(max_length=255, null=True)

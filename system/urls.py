@@ -49,4 +49,6 @@ urlpatterns = [
     url(r'^keyword/create$', views.create_keyword),
     url(r'^updomain$', views.updomain),
     url(r'^upserver$', views.upserver),
+    url(r'^site/delete$', views.site_delete),
+    url(r'^site/edit$', views.site_edit),
 ]
