@@ -180,7 +180,6 @@ def domain(request):
     search_index = None
     if request.method == 'POST':
         search_index = request.POST['search']
-        print search_index
     elif request.method == 'GET':
         try:
             if request.GET['search_index'] == 'None':
@@ -701,43 +700,140 @@ def create_site(request):
         login_id = request.POST['login_id']
         login_pass = request.POST['login_pass']
         remarks = request.POST['remarks']
+        domain_name = url.split('/')[2]
         try:
-            domain_name = url.split('/')[2]
             domain = Domain.objects.get(
                 domain_name=domain_name
             )
-            server = domain.server_company
-            print server
-            domain_detail = DomainDetail(
-                domain_id=domain.id,
-                url=url,
-                title=title,
-                is_representative=False
-            )
-            domain_detail.save()
-            site_obj = Site(
-                site_title=title,
-                url=url,
-                japanese=japanese,
-                group_name=group,
-                server=server,
-                updated_date=update_at,
-                template=template,
-                login_url=login_url,
-                login_id=login_id,
-                login_pass=login_pass,
-                remarks=remarks
-            )
-            site_obj.save()
         except:
-            return redirect(reverse('system.views.domain_warning'))
+            data = {
+                'title': title,
+                'url': url,
+                'japanese': japanese,
+                'group_name': group,
+                'updated_date': update_at,
+                'template': template,
+                'login_id': login_id,
+                'login_url': login_url,
+                'login_pass': login_pass,
+                'remarks': remarks,
+                'domain_name': domain_name
+            }
+            params = "?"
+            for key, value in data.iteritems():
+                params += key + '=' + value + '&'
+            return redirect(reverse('system.views.domain_warning') + params[:-1])
+        server = domain.server_company
+        domain_detail = DomainDetail(
+            domain_id=domain.id,
+            url=url,
+            title=title,
+            is_representative=False
+        )
+        domain_detail.save()
+        site_obj = Site(
+            site_title=title,
+            url=url,
+            japanese=japanese,
+            group_name=group,
+            server=server,
+            updated_date=update_at,
+            template=template,
+            login_url=login_url,
+            login_id=login_id,
+            login_pass=login_pass,
+            remarks=remarks
+        )
+        site_obj.save()
         return HttpResponseRedirect('/django.cgi/site')
 
 
 @login_required
 def domain_warning(request):
-    data = {'message': 'There is something wrong with domain names'}
-    return render(request, 'system/warning.html', data)
+    if request.method == 'GET':
+        title = request.GET['title']
+        url = request.GET['url']
+        japanese = request.GET['japanese']
+        group_name = request.GET['group_name']
+        updated_date = request.GET['updated_date']
+        template = request.GET['template']
+        login_id = request.GET['login_id']
+        login_url = request.GET['login_url']
+        login_pass = request.GET['login_pass']
+        remarks = request.GET['remarks']
+        domain_name = request.GET['domain_name']
+        data = {
+            'title': title,
+            'url': url,
+            'japanese': japanese,
+            'group_name': group_name,
+            'updated_date': updated_date,
+            'tempalte': template,
+            'login_id': login_id,
+            'login_url': login_url,
+            'login_pass': login_pass,
+            'remarks': remarks,
+            'domain_name': domain_name
+        }
+        next_year = datetime.today() + timedelta(days=365)
+        day = datetime.strftime(next_year, '%Y-%m-%d')
+        company = Setting_Domain.objects.all()
+        server = Setting_Server.objects.all()
+        data['next_year'] = day
+        data['company'] = company
+        data['server'] = server
+        japanese_domain = japanese.split('/')[2]
+        data['japanese_domain'] = japanese_domain
+        return render(request, 'system/warning.html', data)
+    elif request.method == 'POST':
+        title = request.POST['title']
+        url = request.POST['url']
+        japanese = request.POST['japanese']
+        group_name = request.POST['group_name']
+        template = request.POST['template']
+        login_id = request.POST['login_id']
+        login_url = request.POST['login_url']
+        login_pass = request.POST['login_pass']
+        remarks = request.POST['remarks']
+        domain_name = request.POST['domain_name']
+        # ika
+        domain = request.POST['domain']
+        japanese_domain = request.POST['japanese_domain']
+        company = request.POST['company']
+        updated_date = request.POST['updated_date']
+        update_method = request.POST['update_method']
+        server = request.POST['server']
+        domain_obj = Domain(
+            domain_name=domain,
+            japanese=japanese_domain,
+            domain_company=company,
+            updated_date=updated_date,
+            update_method=update_method,
+            server_company=server
+        )
+        domain_obj.save()
+        domain_detail = DomainDetail(
+            domain_id=domain_obj.id,
+            url=url,
+            title=title,
+            is_representative=False
+        )
+        domain_detail.save()
+        site_obj = Site(
+            site_title=title,
+            url=url,
+            japanese=japanese_domain,
+            group_name=group_name,
+            server=server,
+            updated_date=updated_date,
+            template=template,
+            login_url=login_url,
+            login_id=login_id,
+            login_pass=login_pass,
+            remarks=remarks
+        )
+        site_obj.save()
+        return HttpResponseRedirect('/django.cgi/site')
 
 
 @login_required
@@ -1328,7 +1424,6 @@ def site_edit(request):
         data['remarks'] = obj.remarks
         data['template'] = obj.template
         data['updated_date'] = datetime.strftime(obj.updated_date, '%Y-%m-%d')
-        print type(obj.updated_date)
         group = Group.objects.all()
         template = Templates.objects.all()
         return render(request, 'system/site_edit.html', {'data': data, 'group': group, 'template': template})

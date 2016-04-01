@@ -1,5 +1,45 @@
 {% extends "layouts/base.html" %}
 {% block title %} Home {% endblock %}
 {% block content %}
-<h1>{{ message }}</h1>
+<h1>ドメイン追加</h1>
+
+<form action="{% url 'system.views.domain_warning' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="title" value="{{ title }}">
+    <input type="hidden" name="url" value="{{ url }}">
+    <input type="hidden" name="japanese" value="{{ japanese }}">
+    <input type="hidden" name="group_name" value="{{ group_name }}">
+    <input type="hidden" name="template" value="{{ template }}">
+    <input type="hidden" name="login_id" value="{{ login_id }}">
+    <input type="hidden" name="login_url" value="{{ login_url }}">
+    <input type="hidden" name="login_pass" value="{{ login_pass }}">
+    <input type="hidden" name="domain_name" value="{{ domain_name }}">
+    <input type="hidden" name="remarks" value="{{ remarks }}">
+
+    <label for="domain">ドメイン名:</label>
+    <input type="text" name="domain" class="form-control" value="{{ domain_name }}" /><br/>
+    <label for="japanese_domain">日本語:</label>
+    <input type="text" name="japanese_domain" class="form-control" value="{{ japanese_domain }}" /><br/>
+    <label for="company">ドメイン会社:</label>
+    <select name="company" class="form-control">
+        {% for r in company %}
+            <option value="{{ r.domain_company }}">{{ r.domain_company }}</option>
+        {% endfor %}
+    </select>
+    <label for="updated_date">更新日:</label>
+    <input type="date" name="updated_date" class="form-control" value="{{ updated_date }}"><br/>
+    <label for="update_method">自動更新</label>
+    <select name="update_method" class="form-control">
+        <option value="auto">自動</option>
+        <option value="hand">手動</option>
+    </select>
+    <label for="company">サーバー会社:</label>
+    <select name="server" id="server_comp" class="form-control" onchange="dropsort()">
+        {% for r in server %}
+            <option value="{{ r.server_company }}">{{ r.server_company }}</option>
+        {% endfor %}
+        <option value="new">新規登録</option>
+    </select>
+    <input type="submit" value="登録" class="btn btn-default">
+</form>
  {% endblock %}

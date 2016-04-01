@@ -4,3 +4,10 @@ function dropsort() {
     }
 }
 
+path = $(location).attr('pathname');
+if (path == '/warning') {
+    if (confirm("ドメインが登録されていません。続いてドメインの登録もしますか？")) {
+    } else {
+        location.href = '/django.cgi/site';
+    }
+}
