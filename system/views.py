@@ -169,7 +169,6 @@ def site(request):
     for raw in groups:
         if raw.group not in group:
             group.append(raw.group)
-    print data
     result = {'data': data, 'method': 'site', 'group': group}
     return render(request, 'system/site.html', result)
 
@@ -312,10 +311,8 @@ def domain_unup(request):
                 tmp['site_id'] = domaindetail.id
                 if (today > dt.strptime(dt.strftime(domain_data[3], '%Y-%m-%d'), '%Y-%m-%d')) == True:
                     tmp['pass'] = 1
-                    print "aaaa"
                 else:
                     tmp['pass'] = 0
-                    print "bbbb"
                 data.append(tmp)
             except:
                 tmp = {}
@@ -619,7 +616,6 @@ def create_server(request):
         remark = request.POST['remark']
         update_at = request.POST['update_at']
         server_count = Server.objects.filter(server=company).count()
-        print server_count
         if server_count > 0:
             server_company = company + '-' + str(server_count + 1)
         else:
