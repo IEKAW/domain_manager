@@ -685,6 +685,7 @@ def create_site(request):
         japanese = None
         if url != '':
             japanese = url_pyu_quote(url).encode('utf8')
+            print japanese
         else:
             japanese = request.POST['japanese']
             url = url_idna_quote(japanese)
