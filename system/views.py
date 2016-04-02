@@ -684,11 +684,10 @@ def create_site(request):
         url = request.POST['url']
         japanese = None
         if url != '':
-            japanese = url_pyu_quote('http://' + url).encode('utf8')
+            japanese = url_pyu_quote(url).encode('utf8')
         else:
             japanese = request.POST['japanese']
-            japanese = japanese.encode('utf8')
-            url = url_idna_quote('http://' + japanese)
+            url = url_idna_quote(japanese)
         group = request.POST['group']
         update_at = request.POST['update_at']
         template = request.POST['template']
