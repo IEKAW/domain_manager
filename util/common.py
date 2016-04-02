@@ -22,5 +22,4 @@ def url_pyu_quote(url):
         path = ''
     else:
         path = urllib.quote_plus(path, safe='=&?/')
-    print domain + path
     return protocol + '://' + domain + path
