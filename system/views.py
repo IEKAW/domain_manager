@@ -1429,7 +1429,8 @@ def upserver(request):
 def site_delete(request):
     site_id = request.GET['site_id']
     obj = Site.objects.filter(id=site_id)
-    DomainDetail.objects.filter(url=obj.url).delete()
+    url = obj.all()[:1].get()
+    DomainDetail.objects.filter(url=url.url).delete()
     obj.delete()
     return HttpResponseRedirect('/django.cgi/site')
 
