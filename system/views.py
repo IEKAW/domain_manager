@@ -424,7 +424,7 @@ def server_detail(request):
     for raw in server:
         data['server'] = raw[1]
         obj = Setting_Server.objects.get(
-            server_company=raw[1]
+            server_company=raw[12]
         )
         data['url'] = obj.login_url
         data['update_at'] = raw[2]
