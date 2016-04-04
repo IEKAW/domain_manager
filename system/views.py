@@ -160,7 +160,7 @@ def site(request):
         tmp['server'] = site_data[5]
         tmp['server_id'] = -1
         try:
-            server_id = Server.objects.get(server_company=site_data[5])
+            server_id = Server.objects.get(server_company=site_data[1])
             tmp['server_id'] = server_id.id
         except:
             pass
