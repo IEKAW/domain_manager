@@ -162,7 +162,7 @@ def site(request):
         try:
             server_id = Server.objects.get(server_company=site_data[5])
             tmp['server_id'] = server_id.id
-        except: 
+        except:
             pass
         data.append(tmp)
     groups = Group.objects.all()
@@ -427,7 +427,7 @@ def server_detail(request):
             server_company=raw[1]
         )
         data['url'] = obj.login_url
-        data['update_at'] = raw[1]
+        data['update_at'] = raw[2]
         data['host'] = raw[3]
         data['username'] = raw[8]
         data['ftp_pass'] = raw[5]
