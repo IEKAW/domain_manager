@@ -220,6 +220,8 @@ def domain(request):
                     site_title=domaindetail.title
                 )
                 tmp['site_id'] = site.id
+                if tmp['japanese'][:7] == 'http://':
+                    tmp['japanese'] = tmp['japanese'][7:]
                 data.append(tmp)
             except:
                 tmp = {}
@@ -233,6 +235,8 @@ def domain(request):
                 )
                 tmp['company_url'] = setting_domain.login_url
                 tmp['representative'] = "not selected"
+                if tmp['japanese'][:7] == 'http://':
+                    tmp['japanese'] = tmp['japanese'][7:]
                 data.append(tmp)
     result = {'data': data, 'method': 'domain', 'search_index': search_index, 'reverse': reverse}
     return render(request, 'system/domain.html', result)
