@@ -382,6 +382,8 @@ def domain_detail(request):
             tmp['id'] = detail[0]
             tmp['domain_id'] = detail[1]
             tmp['url'] = detail[2]
+            site_obj = Site.objects.filter(url=tmp['url']).all()[:1].get()
+            tmp['site_id'] = site_obj.id
             tmp['title'] = detail[3]
             tmp['is_represetative'] = detail[4]
             data['detail'].append(tmp)
@@ -409,6 +411,8 @@ def domain_detail(request):
             tmp['id'] = detail[0]
             tmp['domain_id'] = detail[1]
             tmp['url'] = detail[2]
+            site_obj = Site.objects.filter(url=tmp['url']).all()[:1].get()
+            tmp['site_id'] = site_obj.id
             tmp['title'] = detail[3]
             tmp['is_represetative'] = detail[4]
             data['detail'].append(tmp)
