@@ -6,6 +6,8 @@
 <form method="POST" action="{% url 'system.views.site_edit' %}">
     {% csrf_token %}
     <input type="hidden" name="site_id" value="{{data.site_id}}">
+    <label for="url">URL:</label>
+    <input type="text" name="url" class="form-control" value="{{data.url}}" ><br/>
     <label for="group">グループ</label>
     <select name="group" class="form-control">
         {% for row in group %}
@@ -19,7 +21,15 @@
     <label for="japanese">日本語:</label>
     <input type="text" name="japanese" class="form-control" value="{{data.japanese}}" ><br/>
     <label for="server">サーバー:</label>
-    <input type="text" name="server" class="form-control" value="{{data.server}}"><br/>
+    <select name="server" class="form-control">
+        {% for row in server %}
+            {% if row.server_company == data.server %}
+                <option value="{{row.group}}" selected>{{row.server_company}}</option>
+            {% else %}
+                <option value="{{row.group}}">{{row.server_company}}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
     <label for="update_at">作成日:</label>
     <input type="date" name="update_at" class="form-control" value="{{data.updated_date}}"><br/>
     <label for="template">テンプレート:</label>

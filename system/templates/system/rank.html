@@ -16,4 +16,6 @@
         </tr>
     {% endfor %}
 </table>
+
+<a href="{% url 'system.views.site_detail' %}?site_id={{ site_id }}" class="btn btn-default">戻る</a>
  {% endblock %}

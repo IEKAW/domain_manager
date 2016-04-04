@@ -550,7 +550,13 @@ def site_detail(request):
         tmp['comment'] = raw[2]
         tmp['created_at'] = raw[3]
         comment.append(tmp)
-    result = {"data": data, "comment": comment, "site_id": site_id, 'method': 'site'}
+    key = []
+    keyword = Keywords.objects.filter(site_id=site_id).all()
+    for row in keyword:
+        tmp = {}
+        tmp['keyword'] = row.keyword
+        key.append(tmp)
+    result = {"data": data, "comment": comment, "site_id": site_id, 'method': 'site', 'keywords': key}
     return render(request, 'system/site_detail.html', result)
 
 
@@ -689,7 +695,10 @@ def create_domain(request):
 @login_required
 def create_site(request):
     if request.method == 'GET':
-        domain_id = request.GET['domain_id']
+        try:
+            domain_id = request.GET['domain_id']
+        except:
+            domain_id = -1
         server = Server.objects.all()
         group = Group.objects.all()
         template = Templates.objects.all()
@@ -766,7 +775,10 @@ def create_site(request):
             remarks=remarks
         )
         site_obj.save()
-        return HttpResponseRedirect('/django.cgi/domain/detail?domain_id=' + str(domain_id))
+        if domain_id == -1:
+            return HttpResponseRedirect('/django.cgi/domain/detail?domain_id=' + str(domain_id))
+        else:
+            return HttpResponseRedirect('/django.cgi/site')
 
 
 @login_required
@@ -1457,10 +1469,12 @@ def site_edit(request):
         data['updated_date'] = datetime.strftime(obj.updated_date, '%Y-%m-%d')
         group = Group.objects.all()
         template = Templates.objects.all()
-        return render(request, 'system/site_edit.html', {'data': data, 'group': group, 'template': template})
+        server = Setting_Server.objects.all()
+        return render(request, 'system/site_edit.html', {'data': data, 'group': group, 'template': template, 'server': server})
     elif request.method == 'POST':
         site_id = request.POST['site_id']
         Site.objects.filter(id=site_id).update(
+            url=request.POST['url'],
             group_name=request.POST['group'],
             japanese=request.POST['japanese'],
             server=request.POST['server'],

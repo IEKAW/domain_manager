@@ -12,8 +12,13 @@
     </tr>
     <tr>
         <th>日本語</th>
-        <th>{{ data.japanese }}</th>
+        {% if data.japanese != data.url %}
+            <th>{{ data.japanese }}</th>
+        {% else %}
+            <th></th>
+        {% endif %}
     </tr>
+    {{ data.domain }}
     <tr>
         <th>サーバー</th>
         <th>{{ data.server }}</th>
@@ -86,5 +91,12 @@
         <input type="submit" value="送信">        
     </form>
     <a class="btn btn-default" href="{% url 'system.views.rank' %}?site_id={{ site_id }}">検索順位キーワード</a>
+    <ul>
+    <br>
+    <h4>キーワード一覧</h4>
+    {% for row in keywords %}
+        <li>{{ row.keyword }}</li>
+    {% endfor %}
+    </ul>
 </div>
 {% endblock %}
