@@ -317,6 +317,8 @@ def domain_unup(request):
                     tmp['pass'] = 1
                 else:
                     tmp['pass'] = 0
+                if tmp['japanese'][:7] == 'http://':
+                    tmp['japanese'] = tmp['japanese'][7:]
                 data.append(tmp)
             except:
                 tmp = {}
@@ -334,6 +336,8 @@ def domain_unup(request):
                 else:
                     tmp['pass'] = 0
                 tmp['representative'] = "not selected"
+                if tmp['japanese'][:7] == 'http://':
+                    tmp['japanese'] = tmp['japanese'][7:]
                 data.append(tmp)
     result = {'data': data, 'reverse': reverse}
     return render(request, 'system/domain_unup.html', result)
@@ -371,6 +375,8 @@ def domain_detail(request):
             )
             data['company_url'] = setting_domain.login_url
             data['server'] = raw[7]
+            if data['japanese'][:7] == 'http://':
+                data['japanese'] = data['japanese'][7:]
         for detail in details:
             tmp = {}
             tmp['id'] = detail[0]
@@ -396,6 +402,8 @@ def domain_detail(request):
             data['japanese'] = raw[2]
             data['company_url'] = setting_domain.login_url
             data['server'] = raw[7]
+            if data['japanese'][:7] == 'http://':
+                data['japanese'] = data['japanese'][7:]
         for detail in details:
             tmp = {}
             tmp['id'] = detail[0]
