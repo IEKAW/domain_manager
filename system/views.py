@@ -132,7 +132,7 @@ def server(request):
     raw_server = get_server_info(None)
     for r in raw_server:
         if server_data[11] != "not_update":
-            if r[1] not in server:
+            if r[1] not in server and r[12] == r[1]:
                     server.append(r[1])
     result = {'data': data, 'method': 'server', 'server': server}
     return render(request, 'system/server.html', result)
