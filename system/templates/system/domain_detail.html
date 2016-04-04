@@ -16,7 +16,7 @@
     </tr>
     {% for detail in data.detail %}
     <tr>
-        <td><a href="{{ detail.url }}">{{ detail.url }}</a></td>
+        <td><a href="/django.cgi/site/detail?site_id={{ detail.site_id }}">{{ detail.url }}</a></td>
         <td>{{ detail.title }}</td>
         {% if detail.is_represetative == 1 %}
             <td>✔︎</td>
