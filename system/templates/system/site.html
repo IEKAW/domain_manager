@@ -38,7 +38,7 @@
         {% if raw.server_id == -1 %}
             <td>{{ raw.server }}</td>
         {% else %}
-            <td><a href="django.cgi/server/detail?server_id={{ raw.server_id }}">{{ raw.server }}</a></td>
+            <td><a href="/django.cgi/server/detail?server_id={{ raw.server_id }}">{{ raw.server }}</a></td>
         {% endif %}
     </tr>
     {% endfor %}
