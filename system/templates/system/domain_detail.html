@@ -1,7 +1,11 @@
 {% extends "layouts/base.html" %}
 {% block title %} Home {% endblock %}
 {% block content %}
-<h1>{{ data.domain }} / {{data.japanese}}(日本語ドメイン)</h1><br/>
+{% if data.domain == data.japanese %}
+    <h1>{{ data.domain }}</h1><br/>
+{% else %}
+    <h1>{{ data.domain }} / {{data.japanese}}</h1><br/>
+{% endif %}
 
 <div class="col-md-6">
 <table class="table table-bordered table-hover" style="background-color: white" border="1">
