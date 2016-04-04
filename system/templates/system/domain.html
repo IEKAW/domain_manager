@@ -40,12 +40,12 @@
             <td width="200" style="word-break: break-all;">{{ raw.representative }}</td>
         {% endif %}
         <td>
-            <a href="{% url 'system.views.update_domain' %}?domain_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>
+            <a href="{% url 'system.views.update_domain' %}?domain_id={{ raw.id }}" class="btn-xs btn-warning">更新する</a><br/>
             <form method="POST" action="{% url 'system.views.domain_unup' %}">
                 {% csrf_token %}
                 <input type="hidden" name="kind" value="domain"/>
                 <input type="hidden" name="id" value="{{ raw.id }}"/>
-                <button class="btn-info btn-xs">更新しない</button>
+                <button class="btn-xs btn-info">更新しない</button>
             </form>
         </td>
     </tr>
