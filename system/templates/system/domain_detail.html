@@ -31,7 +31,7 @@
     </tr>
     {% endfor %}
 </table>
-<a class="btn btn-default" href="{% url 'system.views.create_site' %}">サイト追加</a>
+<a class="btn btn-default" href="{% url 'system.views.create_site' %}?domain_id={{ id }}">サイト追加</a>
 </div>
 
 <div class="col-md-5 col-md-offset-1">

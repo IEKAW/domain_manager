@@ -689,13 +689,15 @@ def create_domain(request):
 @login_required
 def create_site(request):
     if request.method == 'GET':
+        domain_id = request.GET['domain_id']
         server = Server.objects.all()
         group = Group.objects.all()
         template = Templates.objects.all()
         today = datetime.today()
         day = datetime.strftime(today, '%Y-%m-%d')
-        return render(request, 'system/create_site.html', {'server': server, 'group': group, 'template': template, 'day': day})
+        return render(request, 'system/create_site.html', {'server': server, 'group': group, 'template': template, 'day': day, 'domain_id': domain_id})
     elif request.method == 'POST':
+        domain_id = request.POST['domain_id']
         title = request.POST['title']
         url = request.POST['url']
         japanese = None
@@ -764,7 +766,7 @@ def create_site(request):
             remarks=remarks
         )
         site_obj.save()
-        return HttpResponseRedirect('/django.cgi/site')
+        return HttpResponseRedirect('/django.cgi/domain/detail?domain_id=' + str(domain_id))
 
 
 @login_required
