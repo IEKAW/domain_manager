@@ -731,12 +731,20 @@ def create_site(request):
                 params += key + '=' + value + '&'
             return redirect(reverse('system.views.domain_warning') + params[:-1])
         server = domain.server_company
-        domain_detail = DomainDetail(
-            domain_id=domain.id,
-            url=url,
-            title=title,
-            is_representative=False
-        )
+        if domain.count() == 0:
+            domain_detail = DomainDetail(
+                domain_id=domain.id,
+                url=url,
+                title=title,
+                is_representative=True
+            )
+        else:
+            domain_detail = DomainDetail(
+                domain_id=domain.id,
+                url=url,
+                title=title,
+                is_representative=False
+            )
         domain_detail.save()
         site_obj = Site(
             site_title=title,
