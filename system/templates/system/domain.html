@@ -12,7 +12,7 @@
 <table class="table table-hover" style="background-color: white">
     <tr>
         <th width="250">ドメイン名</th>
-        <th width="250">日本語</th>
+        <th width="200">日本語</th>
         <th>更新日
             {% if reverse == False %}
             <a href="/django.cgi/domain?search_index={{ search_index }}&reverse=True">
@@ -35,9 +35,9 @@
         <td>{{ raw.updated_at }}</td>
         <td width="200" style="word-break: break-all;"><a href="{{ raw.company_url }}">{{ raw.company }}</a></td>
         {% if raw.representative != 'not selected' %}
-            <td width="250" style="word-break: break-all;"><a href="{% url 'system.views.site_detail' %}?site_id={{ raw.site_id }}">{{ raw.representative }}</a></td>
+            <td width="200" style="word-break: break-all;"><a href="{% url 'system.views.site_detail' %}?site_id={{ raw.site_id }}">{{ raw.representative }}</a></td>
         {% else %}
-            <td width="250" style="word-break: break-all;">{{ raw.representative }}</td>
+            <td width="200" style="word-break: break-all;">{{ raw.representative }}</td>
         {% endif %}
         <td>
             <a href="{% url 'system.views.update_domain' %}?domain_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>
