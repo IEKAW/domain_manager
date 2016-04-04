@@ -214,7 +214,7 @@ def domain(request):
                     domain_id=domain_data[0],
                     is_representative=True
                 )
-                tmp['representative'] = domaindetail.url
+                tmp['representative'] = domaindetail.title
                 site = Site.objects.get(
                     url=domaindetail.url,
                     site_title=domaindetail.title
