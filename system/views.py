@@ -731,7 +731,7 @@ def create_site(request):
                 params += key + '=' + value + '&'
             return redirect(reverse('system.views.domain_warning') + params[:-1])
         server = domain.server_company
-        if domain.count() == 0:
+        if DomainDetail.objects.filter(domain_id=domain.id).count() == 0:
             domain_detail = DomainDetail(
                 domain_id=domain.id,
                 url=url,
@@ -827,12 +827,20 @@ def domain_warning(request):
             server_company=server
         )
         domain_obj.save()
-        domain_detail = DomainDetail(
-            domain_id=domain_obj.id,
-            url=url,
-            title=title,
-            is_representative=False
-        )
+        if DomainDetail.objects.filter(domain_id=domain_obj.id).count() == 0:
+            domain_detail = DomainDetail(
+                domain_id=domain_obj.id,
+                url=url,
+                title=title,
+                is_representative=True
+            )
+        else:
+            domain_detail = DomainDetail(
+                domain_id=domain.id,
+                url=url,
+                title=title,
+                is_representative=False
+            )
         domain_detail.save()
         site_obj = Site(
             site_title=title,
