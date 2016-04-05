@@ -887,7 +887,7 @@ def create_link(request):
         sites = Site.objects.get(id=site_id)
         raw_site_list = get_site_list()
         data = {}
-        data["me"] = {"url": sites.url, "title": sites.site_title}
+        data["me"] = {"url": sites.url, "title": sites.site_title, "server": sites.server}
         data['site'] = []
         data['url'] = []
         today = datetime.today()
