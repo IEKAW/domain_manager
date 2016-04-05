@@ -1525,7 +1525,6 @@ def site_key(request):
 @login_required
 def delete_setting(request):
     deleted_id = request.POST['id']
-    print deleted_id, request.POST['kind']
     if request.POST['kind'] == 'set_domain':
         obj = Setting_Domain.objects.filter(id=deleted_id)
         obj.delete()
