@@ -1519,4 +1519,34 @@ def site_key(request):
             created_at=datetime.now()
         )
         site_comment_obj.save()
-    return HttpResponseRedirect('/django.cgi/site/detail?site_id=' + str(site_id)) 
+    return HttpResponseRedirect('/django.cgi/site/detail?site_id=' + str(site_id))
+
+
+@login_required
+def delete_setting(request):
+    deleted_id = request.POST['id']
+    print deleted_id, request.POST['kind']
+    if request.POST['kind'] == 'set_domain':
+        obj = Setting_Domain.objects.filter(id=deleted_id)
+        obj.delete()
+        return redirect('system.views.setting_domain')
+    elif request.POST['kind'] == 'set_group':
+        obj = Group.objects.filter(id=deleted_id)
+        obj.delete()
+        return redirect('system.views.setting_group')
+    elif request.POST['kind'] == 'link':
+        obj = Setting_Link.objects.filter(id=deleted_id)
+        obj.delete()
+        return redirect('system.views.setting_link')
+    elif request.POST['kind'] == 'payment':
+        obj = Payment.objects.filter(id=deleted_id)
+        obj.delete()
+        return redirect('system.views.setting_payment')
+    elif request.POST['kind'] == 'set_server':
+        obj = Setting_Server.objects.filter(id=deleted_id)
+        obj.delete()
+        return redirect('system.views.setting_server')
+    elif request.POST['kind'] == 'template':
+        obj = Templates.objects.filter(id=deleted_id)
+        obj.delete()
+        return redirect('system.views.setting_templates')

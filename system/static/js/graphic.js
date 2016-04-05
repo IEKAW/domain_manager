@@ -27,7 +27,6 @@ function get_id_pass(){
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", http_url, false);
     xmlHttp.send(null);
-    console.log(xmlHttp.responseText);
     $('input[name=id]').val(JSON.parse(xmlHttp.responseText)["id"]);
     $('input[name=pass]').val(JSON.parse(xmlHttp.responseText)["pass"]);
 }
