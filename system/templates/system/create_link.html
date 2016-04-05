@@ -20,7 +20,7 @@
     <label for="send_day">リンクを送った日:</label>
     <input type="date" name="send_day" class="form-control" value="{{ day }}"><br/>
     <label for="server">サーバー:</label>
-    <input type="text" name="server" class="form-control"><br/>
+    <input type="text" name="server" class="form-control" value="{{ me.server }}"><br/>
     <label for="link_url">リンク先URL:</label>
     <select name="link_url" class="form-control" onchange="get_site('url')">
         {% for link in url %}
