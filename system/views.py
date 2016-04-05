@@ -945,10 +945,12 @@ def setting_templates(request):
     templates = Templates.objects.all()
     return render(request, 'system/setting_templates.html',{'templates' : templates})
 
+
 @login_required
 def setting_link(request):
     link = Setting_Link.objects.all()
     return render(request, 'system/setting_link.html',{'link' : link})
+
 
 @login_required
 def setting_group(request):
@@ -1216,9 +1218,9 @@ def group_edit(request):
     elif request.method == "POST":
         group_id = request.POST['group_id']
         name = request.POST['group']
-        obj = Group.objects.get(id=group_id)
-        obj.group = name
-        obj.save()
+        Group.objects.filter(id=group_id).update(
+            group=name
+        )
         return redirect('system.views.setting_group')
 
 
@@ -1238,9 +1240,9 @@ def templates_edit(request):
     elif request.method == "POST":
         templates_id = request.POST['templates_id']
         name = request.POST['templates']
-        obj = Templates.objects.get(id=templates_id)
-        obj.tempaltes = name
-        obj.save()
+        Templates.objects.filter(id=templates_id).update(
+            templates=name
+        )
         return redirect('system.views.setting_templates')
 
 
@@ -1260,9 +1262,9 @@ def setting_link_edit(request):
     elif request.method == "POST":
         link_id = request.POST['link_id']
         name = request.POST['link']
-        obj = Setting_Link.objects.get(id=link_id)
-        obj.link = name
-        obj.save()
+        Setting_Link.objects.filter(id=link_id).update(
+            link=name
+        )
         return redirect('system.views.setting_link')
 
 
@@ -1282,9 +1284,9 @@ def payment_edit(request):
     elif request.method == "POST":
         payment_id = request.POST['payment_id']
         name = request.POST['payment']
-        obj = Payment.objects.get(id=payment_id)
-        obj.payment = name
-        obj.save()
+        Payment.objects.filter(id=payment_id).update(
+            payment=name
+        )
         return redirect('system.views.setting_payment')
 
 
@@ -1296,17 +1298,17 @@ def setting_server_edit(request):
         return render(request, 'system/edit_setting_server.html', {'data': server_obj})
     elif request.method == "POST":
         server_id = request.POST['server_id']
-        obj = Setting_Server.objects.get(id=server_id)
-        obj.server_company = request.POST['server_company']
-        obj.login_url = request.POST['login_url']
-        obj.login_id = request.POST['login_id']
-        obj.login_pass = request.POST['login_pass']
-        obj.nameserver1 = request.POST['nameserver1']
-        obj.nameserver2 = request.POST['nameserver2']
-        obj.nameserver3 = request.POST['nameserver3']
-        obj.nameserver4 = request.POST['nameserver4']
-        obj.nameserver5 = request.POST['nameserver5']
-        obj.save()
+        Setting_Server.objects.filter(id=server_id).update(
+            server_company=request.POST['server_company'],
+            login_url=request.POST['login_url'],
+            login_id=request.POST['login_id'],
+            login_pass=request.POST['login_pass'],
+            nameserver1=request.POST['nameserver1'],
+            nameserver2=request.POST['nameserver2'],
+            nameserver3=request.POST['nameserver3'],
+            nameserver4=request.POST['nameserver4'],
+            nameserver5=request.POST['nameserver5']
+        )
         return HttpResponseRedirect('/django.cgi/setting/server')
 
 
@@ -1524,28 +1526,52 @@ def site_key(request):
 
 @login_required
 def delete_setting(request):
-    deleted_id = request.POST['id']
-    if request.POST['kind'] == 'set_domain':
+    deleted_id = request.GET['id']
+    # if request.POST['kind'] == 'set_domain':
+    #     obj = Setting_Domain.objects.filter(id=deleted_id)
+    #     obj.delete()
+    #     return redirect('system.views.setting_domain')
+    # elif request.POST['kind'] == 'set_group':
+    #     obj = Group.objects.filter(id=deleted_id)
+    #     obj.delete()
+    #     return redirect('system.views.setting_group')
+    # elif request.POST['kind'] == 'link':
+    #     obj = Setting_Link.objects.filter(id=deleted_id)
+    #     obj.delete()
+    #     return redirect('system.views.setting_link')
+    # elif request.POST['kind'] == 'payment':
+    #     obj = Payment.objects.filter(id=deleted_id)
+    #     obj.delete()
+    #     return redirect('system.views.setting_payment')
+    # elif request.POST['kind'] == 'set_server':
+    #     obj = Setting_Server.objects.filter(id=deleted_id)
+    #     obj.delete()
+    #     return redirect('system.views.setting_server')
+    # elif request.POST['kind'] == 'template':
+    #     obj = Templates.objects.filter(id=deleted_id)
+    #     obj.delete()
+    #     return redirect('system.views.setting_templates')
+    if request.GET['kind'] == 'set_domain':
         obj = Setting_Domain.objects.filter(id=deleted_id)
         obj.delete()
         return redirect('system.views.setting_domain')
-    elif request.POST['kind'] == 'set_group':
+    elif request.GET['kind'] == 'set_group':
         obj = Group.objects.filter(id=deleted_id)
         obj.delete()
         return redirect('system.views.setting_group')
-    elif request.POST['kind'] == 'link':
+    elif request.GET['kind'] == 'link':
         obj = Setting_Link.objects.filter(id=deleted_id)
         obj.delete()
         return redirect('system.views.setting_link')
-    elif request.POST['kind'] == 'payment':
+    elif request.GET['kind'] == 'payment':
         obj = Payment.objects.filter(id=deleted_id)
         obj.delete()
         return redirect('system.views.setting_payment')
-    elif request.POST['kind'] == 'set_server':
+    elif request.GET['kind'] == 'set_server':
         obj = Setting_Server.objects.filter(id=deleted_id)
         obj.delete()
         return redirect('system.views.setting_server')
-    elif request.POST['kind'] == 'template':
+    elif request.GET['kind'] == 'template':
         obj = Templates.objects.filter(id=deleted_id)
         obj.delete()
         return redirect('system.views.setting_templates')

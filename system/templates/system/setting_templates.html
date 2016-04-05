@@ -10,25 +10,16 @@
 <a class="btn btn-default pull-right" href="{% url 'system.views.create_setting_templates' %}">新規追加</a><br/><br/>	
 
 <table class="table table-striped table-bordered table-hover">
-
 	<tr>
         <th>テンプレート名</th>
         <th></th>
     </tr>
     {% for name in templates %}
     <tr>
-        {{ name.id }}
         <td>{{ name.templates }}</td>
         <td><a class="btn btn-warning" href="{% url 'system.views.templates_edit' %}?templates_id={{ name.id }}">編集</a>
-        <form method="POST" action="{% url 'system.views.delete_setting' %}">
-            {% csrf_token %}
-            <input type="hidden" name="id" value="{{ name.id }}"/>
-            <input type="hidden" name="kind" value="template"/>
-            <input type="submit" value="削除" class="btn btn-danger">
-        </form></td>
+        <td><a class="btn btn-danger" href="{% url 'system.views.delete_setting' %}?id={{ name.id }}&kind=template">削除</a>
     </tr>
     {% endfor %}
-
-
 </table>
  {% endblock %}

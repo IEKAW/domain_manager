@@ -19,12 +19,8 @@
     <tr>
         <td>{{ name.payment }}</td>
         <td><a class="btn btn-warning" href="{% url 'system.views.payment_edit' %}?payment_id={{ name.id }}">編集</a>
-        <form method="POST" action="{% url 'system.views.delete_setting' %}">
-            {% csrf_token %}
-            <input type="hidden" name="id" value="{{ name.id }}"/>
-            <input type="hidden" name="kind" value="payment"/>
-            <input type="submit" value="削除" class="btn btn-danger">
-        </form></td>
+            <a class="btn btn-danger" href="{% url 'system.views.delete_setting' %}?id={{ name.id }}&kind=payment">削除</a>
+        </td>
     </tr>
     {% endfor %}
 

@@ -23,12 +23,7 @@
         <td>{{ r.login_pass }}</td>
         <td>
             <a href="{% url 'system.views.domain_edit' %}?domain_id={{ r.id }}" class="btn btn-warning">編集</a>
-            <form method="POST" action="{% url 'system.views.delete_setting' %}">
-                {% csrf_token %}
-                <input type="hidden" name="id" value="{{ r.id }}"/>
-                <input type="hidden" name="kind" value="set_domain"/>
-                <input type="submit" value="削除" class="btn btn-danger">
-            </form>
+            <a class="btn btn-danger" href="{% url 'system.views.delete_setting' %}?id={{ r.id }}&kind=set_domain">削除</a>
         </td>
     </tr>
     {% endfor %}
