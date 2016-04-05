@@ -288,6 +288,8 @@ def get_site_list():
             url
         FROM
             system_site
+        ORDER BY
+            url
     """
     cursor = connection.cursor()
     cursor.execute(sql)
