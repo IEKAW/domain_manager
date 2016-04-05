@@ -20,8 +20,8 @@ function get_id_pass(){
     query_params = {
         'server': url
     };
-    base_url = [location.protocol, '/', location.host, "id/pass.json"].join('/');
-    // base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
+    //base_url = [location.protocol, '/', location.host, "id/pass.json"].join('/');
+    base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
     http_url = [base_url, $.param(query_params)].join('?');
     var xmlHttp;
     xmlHttp = new XMLHttpRequest();
