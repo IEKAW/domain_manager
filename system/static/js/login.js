@@ -46,7 +46,7 @@ function get_site(){
         'url': url
     };
     id = $('select[name=link_url] option:selected').attr('id');
-    base_url = [location.protocol, '/', location.host, "url_site.json"].join('/');
+    base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
     // base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
     http_url = [base_url, $.param(query_params)].join('?');
     var xmlHttp;
@@ -57,23 +57,6 @@ function get_site(){
     $('input[name=link_site]').val(JSON.parse(xmlHttp.responseText)["site"][id]);
 }
 
-// urlから自動でsite_titleを取得してくれる
-function get_id_pass(){
-    url = $('select[name=company]').val();
-    query_params = {
-        'server': url
-    };
-    base_url = [location.protocol, '/', location.host, "id/pass.json"].join('/');
-    // base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
-    http_url = [base_url, $.param(query_params)].join('?');
-    var xmlHttp;
-    xmlHttp = new XMLHttpRequest();
-    xmlHttp.open("GET", http_url, false);
-    xmlHttp.send(null);
-    console.log(xmlHttp.responseText);
-    $('input[name=login_id]').val(JSON.parse(xmlHttp.responseText)["id"]);
-    $('input[name=login_pass]').val(JSON.parse(xmlHttp.responseText)["pass"]);
-}
 
 
 function communicate_http(url){
@@ -89,4 +72,3 @@ function communicate_http(url){
     });
 }
 
-get_id_pass();

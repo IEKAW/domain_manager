@@ -1,4 +1,3 @@
-get_id_pass();
 
 function dropsort() {
     if ($("#server_comp").val() == 'new'){
@@ -32,3 +31,5 @@ function get_id_pass(){
     $('input[name=id]').val(JSON.parse(xmlHttp.responseText)["id"]);
     $('input[name=pass]').val(JSON.parse(xmlHttp.responseText)["pass"]);
 }
+
+get_id_pass();
