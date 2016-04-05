@@ -10,7 +10,7 @@
 
     <tr>
         <th>ドメイン会社</th>
-        <th>ログインURL</th>
+        <th width="400">ログインURL</th>
         <th>ログインID</th>
         <th>ログインパスワード</th>
         <th></th>
@@ -18,7 +18,7 @@
     {% for r in data %}
     <tr>
         <td>{{ r.domain_company }}</td>
-        <td><a href="{{ r.login_url }}">{{ r.login_url }}</a></td>
+        <td width="400" style="word-break: break-all;"><a href="{{ r.login_url }}">{{ r.login_url }}</a></td>
         <td>{{ r.login_id }}</td>
         <td>{{ r.login_pass }}</td>
         <td>

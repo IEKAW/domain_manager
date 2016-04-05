@@ -665,7 +665,7 @@ def create_domain(request):
         next_year = datetime.today() + timedelta(days=365)
         day = datetime.strftime(next_year, '%Y-%m-%d')
         company = Setting_Domain.objects.all()
-        server = Setting_Server.objects.all()
+        server = Server.objects.all()
         return render(request, 'system/create_domain.html', {"next_year": day, "company": company, 'server': server})
     elif request.method == 'POST':
         domain = request.POST['domain']
@@ -674,8 +674,11 @@ def create_domain(request):
             japanese = url_pyu_quote('http://' + domain).encode('utf8')
         else:
             japanese = request.POST['japanese']
-            japanese = japanese.encode('utf8')
-            domain = url_idna_quote('http://' + japanese)
+            if japanese[:7] == 'http://':
+                japanese = japanese[7:]
+                domain = url_idna_quote('http://' + japanese)
+            else:
+                domain = url_idna_quote('http://' + japanese)
         company = request.POST['company']
         update_at = request.POST['update_at']
         update_method = request.POST['update_method']
@@ -1486,3 +1489,13 @@ def site_edit(request):
             updated_date=request.POST['update_at']
         )
         return HttpResponseRedirect('/django.cgi/site/detail?site_id=' + str(site_id))
+
+
+@login_required
+def id_pass(request):
+    server = request.GET['server']
+    servers = Setting_Server.objects.filter(server_company=server).all()[:1].get()
+    data = {}
+    data['id'] = servers.login_id
+    data['pass'] = servers.login_pass
+    return HttpResponse(json.dumps(data), content_type='application/json')

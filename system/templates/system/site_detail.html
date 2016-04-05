@@ -48,7 +48,7 @@
 <a class="btn btn-danger" href="{% url 'system.views.site_delete' %}?site_id={{site_id}}" onclick="alert('本当に削除してもよろしいですか。')">削除</a>
 
 <h2>備考</h2>
-<p>{{ data.remarks }}</p>
+<p>{{ data.remarks|linebreaks }}</p>
 <a href="{% url 'system.views.link' site_id=site_id %}" class="btn btn-default">リンク構造</a>
 <a href="{% url 'system.views.create_link' %}?site_id={{ site_id }}" class="btn btn-default">リンクを貼る</a>
 </div>
