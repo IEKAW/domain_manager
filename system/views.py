@@ -556,7 +556,8 @@ def site_detail(request):
         tmp = {}
         tmp['keyword'] = row.keyword
         key.append(tmp)
-    result = {"data": data, "comment": comment, "site_id": site_id, 'method': 'site', 'keywords': key}
+    count = [x for x in range(1, 300)]
+    result = {"data": data, "comment": comment, "site_id": site_id, 'method': 'site', 'keywords': key, 'count': count}
     return render(request, 'system/site_detail.html', result)
 
 
@@ -1499,3 +1500,23 @@ def id_pass(request):
     data['id'] = servers.login_id
     data['pass'] = servers.login_pass
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@login_required
+def site_key(request):
+    if request.method == 'GET':
+        site_id = request.GET['site_id']
+        key = request.GET['key']
+        Keywords.objects.filter(keyword=key).delete()
+    elif request.method == 'POST':
+        site_id = request.POST['site_id']
+        key = request.POST['key']
+        rank = request.POST['rank']
+        comment = key + ':  ' + rank + u'位'
+        site_comment_obj = SiteComment(
+            site_id=site_id,
+            comment=comment,
+            created_at=datetime.now()
+        )
+        site_comment_obj.save()
+    return HttpResponseRedirect('/django.cgi/site/detail?site_id=' + str(site_id)) 

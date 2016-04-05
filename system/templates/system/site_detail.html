@@ -91,12 +91,20 @@
         <input type="submit" value="送信">        
     </form>
     <a class="btn btn-default" href="{% url 'system.views.rank' %}?site_id={{ site_id }}">検索順位キーワード</a>
-    <ul>
-    <br>
-    <h4>キーワード一覧</h4>
     {% for row in keywords %}
-        <li>{{ row.keyword }}</li>
+        <form method="POST" action="{% url 'system.views.site_key' %}">
+            {% csrf_token %}
+            <input type="hidden" name="site_id" value="{{ site_id }}">
+            <h4>{{ row.keyword }}:
+            <select name="rank">
+                {% for r in count %}
+                <option value="{{r}}">{{ r }}</option>
+                {% endfor %}
+            </select>
+            <input type="hidden" name="key" value="{{ row.keyword }}">
+            <input type="submit" class="btn btn-default" value="送信">
+            <a class="btn btn-danger" href="{% url 'system.views.site_key' %}?site_id={{ site_id }}&key={{ row.keyword }}">削除</a></h4>
+        </form>
     {% endfor %}
-    </ul>
 </div>
 {% endblock %}

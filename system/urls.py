@@ -51,5 +51,6 @@ urlpatterns = [
     url(r'^upserver$', views.upserver),
     url(r'^site/delete$', views.site_delete),
     url(r'^site/edit$', views.site_edit),
-    url(r'^id/pass.json$', views.id_pass)
+    url(r'^id/pass.json$', views.id_pass),
+    url(r'^site/key$', views.site_key)
 ]
