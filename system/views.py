@@ -1504,8 +1504,17 @@ def site_edit(request):
         url = request.POST['url']
         japanese = request.POST['japanese']
         if request.POST['url'] != site.url:
-            if request.POST['japanese'] == site.japanese:
-                pass
+            if japanese == site.japanese:
+                if japanese[len(japanese) - 1] == '/':
+                    japanese = japanese + request.POST['url'][len(site.url):]
+                else:
+                    japanese = japanese + '/' + request.POST['url'][len(site.url)-1:]
+        elif japanese != site.japanese:
+            if url == site.url:
+                if url[len(url) - 1] == '/':
+                    url = url + request.POST['japanese'][len(site.japanese):]
+                else:
+                    url = url + '/' + request.POST['japanese'][len(site.japanese)-1:]
         Site.objects.filter(id=site_id).update(
             url=url,
             group_name=request.POST['group'],

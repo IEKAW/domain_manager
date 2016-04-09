@@ -93,16 +93,6 @@ function get_urls(){
 }
 
 function communicate_http(url){
-    // $.ajax({
-    //       url: url,
-    //       dataType: 'json',
-    //       async: true,
-    //       complete: function(data){
-    //         var data_json = data.responseJSON;
-    //         console.log(data_json);
-    //         return data_json;
-    //       }
-    // });
     var xmlHttp;
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", url, false);
