@@ -646,7 +646,10 @@ def create_server(request):
         account = request.POST['account']
         ftp_pass = request.POST['ftp_pass']
         db_pass = request.POST['db_pass']
-        pay = request.POST['pay']
+        try:
+            pay = request.POST['pay']
+        except:
+            pay = ""
         remark = request.POST['remark']
         update_at = request.POST['update_at']
         server_count = Server.objects.filter(server=company).count()
