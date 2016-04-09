@@ -878,7 +878,10 @@ def domain_warning(request):
         # ika
         domain = request.POST['domain']
         japanese_domain = request.POST['japanese_domain']
-        company = request.POST['company']
+        try:
+            company = request.POST['company']
+        except:
+            company = ""
         updated_date = request.POST['updated_date']
         update_method = request.POST['update_method']
         server = request.POST['server']
