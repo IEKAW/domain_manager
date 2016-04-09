@@ -13,7 +13,17 @@
         </tr>
         <tr>
             <td>サーバー</td>
-            <td><input type="text" class="form-control" name="server" value="{{ data.server }}" /></td>
+            <td>
+            <select name="server" class="form-control">
+            {% for row in server %}
+                {% if row.server_company == server_company %}
+                    <option value="{{ row.server_company }}" selected="">{{ row.server_company }}</option>
+                {% else %}
+                    <option value="{{ row.server_company }}">{{ row.server_company }}</option>
+                {% endif %}
+            {% endfor %}
+            </select>
+            </td>
         </tr>
     </table><br/>
     <input type="submit" value="更新" class="btn btn-info" />

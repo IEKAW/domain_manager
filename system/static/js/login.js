@@ -53,11 +53,44 @@ function get_site(){
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", http_url, false);
     xmlHttp.send(null);
-    console.log(xmlHttp.responseText);
     $('input[name=link_site]').val(JSON.parse(xmlHttp.responseText)["site"][id]);
 }
 
 
+// urlから自動でsite_titleを取得してくれる
+function get_url(){
+    site = $('select[name=link_site]').val();
+    query_params = {
+        'site': site
+    };
+    id = $('select[name=link_site] option:selected').attr('id');
+    base_url = [location.protocol, '/', location.host,"django.cgi" ,"site_url.json"].join('/');
+    // base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
+    http_url = [base_url, $.param(query_params)].join('?');
+    var xmlHttp;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", http_url, false);
+    xmlHttp.send(null);
+    $('input[name=link_url]').val(JSON.parse(xmlHttp.responseText)["url"][0]);
+}
+
+
+// urlから自動でsite_titleを取得してくれる
+function get_urls(){
+    site = $('select[name=site_title]').val();
+    query_params = {
+        'site': site
+    };
+    id = $('select[name=site_title] option:selected').attr('id');
+    base_url = [location.protocol, '/', location.host, "django.cgi" ,"site_url.json"].join('/');
+    // base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
+    http_url = [base_url, $.param(query_params)].join('?');
+    var xmlHttp;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", http_url, false);
+    xmlHttp.send(null);
+    $('input[name=url]').val(JSON.parse(xmlHttp.responseText)["url"][0]);
+}
 
 function communicate_http(url){
     // $.ajax({
@@ -75,5 +108,25 @@ function communicate_http(url){
     xmlHttp.open("GET", url, false);
     xmlHttp.send(null);
     return xmlHttp.responseText;
+}
+
+function delete_confirm(check_id) {
+    path = $(location).attr('pathname').split('/')[1];
+    if (path == 'setting') {
+        query_params = {
+            'check_id': check_id,
+            'kind': $(location).attr('pathname').split('/')[2]
+        }
+        base_url = [location.protocol, '/', location.host, "django.cgi" ,"delete_confirm.json"].join('/');
+        http_url = [base_url, $.param(query_params)].join('?');
+        var xmlHttp;
+        xmlHttp = new XMLHttpRequest();
+        xmlHttp.open("GET", http_url, false);
+        xmlHttp.send(null);
+        if (JSON.parse(xmlHttp.responseText)["result"] == 'yes'){
+            $('a#' + check_id).attr('href', "/setting/" + $(location).attr('pathname').split('/')[2]);
+            alert("この項目を使用している" + JSON.parse(xmlHttp.responseText)["reason"][0] + "がある為、削除が出来ません");
+        }
+    }
 }
 

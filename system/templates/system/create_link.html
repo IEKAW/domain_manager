@@ -6,12 +6,12 @@
 <form action="{% url 'system.views.create_link' %}" method="POST">
     {% csrf_token %}
     <label for="site_title">サイトタイトル:</label>
-    <select name="site_title" class="form-control">
+    <select name="site_title" class="form-control" onchange="get_urls()">
         {% for link in site %}
-            {% if link == me.title %}
-                <option value="{{ link }}" selected>{{ link }}</option>
+            {% if link.site == me.title %}
+                <option value="{{ link.site }}" selected>{{ link.site }}</option>
             {% else %}
-                <option value="{{ link }}">{{ link }}</option>
+                <option value="{{ link.site }}">{{ link.site }}</option>
             {% endif %}
         {% endfor %}
     </select>
@@ -21,14 +21,14 @@
     <input type="date" name="send_day" class="form-control" value="{{ day }}"><br/>
     <label for="server">サーバー:</label>
     <input type="text" name="server" class="form-control" value="{{ me.server }}"><br/>
-    <label for="link_url">リンク先URL:</label>
-    <select name="link_url" class="form-control" onchange="get_site('url')">
-        {% for link in url %}
+    <label for="link_site">リンク先サイト:</label>
+    <select name="link_site" class="form-control" onchange="get_url()">
+        {% for link in site %}
                 <option value="{{ link.site }}" id="{{ link.num }}">{{ link.site }}</option>
         {% endfor %}
     </select>
-    <label for="link_site">リンク先サイト名:</label>
-    <input type="text" name="link_site" value="{{ site.0 }}" class="form-control">
+    <label for="link_url">リンク先URL:</label>
+    <input type="text" name="link_url" value="{{ url.0 }}" class="form-control">
     <label for="link_pos">リンク位置:</label>
     <select name="link_pos" class="form-control">
         {% for row in position %}

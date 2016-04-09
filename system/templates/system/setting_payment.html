@@ -19,7 +19,7 @@
     <tr>
         <td>{{ name.payment }}</td>
         <td><a class="btn btn-warning" href="{% url 'system.views.payment_edit' %}?payment_id={{ name.id }}">編集</a>
-            <a class="btn btn-danger" href="{% url 'system.views.delete_setting' %}?id={{ name.id }}&kind=payment">削除</a>
+            <a class="btn btn-danger" id="setting_{{ name.id }}" onclick="delete_confirm('setting_{{name.id}}')" href="{% url 'system.views.delete_setting' %}?id={{ name.id }}&kind=payment">削除</a>
         </td>
     </tr>
     {% endfor %}

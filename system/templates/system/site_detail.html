@@ -18,10 +18,9 @@
             <th></th>
         {% endif %}
     </tr>
-    {{ data.domain }}
     <tr>
         <th>サーバー</th>
-        <th>{{ data.server }}</th>
+        <th><a href="{% url 'system.views.server_detail' %}?server_id={{ server_id }}">{{ data.server }}</a></th>
     </tr>
     <tr>
         <th>作成日</th>
@@ -44,7 +43,7 @@
         <th>{{ data.login_pass }}</th>
     </tr>
 </table>
-<a class="btn btn-default" href="{% url 'system.views.site_edit' %}?site_id={{site_id}}">編集</a>
+<a class="btn btn-default" href="{% url 'system.views.site_edit' %}?site_id={{site_id}}&server_id={{ server_id }}">編集</a>
 <a class="btn btn-danger" href="{% url 'system.views.site_delete' %}?site_id={{site_id}}" onclick="alert('本当に削除してもよろしいですか。')">削除</a>
 
 <h2>備考</h2>
@@ -75,7 +74,7 @@
                                         <input type="hidden" name="comment_id" value="{{ raw.id }}">
                                         <input type="submit" class="btn btn-danger" value="削除">
                                     </form>
-                                    <a class="pull-right btn btn-warning" href="{% url 'system.views.comment_edit' %}?site_id={{ raw.site_id }}&comment_id={{ raw.id }}&comment={{ raw.comment }}">編集</a>
+                                    <a class="pull-right btn btn-warning" href="{% url 'system.views.comment_edit' %}?site_id={{ raw.site_id }}&comment_id={{ raw.id }}&comment={{ raw.comment }}&server_id={{ server_id }}">編集</a>
                                 </p>
                             </div>
                         </li>
@@ -87,6 +86,7 @@
     <form method="POST" action="{% url 'system.views.site_detail' %}">
         {% csrf_token %}
         <input type="hidden" name="site_id" value="{{ data.site_id }}">
+        <input type="hidden" name="server_id" value="{{ server_id }}">
         <textarea name="memo" cols="50" rows="10"></textarea><br/>
         <input type="submit" value="送信">        
     </form>

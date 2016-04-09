@@ -41,6 +41,6 @@
 <p><a href="{{ data.company_url }}">{{ data.company }}</a></p>
 <h2>サーバー</h2><br/>
 <p>{{ data.server }}</p>
-<a class="btn btn-default" href="{% url 'system.views.updomain' %}?domain_id={{ id }}">編集</a>
+<a class="btn btn-default" href="{% url 'system.views.updomain' %}?domain_id={{ id }}&server={{ data.server }}">編集</a>
 </div>
  {% endblock %}

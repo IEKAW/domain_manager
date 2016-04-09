@@ -22,7 +22,7 @@
         <tr>
         {% for r in data %}
                 <td>{{ r.server_company }}</td>
-                <td>{{ r.login_url }}</td>
+                <td><a href="{{r.login_url}}">{{ r.login_url }}</a></td>
                 <td>{{ r.login_id }}</td>
                 <td>{{ r.login_pass }}</td>
                 <td>{{ r.nameserver1 }}</td>
@@ -31,7 +31,7 @@
                 <td>{{ r.nameserver4 }}</td>
                 <td>{{ r.nameserver5 }}</td>
                 <td><a class="btn btn-warning" href="{% url 'system.views.setting_server_edit' %}?server_id={{ r.id }}">編集</a>
-                <a class="btn btn-danger" href="{% url 'system.views.delete_setting' %}?id={{ r.id }}&kind=set_server">削除</a>
+                <a class="btn btn-danger" id="setting_{{ r.id }}" onclick="delete_confirm('setting_{{r.id}}')" href="{% url 'system.views.delete_setting' %}?id={{ r.id }}&kind=set_server">削除</a>
                 </td>
         </tr>
         {% endfor %}

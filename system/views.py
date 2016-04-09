@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import json
+import urllib
 
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
@@ -49,6 +50,7 @@ from system.aggregate import(
     get_link_info,
     get_domain_near_info,
     get_server_near_info,
+    raw_get_url_from_site,
 )
 
 COLOR_LIST = [
@@ -83,7 +85,7 @@ def home(request):
                     domain_id=domain_data[0],
                     is_representative=True
                 )
-                tmp['representative'] = domaindetail.url
+                tmp['representative'] = domaindetail.title
                 data['domain'].append(tmp)
             except:
                 tmp = {}
@@ -98,6 +100,8 @@ def home(request):
                 tmp['company_url'] = setting_domain.login_url
                 tmp['representative'] = "not selected"
                 data['domain'].append(tmp)
+            if tmp['domain'] == tmp['japanese']:
+                tmp['japanese'] = ""
     raw_server_datas = get_server_near_info(day)
     for server_data in raw_server_datas:
         if server_data[11] != "not_update":
@@ -159,6 +163,8 @@ def site(request):
         tmp['japanese'] = site_data[4]
         tmp['server'] = site_data[5]
         tmp['server_id'] = -1
+        if tmp['japanese'] == tmp['url']:
+            tmp['japanese'] = ''
         try:
             server_id = Server.objects.get(server_company=site_data[5])
             tmp['server_id'] = server_id.id
@@ -238,6 +244,8 @@ def domain(request):
                 if tmp['japanese'][:7] == 'http://':
                     tmp['japanese'] = tmp['japanese'][7:]
                 data.append(tmp)
+            if tmp['domain'] == tmp['japanese']:
+                tmp['japanese'] = ""
     result = {'data': data, 'method': 'domain', 'search_index': search_index, 'reverse': reverse}
     return render(request, 'system/domain.html', result)
 
@@ -438,8 +446,8 @@ def server_detail(request):
         data['db_pass'] = raw[4]
         data['payment'] = raw[6]
         data['remarks'] = raw[7]
-        data['login_id'] = obj.login_id
-        data['login_pass'] = obj.login_pass
+        data['login_id'] = raw[9]
+        data['login_pass'] = raw[10]
         data['nameserver1'] = obj.nameserver1
         data['nameserver2'] = obj.nameserver2
         data['nameserver3'] = obj.nameserver3
@@ -519,6 +527,7 @@ def site_detail(request):
     if request.method == 'POST':
         site_id = request.POST['site_id']
         comment = request.POST['memo']
+        server_id = request.POST['server_id']
         site_comment_obj = SiteComment(
             site_id=site_id,
             comment=comment,
@@ -527,6 +536,7 @@ def site_detail(request):
         site_comment_obj.save()
     else:
         site_id = request.GET['site_id']
+        server_id = request.GET['server_id']
     site = get_site_detail(site_id)
     for raw in site:
         data['site_id'] = raw[0]
@@ -557,7 +567,7 @@ def site_detail(request):
         tmp['keyword'] = row.keyword
         key.append(tmp)
     count = [x for x in range(1, 300)]
-    result = {"data": data, "comment": comment, "site_id": site_id, 'method': 'site', 'keywords': key, 'count': count}
+    result = {"data": data, "comment": comment, "site_id": site_id, 'method': 'site', 'keywords': key, 'count': count, 'server_id': server_id}
     return render(request, 'system/site_detail.html', result)
 
 
@@ -630,8 +640,6 @@ def create_server(request):
         company = request.POST['company']
         host = request.POST['host']
         company = request.POST['company']
-        login_id = request.POST['id']
-        login_pass = request.POST['pass']
         account = request.POST['account']
         ftp_pass = request.POST['ftp_pass']
         db_pass = request.POST['db_pass']
@@ -643,6 +651,7 @@ def create_server(request):
             server_company = company + '-' + str(server_count + 1)
         else:
             server_company = company
+        obj = Setting_Server.objects.get(server_company=company)
         server_obj = Server(
             server_company=server_company,
             server=company,
@@ -653,8 +662,8 @@ def create_server(request):
             payment=pay,
             remarks=remark,
             username=account,
-            login_id=login_id,
-            login_pass=login_pass
+            login_id=obj.login_id,
+            login_pass=obj.login_pass
         )
         server_obj.save()
         return HttpResponseRedirect('/django.cgi/server')
@@ -672,7 +681,11 @@ def create_domain(request):
         domain = request.POST['domain']
         japanese = None
         if domain != '':
+            if domain[:7] == 'http://':
+                domain = domain[7:]
             japanese = url_pyu_quote('http://' + domain).encode('utf8')
+            if japanese[:7] == 'http://':
+                japanese = japanese[7:]
         else:
             japanese = request.POST['japanese']
             if japanese[:7] == 'http://':
@@ -680,6 +693,8 @@ def create_domain(request):
                 domain = url_idna_quote('http://' + japanese)
             else:
                 domain = url_idna_quote('http://' + japanese)
+            if domain[:7] == 'http://':
+                domain = domain[7:]
         company = request.POST['company']
         update_at = request.POST['update_at']
         update_method = request.POST['update_method']
@@ -747,6 +762,8 @@ def create_site(request):
             }
             params = "?"
             for key, value in data.iteritems():
+                if key == 'japanese':
+                    value = urllib.quote_plus(value)
                 params += key + '=' + value + '&'
             return redirect(reverse('system.views.domain_warning') + params[:-1])
         server = domain.server_company
@@ -799,6 +816,7 @@ def domain_warning(request):
         login_pass = request.GET['login_pass']
         remarks = request.GET['remarks']
         domain_name = request.GET['domain_name']
+        japanese = urllib.unquote_plus(japanese)
         data = {
             'title': title,
             'url': url,
@@ -878,7 +896,7 @@ def domain_warning(request):
             remarks=remarks
         )
         site_obj.save()
-        return HttpResponseRedirect('/django.cgi/site')
+        return HttpResponseRedirect('/django.cgi/domain/detail?domain_id=' + domain_id)
 
 
 @login_required
@@ -894,8 +912,8 @@ def create_link(request):
         today = datetime.today()
         data['day'] = datetime.strftime(today, '%Y-%m-%d')
         for i, site in enumerate(raw_site_list):
-            data['site'].append(site[0])
-            data['url'].append({'num': i, 'site': site[1]})
+            data['site'].append({'num': i, 'site': site[0]})
+            data['url'].append(site[1])
         position = Setting_Link.objects.all()
         data['position'] = position
         return render(request, 'system/create_link.html', data)
@@ -1386,8 +1404,10 @@ def updomain(request):
             day = '0%d' % domain_day.day
         else:
             day = '%d' % domain_day.day
+        server_company = request.GET['server']
+        server = Server.objects.all()
         update_date = year + '-' + month + '-' + day
-        return render(request, 'system/updomain.html', {'data': domain, 'date': update_date})
+        return render(request, 'system/updomain.html', {'server': server, 'server_company': server_company, 'data': domain, 'date': update_date})
     elif request.method == 'POST':
         domain_id = request.POST['id']
         update_at = request.POST['update_at']
@@ -1404,7 +1424,6 @@ def upserver(request):
     if request.method == 'GET':
         server_id = request.GET['server_id']
         server = Server.objects.get(id=server_id)
-        setserver = Setting_Server.objects.get(server_company=server.server_company)
         server_day = server.updated_date
         year_int = server_day.year + 1
         year = '%d' % year_int
@@ -1418,7 +1437,7 @@ def upserver(request):
             day = '%d' % server_day.day
         update_date = year + '-' + month + '-' + day
         pay = Payment.objects.all()
-        return render(request, 'system/upserver.html', {'data': server, 'set': setserver,'date': update_date, 'pay': pay, 'server_id': server_id})
+        return render(request, 'system/upserver.html', {'data': server, 'date': update_date, 'pay': pay, 'server_id': server_id})
     elif request.method == 'POST':
         server_id = request.POST['server_id']
         host = request.POST['host']
@@ -1430,17 +1449,17 @@ def upserver(request):
         update_at = request.POST['update_at']
         pay = request.POST['pay']
         remarks = request.POST['remark']
-        obj = Server.objects.get(id=server_id)
-        obj.login_id = login_id
-        obj.host = host
-        obj.login_pass = login_pass
-        obj.username = account
-        obj.ftp_pass = ftp_pass
-        obj.db_pass = db_pass
-        obj.updated_date = update_at
-        obj.payment = pay
-        obj.remarks = remarks
-        obj.save()
+        Server.objects.filter(id=server_id).update(
+            login_id=login_id,
+            host=host,
+            login_pass=login_pass,
+            username=account,
+            ftp_pass=ftp_pass,
+            db_pass=db_pass,
+            updated_date=update_at,
+            payment=pay,
+            remarks=remarks,
+        )
         redirect_url = '/django.cgi/server/detail?server_id=' + str(server_id)
         return HttpResponseRedirect(redirect_url)
 
@@ -1459,6 +1478,7 @@ def site_delete(request):
 def site_edit(request):
     if request.method == 'GET':
         site_id = request.GET['site_id']
+        server_id = request.GET['server_id']
         obj = Site.objects.get(id=site_id)
         data = {}
         data['site_id'] = obj.id
@@ -1475,14 +1495,21 @@ def site_edit(request):
         data['updated_date'] = datetime.strftime(obj.updated_date, '%Y-%m-%d')
         group = Group.objects.all()
         template = Templates.objects.all()
-        server = Setting_Server.objects.all()
-        return render(request, 'system/site_edit.html', {'data': data, 'group': group, 'template': template, 'server': server})
+        server = Server.objects.all()
+        return render(request, 'system/site_edit.html', {'data': data, 'group': group, 'template': template, 'server': server, 'server_id': server_id})
     elif request.method == 'POST':
         site_id = request.POST['site_id']
+        server_id = request.POST['server_id']
+        site = Site.objects.get(id=site_id)
+        url = request.POST['url']
+        japanese = request.POST['japanese']
+        if request.POST['url'] != site.url:
+            if request.POST['japanese'] == site.japanese:
+                pass
         Site.objects.filter(id=site_id).update(
-            url=request.POST['url'],
+            url=url,
             group_name=request.POST['group'],
-            japanese=request.POST['japanese'],
+            japanese=japanese,
             server=request.POST['server'],
             login_url=request.POST['login_url'],
             login_id=request.POST['login_id'],
@@ -1491,7 +1518,7 @@ def site_edit(request):
             template=request.POST['template'],
             updated_date=request.POST['update_at']
         )
-        return HttpResponseRedirect('/django.cgi/site/detail?site_id=' + str(site_id))
+        return HttpResponseRedirect('/django.cgi/site/detail?site_id=' + str(site_id) + '&server_id=' + str(server_id))
 
 
 @login_required
@@ -1575,3 +1602,55 @@ def delete_setting(request):
         obj = Templates.objects.filter(id=deleted_id)
         obj.delete()
         return redirect('system.views.setting_templates')
+
+
+@login_required
+def site_to_url(request):
+    site = request.GET['site']
+    site_names = raw_get_url_from_site(site)
+    data = {}
+    data['url'] = []
+    for site_name in site_names:
+        data['url'].append(site_name[0])
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+@login_required
+def delete_confirm(request):
+    check_id = request.GET['check_id'][8:]
+    kind = request.GET['kind']
+    data = {
+        'result': False,
+        'reason': ""
+    }
+    if kind == 'templates':
+        name = Templates.objects.get(id=check_id).templates
+        if Site.objects.filter(template=name).count != 0:
+            data['result'] = 'yes'
+            data['reason'] = 'site'
+    elif kind == 'link':
+        name = Link.objects.get(id=check_id).link
+        if Link.objects.filter(link_position=name).count != 0:
+            data['result'] = 'yes'
+            data['reason'] = 'link'
+    elif kind == 'group':
+        name = Group.objects.get(id=check_id).group
+        if Site.objects.filter(group_name=name).count != 0:
+            data['result'] = 'yes'
+            data['reason'] = 'site'
+    elif kind == 'payment':
+        name = Payment.objects.get(id=check_id).payment
+        if Server.objects.filter(payment=name).count != 0:
+            data['result'] = 'yes'
+            data['reason'] = 'server'
+    elif kind == 'domain':
+        name = Setting_Domain.objects.get(id=check_id).domain_company
+        if Domain.objects.filter(domain_company=name).count != 0:
+            data['result'] = 'yes'
+            data['reason'] = 'server'
+    elif kind == 'server':
+        name = Setting_Server.objects.get(id=check_id).server_company
+        if Server.objects.filter(server=name).count != 0:
+            data['result'] = 'yes'
+            data['reason'] = 'server'
+    return HttpResponse(json.dumps(data), content_type='application/json')

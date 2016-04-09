@@ -273,7 +273,7 @@ def get_site_comment(site_id):
         WHERE
             site_id = %s
         ORDER BY
-            created_at
+            created_at DESC
     """ % site_id
     cursor = connection.cursor()
     cursor.execute(sql)
@@ -310,6 +310,23 @@ def raw_get_site_from_url(url):
         yield row
 
 
+def raw_get_url_from_site(site_title):
+    sql = """
+        SELECT
+            url
+        FROM
+            system_site
+        WHERE
+            site_title = '%s'
+        ORDER BY
+            url
+    """ % site_title
+    cursor = connection.cursor()
+    cursor.execute(sql)
+    for row in cursor.fetchall():
+        yield row
+
+
 def get_exact_group(site_id):
     sql = """
         SELECT
@@ -323,6 +340,7 @@ def get_exact_group(site_id):
     cursor.execute(sql)
     for row in cursor.fetchall():
         yield row
+
 
 def get_exact_templates(site_id):
     sql = """
@@ -351,6 +369,7 @@ def get_exact_link(site_id):
     cursor.execute(sql)
     for row in cursor.fetchall():
         yield row
+
 
 def get_exact_payment(site_id):
     sql = """

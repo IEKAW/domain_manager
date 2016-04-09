@@ -1,7 +1,7 @@
 
 function dropsort() {
     if ($("#server_comp").val() == 'new'){
-        location.href = 'http://mimimimim.sakura.ne.jp/django.cgi/setting/server/create'
+        location.href = 'http://mimimimim.sakura.ne.jp/django.cgi/setting/server/create';
     }
     get_id_pass();
 }

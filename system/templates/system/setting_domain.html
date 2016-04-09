@@ -23,7 +23,7 @@
         <td>{{ r.login_pass }}</td>
         <td>
             <a href="{% url 'system.views.domain_edit' %}?domain_id={{ r.id }}" class="btn btn-warning">編集</a>
-            <a class="btn btn-danger" href="{% url 'system.views.delete_setting' %}?id={{ r.id }}&kind=set_domain">削除</a>
+            <a class="btn btn-danger" id="setting_{{ r.id }}" onclick="delete_confirm('setting_{{r.id}}')" href="{% url 'system.views.delete_setting' %}?id={{ r.id }}&kind=set_domain" onclick="delete_confirm()">削除</a>
         </td>
     </tr>
     {% endfor %}
