@@ -405,12 +405,15 @@ def domain_detail(request):
         for raw in domain:
             data['updated_at'] = raw[3]
             data['company'] = raw[4]
-            setting_domain = Setting_Domain.objects.get(
-                domain_company=raw[4]
-            )
+            try:
+                setting_domain = Setting_Domain.objects.get(
+                    domain_company=raw[4]
+                )
+                data['company_url'] = setting_domain.login_url
+            except:
+                data['company_url'] = ""
             data['domain'] = raw[1]
             data['japanese'] = raw[2]
-            data['company_url'] = setting_domain.login_url
             data['server'] = raw[7]
             if data['japanese'][:7] == 'http://':
                 data['japanese'] = data['japanese'][7:]
