@@ -649,10 +649,7 @@ def create_server(request):
         return render(request, 'system/create_server.html', {'next_year': day, 'server': server, 'pay': pay})
     elif request.method == 'POST':
         company = request.POST['company']
-        if company == 'new':
-            company = ''
         host = request.POST['host']
-        company = request.POST['company']
         account = request.POST['account']
         ftp_pass = request.POST['ftp_pass']
         db_pass = request.POST['db_pass']
