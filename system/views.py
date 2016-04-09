@@ -438,9 +438,21 @@ def server_detail(request):
     server = get_special_server(server_id)
     for raw in server:
         data['server'] = raw[1]
-        obj = Setting_Server.objects.get(
-            server_company=raw[12]
-        )
+        try:
+            obj = Setting_Server.objects.get(
+                server_company=raw[12]
+            )
+            data['nameserver1'] = obj.nameserver1
+            data['nameserver2'] = obj.nameserver2
+            data['nameserver3'] = obj.nameserver3
+            data['nameserver4'] = obj.nameserver4
+            data['nameserver5'] = obj.nameserver5
+        except:
+            data['nameserver1'] = ''
+            data['nameserver2'] = ''
+            data['nameserver3'] = ''
+            data['nameserver4'] = ''
+            data['nameserver5'] = ''
         data['url'] = obj.login_url
         data['update_at'] = raw[2]
         data['host'] = raw[3]
@@ -451,11 +463,6 @@ def server_detail(request):
         data['remarks'] = raw[7]
         data['login_id'] = raw[9]
         data['login_pass'] = raw[10]
-        data['nameserver1'] = obj.nameserver1
-        data['nameserver2'] = obj.nameserver2
-        data['nameserver3'] = obj.nameserver3
-        data['nameserver4'] = obj.nameserver4
-        data['nameserver5'] = obj.nameserver5
     result = {'data': data, 'method': 'server', 'server_id': server_id}
     return render(request, 'system/server_detail.html', result)
 
