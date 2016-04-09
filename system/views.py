@@ -447,13 +447,14 @@ def server_detail(request):
             data['nameserver3'] = obj.nameserver3
             data['nameserver4'] = obj.nameserver4
             data['nameserver5'] = obj.nameserver5
+            data['url'] = obj.login_url
         except:
             data['nameserver1'] = ''
             data['nameserver2'] = ''
             data['nameserver3'] = ''
             data['nameserver4'] = ''
             data['nameserver5'] = ''
-        data['url'] = obj.login_url
+            data['url'] = ''
         data['update_at'] = raw[2]
         data['host'] = raw[3]
         data['username'] = raw[8]
