@@ -124,8 +124,8 @@ function delete_confirm(check_id) {
         xmlHttp.open("GET", http_url, false);
         xmlHttp.send(null);
         if (JSON.parse(xmlHttp.responseText)["result"] == 'yes'){
-            $('a#' + check_id).attr('href', "/setting/" + $(location).attr('pathname').split('/')[3]);
-            alert("この項目を使用している" + JSON.parse(xmlHttp.responseText)["reason"][0] + "がある為、削除が出来ません");
+            $('a#' + check_id).attr('href', "/django.cgi/setting/" + $(location).attr('pathname').split('/')[3]);
+            alert("この項目を使用している" + JSON.parse(xmlHttp.responseText)["reason"] + "がある為、削除が出来ません");
         }
     }
 }
