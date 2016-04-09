@@ -710,7 +710,10 @@ def create_domain(request):
                 domain = url_idna_quote('http://' + japanese)
             if domain[:7] == 'http://':
                 domain = domain[7:]
-        company = request.POST['company']
+        try:
+            company = request.POST['company']
+        except:
+            company = ""
         update_at = request.POST['update_at']
         update_method = request.POST['update_method']
         server = request.POST['server']
