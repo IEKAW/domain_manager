@@ -876,7 +876,7 @@ def domain_warning(request):
             )
         else:
             domain_detail = DomainDetail(
-                domain_id=domain.id,
+                domain_id=domain_obj.id,
                 url=url,
                 title=title,
                 is_representative=False
@@ -896,7 +896,7 @@ def domain_warning(request):
             remarks=remarks
         )
         site_obj.save()
-        return HttpResponseRedirect('/django.cgi/domain/detail?domain_id=' + domain_id)
+        return HttpResponseRedirect('/django.cgi/domain/detail?domain_id=' + str(domain_obj.id))
 
 
 @login_required
