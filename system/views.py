@@ -651,20 +651,35 @@ def create_server(request):
             server_company = company + '-' + str(server_count + 1)
         else:
             server_company = company
-        obj = Setting_Server.objects.get(server_company=company)
-        server_obj = Server(
-            server_company=server_company,
-            server=company,
-            updated_date=update_at,
-            host=host,
-            db_pass=db_pass,
-            ftp_pass=ftp_pass,
-            payment=pay,
-            remarks=remark,
-            username=account,
-            login_id=obj.login_id,
-            login_pass=obj.login_pass
-        )
+        try:
+            obj = Setting_Server.objects.get(server_company=company)
+            server_obj = Server(
+                server_company=server_company,
+                server=company,
+                updated_date=update_at,
+                host=host,
+                db_pass=db_pass,
+                ftp_pass=ftp_pass,
+                payment=pay,
+                remarks=remark,
+                username=account,
+                login_id=obj.login_id,
+                login_pass=obj.login_pass
+            )
+        except:
+            server_obj = Server(
+                server_company=server_company,
+                server=company,
+                updated_date=update_at,
+                host=host,
+                db_pass=db_pass,
+                ftp_pass=ftp_pass,
+                payment=pay,
+                remarks=remark,
+                username=account,
+                login_id="",
+                login_pass=""
+            )
         server_obj.save()
         return HttpResponseRedirect('/django.cgi/server')
 
@@ -734,9 +749,15 @@ def create_site(request):
         else:
             japanese = request.POST['japanese']
             url = url_idna_quote(japanese)
-        group = request.POST['group']
+        try:
+            group = request.POST['group']
+        except:
+            group = ""
         update_at = request.POST['update_at']
-        template = request.POST['template']
+        try:
+            template = request.POST['template']
+        except:
+            template = ""
         login_url = request.POST['login_url']
         login_id = request.POST['login_id']
         login_pass = request.POST['login_pass']
