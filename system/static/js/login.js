@@ -111,11 +111,11 @@ function communicate_http(url){
 }
 
 function delete_confirm(check_id) {
-    path = $(location).attr('pathname').split('/')[1];
+    path = $(location).attr('pathname').split('/')[2];
     if (path == 'setting') {
         query_params = {
             'check_id': check_id,
-            'kind': $(location).attr('pathname').split('/')[2]
+            'kind': $(location).attr('pathname').split('/')[3]
         }
         base_url = [location.protocol, '/', location.host, "django.cgi" ,"delete_confirm.json"].join('/');
         http_url = [base_url, $.param(query_params)].join('?');
@@ -124,7 +124,7 @@ function delete_confirm(check_id) {
         xmlHttp.open("GET", http_url, false);
         xmlHttp.send(null);
         if (JSON.parse(xmlHttp.responseText)["result"] == 'yes'){
-            $('a#' + check_id).attr('href', "/setting/" + $(location).attr('pathname').split('/')[2]);
+            $('a#' + check_id).attr('href', "/setting/" + $(location).attr('pathname').split('/')[3]);
             alert("この項目を使用している" + JSON.parse(xmlHttp.responseText)["reason"][0] + "がある為、削除が出来ません");
         }
     }
