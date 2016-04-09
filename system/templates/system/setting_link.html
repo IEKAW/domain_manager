@@ -16,7 +16,7 @@
     <tr>
         <td>{{ name.link }}</td>
         <td><a class="btn btn-warning" href="{% url 'system.views.setting_link_edit' %}?link_id={{ name.id }}">編集</a>
-            <a class="btn btn-danger" d="setting_{{ name.id }}" onclick="delete_confirm('setting_{{name.id}}')" href="{% url 'system.views.delete_setting' %}?id={{ name.id }}&kind=link">削除</a>
+            <a class="btn btn-danger" id="setting_{{ name.id }}" onclick="delete_confirm('setting_{{name.id}}')" href="{% url 'system.views.delete_setting' %}?id={{ name.id }}&kind=link">削除</a>
     </tr>
     {% endfor %}
 
