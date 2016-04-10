@@ -1674,32 +1674,33 @@ def delete_confirm(request):
     }
     if kind == 'templates':
         name = Templates.objects.get(id=check_id).templates
-        if Site.objects.filter(template=name).count != 0:
+        print Site.objects.filter(template=name).count()
+        if Site.objects.filter(template=name).count() != 0:
             data['result'] = 'yes'
             data['reason'] = 'site'
     elif kind == 'link':
-        name = Link.objects.get(id=check_id).link
-        if Link.objects.filter(link_position=name).count != 0:
+        name = Setting_Link.objects.get(id=check_id).link
+        if Link.objects.filter(link_position=name).count() != 0:
             data['result'] = 'yes'
             data['reason'] = 'link'
     elif kind == 'group':
         name = Group.objects.get(id=check_id).group
-        if Site.objects.filter(group_name=name).count != 0:
+        if Site.objects.filter(group_name=name).count() != 0:
             data['result'] = 'yes'
             data['reason'] = 'site'
     elif kind == 'payment':
         name = Payment.objects.get(id=check_id).payment
-        if Server.objects.filter(payment=name).count != 0:
+        if Server.objects.filter(payment=name).count() != 0:
             data['result'] = 'yes'
             data['reason'] = 'server'
     elif kind == 'domain':
         name = Setting_Domain.objects.get(id=check_id).domain_company
-        if Domain.objects.filter(domain_company=name).count != 0:
+        if Domain.objects.filter(domain_company=name).count() != 0:
             data['result'] = 'yes'
             data['reason'] = 'server'
     elif kind == 'server':
         name = Setting_Server.objects.get(id=check_id).server_company
-        if Server.objects.filter(server=name).count != 0:
+        if Server.objects.filter(server=name).count() != 0:
             data['result'] = 'yes'
             data['reason'] = 'server'
     return HttpResponse(json.dumps(data), content_type='application/json')
