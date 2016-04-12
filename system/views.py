@@ -215,10 +215,13 @@ def domain(request):
                 tmp['japanese'] = domain_data[2]
                 tmp['updated_at'] = domain_data[3]
                 tmp['company'] = domain_data[4]
-                setting_domain = Setting_Domain.objects.get(
-                    domain_company=domain_data[4]
-                )
-                tmp['company_url'] = setting_domain.login_url
+                try:
+                    setting_domain = Setting_Domain.objects.get(
+                        domain_company=domain_data[4]
+                    )
+                    tmp['company_url'] = setting_domain.login_url
+                except:
+                    tmp['company_url'] = ""
                 domaindetail = DomainDetail.objects.get(
                     domain_id=domain_data[0],
                     is_representative=True
