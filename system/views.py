@@ -1381,8 +1381,10 @@ def setting_server_edit(request):
 
 def rank(request):
     site_id = request.GET['site_id']
+    site = Site.objects.get(id=site_id)
+    server_id = Server.objects.get(server_company=site.server).id
     data = Keywords.objects.filter(site_id=site_id).all()
-    return render(request, 'system/rank.html', {'data': data, 'site_id': site_id})
+    return render(request, 'system/rank.html', {'data': data, 'site_id': site_id, 'server_id':server_id})
 
 
 def create_keyword(request):
