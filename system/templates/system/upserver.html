@@ -9,6 +9,8 @@
     <input type="hidden" name="server_company" value="{{ data.server_company }}">
     <label for="host">FTPサーバー(ホスト名)</label>
     <input type="text" name="host" class="form-control" value="{{ data.host }}" ><br/>
+    <label for="id">ログインURL:</label>
+    <input type="text" name="login_url" class="form-control" value="{{ data.login_url }}" ><br/>
     <label for="id">ログインID:</label>
     <input type="text" name="login_id" class="form-control" value="{{ data.login_id }}" ><br/>
     <label for="pass">ログインパスワード:</label>
@@ -26,7 +28,7 @@
         {% for r in pay %}
             {% if r.payment == data.payment %}
             <option value="{{ r.payment }}" selected="">{{ r.payment }}</option>
-            } 
+            }
             {% else %}
             <option value="{{ r.payment }}">{{ r.payment }}</option>
             {% endif %}

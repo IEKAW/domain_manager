@@ -665,6 +665,9 @@ def create_server(request):
         account = request.POST['account']
         ftp_pass = request.POST['ftp_pass']
         db_pass = request.POST['db_pass']
+        login_id = request.POST['login_id']
+        login_pass = request.POST['login_pass']
+        login_url = request.POST['login_url']
         try:
             pay = request.POST['pay']
         except:
@@ -676,35 +679,20 @@ def create_server(request):
             server_company = company + '-' + str(server_count + 1)
         else:
             server_company = company
-        try:
-            obj = Setting_Server.objects.get(server_company=company)
-            server_obj = Server(
-                server_company=server_company,
-                server=company,
-                updated_date=update_at,
-                host=host,
-                db_pass=db_pass,
-                ftp_pass=ftp_pass,
-                payment=pay,
-                remarks=remark,
-                username=account,
-                login_id=obj.login_id,
-                login_pass=obj.login_pass
-            )
-        except:
-            server_obj = Server(
-                server_company=server_company,
-                server=company,
-                updated_date=update_at,
-                host=host,
-                db_pass=db_pass,
-                ftp_pass=ftp_pass,
-                payment=pay,
-                remarks=remark,
-                username=account,
-                login_id="",
-                login_pass=""
-            )
+        server_obj = Server(
+            server_company=server_company,
+            server=company,
+            updated_date=update_at,
+            host=host,
+            db_pass=db_pass,
+            ftp_pass=ftp_pass,
+            payment=pay,
+            remarks=remark,
+            username=account,
+            login_url=login_url,
+            login_id=login_id,
+            login_pass=login_pass
+        )
         server_obj.save()
         return HttpResponseRedirect('/django.cgi/server')
 
@@ -1495,6 +1483,7 @@ def upserver(request):
     elif request.method == 'POST':
         server_id = request.POST['server_id']
         host = request.POST['host']
+        login_url = request.POST['login_url']
         login_id = request.POST['login_id']
         login_pass = request.POST['login_pass']
         account = request.POST['account']
@@ -1504,6 +1493,7 @@ def upserver(request):
         pay = request.POST['pay']
         remarks = request.POST['remark']
         Server.objects.filter(id=server_id).update(
+            login_url=login_url,
             login_id=login_id,
             host=host,
             login_pass=login_pass,
@@ -1719,4 +1709,15 @@ def delete_confirm(request):
         if Server.objects.filter(server=name).count() != 0:
             data['result'] = 'yes'
             data['reason'] = 'server'
+    return HttpResponse(json.dumps(data), content_type='application/json')
+
+@login_required
+def get_login(request):
+    server = request.GET['server']
+    server_obj = Setting_Server.objects.get(server_company=server)
+    data = {
+        'login_url': server_obj.login_url,
+        'login_id': server_obj.login_id,
+        'login_pass': server_obj.login_pass,
+    }
     return HttpResponse(json.dumps(data), content_type='application/json')

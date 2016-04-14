@@ -40,6 +40,7 @@ class Server(models.Model):
     db_pass = models.CharField(max_length=255, null=True)
     payment = models.CharField(max_length=255, null=True)
     remarks = models.TextField(null=True)
+    login_url = models.CharField(max_length=255, null=True)
     login_id = models.CharField(max_length=255, null=True)
     login_pass = models.CharField(max_length=255, null=True)
     update_method = models.CharField(max_length=255, null=True)
