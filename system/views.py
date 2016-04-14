@@ -1524,6 +1524,8 @@ def site_delete(request):
     obj = Site.objects.filter(id=site_id)
     url = obj.all()[:1].get()
     DomainDetail.objects.filter(url=url.url).delete()
+    Link.objects.filter(from_id=site_id).delete()
+    Link.objects.filter(to_id=site_id).delete()
     obj.delete()
     return HttpResponseRedirect('/django.cgi/site')
 
