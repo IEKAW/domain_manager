@@ -36,7 +36,7 @@
     <label for="company">サーバー会社:</label>
     <select name="server" id="server_comp" class="form-control" onchange="dropsort()">
         {% for r in server %}
-            <option value="{{ r.server }}">{{ r.server }}</option>
+            <option value="{{ r.server_company }}">{{ r.server_company }}</option>
         {% endfor %}
         <option value="new">新規登録</option>
     </select>
