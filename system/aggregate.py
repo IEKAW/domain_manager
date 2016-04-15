@@ -81,7 +81,7 @@ def get_server_info(search_index):
             FROM
                 system_server
 	       ORDER BY
-	   	       updated_date desc
+	   	       updated_date
         """
     else:
         if search_index == 'all':
@@ -90,8 +90,8 @@ def get_server_info(search_index):
                     *
                 FROM
                     system_server
-		ORDER BY
-	 	    updated_date desc
+        		ORDER BY
+        	 	    updated_date
             """
         else:
             search_index = '%' + search_index + '%'
@@ -105,7 +105,7 @@ def get_server_info(search_index):
                 LIKE
                     '%s'
         		ORDER BY
-        		    updated_date desc
+        		    updated_date
             """ % (search_index)
     cursor = connection.cursor()
     cursor.execute(sql)
