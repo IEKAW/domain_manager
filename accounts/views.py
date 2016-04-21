@@ -22,7 +22,7 @@ def create(request):
             user = User.objects.create_user(name, e_mail, password)
             user.save()
             login(request, authenticate(username=name, password=password))
-            return HttpResponseRedirect('/')
+            return HttpResponseRedirect('/django.cgi/')
         except:
             data['error_msg'] = "something went wrong"
             return render(request, 'accounts/create.html', data)
