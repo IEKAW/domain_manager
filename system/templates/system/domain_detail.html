@@ -16,7 +16,7 @@
     </tr>
     {% for detail in data.detail %}
     <tr>
-        <td width="200" style="word-break: break-all;"><a href="/django.cgi/site/detail?site_id={{ detail.site_id }}">{{ detail.url }}</a></td>
+        <td width="200" style="word-break: break-all;"><a href="/django.cgi/site/detail?site_id={{ detail.site_id }}&server_id={{ detail.server_id }}">{{ detail.url }}</a></td>
         <td width="300" style="word-break: break-all;">{{ detail.title }}</td>
         {% if detail.is_represetative == 1 %}
             <td>✔︎</td>

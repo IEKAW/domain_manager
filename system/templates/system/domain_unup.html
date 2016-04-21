@@ -34,10 +34,12 @@
             <td>{{ raw.updated_at }}</td>
         {% endif %}
         <td><a href="{{ raw.company_url }}">{{ raw.company }}</a></td>
-        {% if raw.representative != 'not selected' %}
-            <td><a href="{% url 'system.views.site_detail' %}?site_id={{ raw.site_id }}">{{ raw.representative }}</a></td>
+        {% if domain.representative != 'not selected' and domain.site_id != -1 %}
+            <td width="200"><a href="{% url 'system.views.site_detail' %}?server_id={{ raw.server_id }}&site_id={{ raw.site_id }}">{{ raw.representative }}</a></td>
+        {% elif domain.site_id == -1 %}
+            <td width="200">{{ raw.representative }}</td>
         {% else %}
-            <td>{{ raw.representative }}</td>
+            <td width="200">{{ raw.representative }}</td>
         {% endif %}
         <td>
             <a href="/django.cgi/domain/update?domain_id={{ raw.id }}" class="btn-warning btn-xs">更新する</a><br/>

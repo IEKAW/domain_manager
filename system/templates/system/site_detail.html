@@ -38,18 +38,18 @@
         <th>ログインID</th>
         <th>{{ data.login_id }}</th>
     </tr>
-    <tr>    
+    <tr>
         <th>ログインパスワード</th>
         <th>{{ data.login_pass }}</th>
     </tr>
 </table>
 <a class="btn btn-default" href="{% url 'system.views.site_edit' %}?site_id={{site_id}}&server_id={{ server_id }}">編集</a>
-<a class="btn btn-danger" href="{% url 'system.views.site_delete' %}?site_id={{site_id}}" onclick="alert('本当に削除してもよろしいですか。')">削除</a>
+<a class="btn btn-danger" onclick="delete_check({{site_id}})">削除</a>
 
 <h2>備考</h2>
 <p>{{ data.remarks|linebreaks }}</p>
 <a href="{% url 'system.views.link' site_id=site_id %}" class="btn btn-default">リンク構造</a>
-<a href="{% url 'system.views.create_link' %}?site_id={{ site_id }}" class="btn btn-default">リンクを貼る</a>
+<a href="{% url 'system.views.create_link' %}?site_id={{ site_id }}" class="btn btn-default">リンクを貰う</a>
 </div>
 <div class="col-md-6 col-md-offset-2">
     <!--chat ui -->
@@ -88,7 +88,7 @@
         <input type="hidden" name="site_id" value="{{ data.site_id }}">
         <input type="hidden" name="server_id" value="{{ server_id }}">
         <textarea name="memo" cols="50" rows="10"></textarea><br/>
-        <input type="submit" value="送信">        
+        <input type="submit" value="送信">
     </form>
     <a class="btn btn-default" href="{% url 'system.views.rank' %}?site_id={{ site_id }}">検索順位キーワード</a>
     {% for row in keywords %}

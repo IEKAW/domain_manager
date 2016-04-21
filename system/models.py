@@ -64,6 +64,7 @@ class Link(models.Model):
     from_id = models.IntegerField(null=True)
     to_id = models.IntegerField(null=True)
     created_at = models.DateField()
+    anchr = models.CharField(max_length=255, null=True)
 
 
 class DomainDetail(models.Model):

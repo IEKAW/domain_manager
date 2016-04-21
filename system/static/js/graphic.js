@@ -21,8 +21,11 @@ function get_id_pass(){
     query_params = {
         'server': url
     };
-    //base_url = [location.protocol, '/', location.host, "id/pass.json"].join('/');
-    base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
+    if (location.host == 'localhost:8000'){
+      base_url = [location.protocol, '/', location.host, "id/pass.json"].join('/');
+    } else {
+      base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
+    }
     http_url = [base_url, $.param(query_params)].join('?');
     var xmlHttp;
     xmlHttp = new XMLHttpRequest();
@@ -32,7 +35,6 @@ function get_id_pass(){
     $('input[name=pass]').val(JSON.parse(xmlHttp.responseText)["pass"]);
 }
 
-// urlから自動でsite_titleを取得してくれる
 function get_login(){
     url = $('select[name=company]').val();
     query_params = {
@@ -53,4 +55,15 @@ function get_login(){
     $('input[name=login_pass]').val(JSON.parse(xmlHttp.responseText)["login_pass"]);
 }
 
-get_login();
+if (location.href == "http://localhost:8000/server/create"){
+  get_login();
+} else if (location.href == "http://mimimimim.sakura.ne.jp/django.cgi/server/create"){
+  get_login();
+}
+
+function delete_check(site_id){
+  if(confirm("本当に削除してもよいですか？")){
+      console.log(location.host + "/site/delete?site_id=" + site_id);
+      location.href = "http://" + location.host + "/site/delete?site_id=" + site_id;
+  }
+}

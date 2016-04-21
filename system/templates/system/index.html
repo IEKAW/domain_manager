@@ -20,8 +20,10 @@
         <td>{{ domain.japanese }}</td>
         <td>{{ domain.updated_at }}</td>
         <td><a href="{{ domain.company_url }}">{{ domain.company }}</a></td>
-        {% if domain.representative != 'not selected' %}
-            <td><a href="{{ domain.representative }}">{{ domain.representative }}</a></td>
+        {% if domain.representative != 'not selected' and domain.site_id != -1 %}
+            <td><a href="{% url 'system.views.site_detail' %}?server_id={{ domain.server_id }}&site_id={{ domain.site_id }}">{{ domain.representative }}</a></td>
+        {% elif domain.site_id == -1 %}
+            <td>{{ domain.representative }}</td>
         {% else %}
             <td>{{ domain.representative }}</td>
         {% endif %}

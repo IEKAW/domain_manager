@@ -46,9 +46,12 @@ function get_site(){
         'url': url
     };
     id = $('select[name=link_url] option:selected').attr('id');
-    base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
-    // base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
-    http_url = [base_url, $.param(query_params)].join('?');
+		if (location.host == 'localhost:8000'){
+			base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
+    } else {
+			base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
+		}
+		http_url = [base_url, $.param(query_params)].join('?');
     var xmlHttp;
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", http_url, false);
@@ -64,9 +67,12 @@ function get_url(){
         'site': site
     };
     id = $('select[name=link_site] option:selected').attr('id');
-    base_url = [location.protocol, '/', location.host,"django.cgi" ,"site_url.json"].join('/');
-    // base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
-    http_url = [base_url, $.param(query_params)].join('?');
+		if (location.host == 'localhost:8000'){
+    	base_url = [location.protocol, '/', location.host,"site_url.json"].join('/');
+    } else{
+			base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
+		}
+		http_url = [base_url, $.param(query_params)].join('?');
     var xmlHttp;
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", http_url, false);
@@ -82,9 +88,12 @@ function get_urls(){
         'site': site
     };
     id = $('select[name=site_title] option:selected').attr('id');
-    base_url = [location.protocol, '/', location.host, "django.cgi" ,"site_url.json"].join('/');
-    // base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
-    http_url = [base_url, $.param(query_params)].join('?');
+		if (location.host == 'localhost:8000'){
+    	base_url = [location.protocol, '/', location.host, "django.cgi" ,"site_url.json"].join('/');
+    } else {
+			base_url = [location.protocol, '/', location.host, "django.cgi", "url_site.json"].join('/');
+		}
+		http_url = [base_url, $.param(query_params)].join('?');
     var xmlHttp;
     xmlHttp = new XMLHttpRequest();
     xmlHttp.open("GET", http_url, false);
@@ -107,7 +116,11 @@ function delete_confirm(check_id) {
             'check_id': check_id,
             'kind': $(location).attr('pathname').split('/')[3]
         }
-        base_url = [location.protocol, '/', location.host, "django.cgi" ,"delete_confirm.json"].join('/');
+				if (location.host == 'localhost:8000'){
+        	base_url = [location.protocol, '/', location.host, "django.cgi" ,"delete_confirm.json"].join('/');
+				} else {
+					base_url = [location.protocol, '/', location.host, "delete_confirm.json"].join('/');
+				}
         http_url = [base_url, $.param(query_params)].join('?');
         var xmlHttp;
         xmlHttp = new XMLHttpRequest();
@@ -119,4 +132,3 @@ function delete_confirm(check_id) {
         }
     }
 }
-

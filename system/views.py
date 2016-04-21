@@ -86,6 +86,18 @@ def home(request):
                     is_representative=True
                 )
                 tmp['representative'] = domaindetail.title
+                tmp['site_id'] = -1
+                tmp['server_id'] = -1
+                try:
+                    site_id = Site.objects.get(site_title=domaindetail.title)
+                    tmp['site_id'] = site_id.id
+                except:
+                    pass
+                try:
+                    server_id = Server.objects.get(server=domain_data[7])
+                    tmp['server_id'] = server_id.id
+                except:
+                    pass
                 data['domain'].append(tmp)
             except:
                 tmp = {}
@@ -102,6 +114,7 @@ def home(request):
                 except:
                     tmp['company_url'] = ""
                 tmp['representative'] = "not selected"
+                tmp['server_id'] = -1
                 data['domain'].append(tmp)
             if tmp['domain'] == tmp['japanese']:
                 tmp['japanese'] = ""
@@ -227,11 +240,18 @@ def domain(request):
                     is_representative=True
                 )
                 tmp['representative'] = domaindetail.title
-                site = Site.objects.get(
-                    url=domaindetail.url,
-                    site_title=domaindetail.title
-                )
-                tmp['site_id'] = site.id
+                tmp['site_id'] = -1
+                tmp['server_id'] = -1
+                try:
+                    site_id = Site.objects.get(site_title=domaindetail.title)
+                    tmp['site_id'] = site_id.id
+                except:
+                    pass
+                try:
+                    server_id = Server.objects.get(server=domain_data[7])
+                    tmp['server_id'] = server_id.id
+                except:
+                    pass
                 if tmp['japanese'][:7] == 'http://':
                     tmp['japanese'] = tmp['japanese'][7:]
                 data.append(tmp)
@@ -328,8 +348,19 @@ def domain_unup(request):
                     domain_id=domain_data[0],
                     is_representative=True
                 )
-                tmp['representative'] = domaindetail.url
-                tmp['site_id'] = domaindetail.id
+                tmp['representative'] = domaindetail.title
+                tmp['site_id'] = -1
+                tmp['server_id'] = -1
+                try:
+                    site_id = Site.objects.get(site_title=domaindetail.title)
+                    tmp['site_id'] = site_id.id
+                except:
+                    pass
+                try:
+                    server_id = Server.objects.get(server=domain_data[7])
+                    tmp['server_id'] = server_id.id
+                except:
+                    pass
                 if (today > dt.strptime(dt.strftime(domain_data[3], '%Y-%m-%d'), '%Y-%m-%d')) == True:
                     tmp['pass'] = 1
                 else:
@@ -406,6 +437,11 @@ def domain_detail(request):
             tmp['site_id'] = site_obj.id
             tmp['title'] = detail[3]
             tmp['is_represetative'] = detail[4]
+            try:
+                server_id = Server.objects.get(server=data['server'])
+                tmp['server_id'] = server_id.id
+            except:
+                tmp['server_id'] = -1
             data['detail'].append(tmp)
         result = {'data': data, 'id': domain_id}
         return render(request, 'system/domain_detail.html', result)
@@ -438,6 +474,11 @@ def domain_detail(request):
             tmp['site_id'] = site_obj.id
             tmp['title'] = detail[3]
             tmp['is_represetative'] = detail[4]
+            try:
+                server_id = Server.objects.get(server=data['server'])
+                tmp['server_id'] = server_id.id
+            except:
+                tmp['server_id'] = -1
             data['detail'].append(tmp)
         result = {'data': data, 'method': 'domain', 'id': domain_id}
         return render(request, 'system/domain_detail.html', result)
@@ -603,6 +644,7 @@ def link(request, site_id):
         tmp = {}
         tmp['date'] = link[3]
         tmp['url'] = link[5]
+        tmp['anchr'] = link[10]
         tmp['title'] = link[1]
         tmp['position'] = link[2]
         tmp['color'] = COLOR_LIST[i]
@@ -630,7 +672,6 @@ def link(request, site_id):
         'check': check_list,
         'children_check': children_list,
     }
-
     return render(request, 'system/link.html', result)
 
 
@@ -730,6 +771,10 @@ def create_domain(request):
         update_at = request.POST['update_at']
         update_method = request.POST['update_method']
         server = request.POST['server']
+        if domain[:4] == "www.":
+            domain = domain[4:]
+        if japanese[:4] == "www.":
+            japanese = japanese[4:]
         domain_obj = Domain(
             domain_name=domain,
             japanese=japanese,
@@ -779,6 +824,8 @@ def create_site(request):
         login_pass = request.POST['login_pass']
         remarks = request.POST['remarks']
         domain_name = url.split('/')[2]
+        if domain_name[:4] == "www.":
+            domain_name = domain_name[4:]
         try:
             domain = Domain.objects.get(
                 domain_name=domain_name
@@ -875,6 +922,8 @@ def domain_warning(request):
         data['company'] = company
         data['server'] = server
         japanese_domain = japanese.split('/')[2]
+        if japanese_domain[:4] == "www.":
+            japanese_domain = japanese_domain[4:]
         data['japanese_domain'] = japanese_domain
         return render(request, 'system/warning.html', data)
     elif request.method == 'POST':
@@ -965,6 +1014,7 @@ def create_link(request):
         link_site = request.POST['link_site']
         link_pos = request.POST['link_pos']
         server = request.POST['server']
+        anchr = request.POST['anchr']
         from_obj = Site.objects.get(url=url, site_title=site_title)
         from_id = from_obj.id
         to_obj = Site.objects.get(url=link_url, site_title=link_site)
@@ -978,7 +1028,8 @@ def create_link(request):
             link_position=link_pos,
             server=server,
             from_id=from_id,
-            to_id=to_id
+            to_id=to_id,
+            anchr=anchr
         )
         link_obj.save()
         created_date = datetime.now()
@@ -1205,7 +1256,9 @@ def comment_delete(request):
         site_id=site_id
     )
     site_comment_obj.delete()
-    redirect_url = '/django.cgi/site/detail?site_id=' + site_id
+    site = Site.objects.get(id=site_id)
+    server_id = Server.objects.get(server=site.server).id
+    redirect_url = '/django.cgi/site/detail?site_id=' + site_id + "&server_id=" + str(server_id)
     return HttpResponseRedirect(redirect_url)
 
 
@@ -1229,7 +1282,9 @@ def comment_edit(request):
             id=comment_id,
             site_id=site_id
         ).update(comment=comment, created_at=created_at)
-        redirect_url = '/django.cgi/site/detail?site_id=' + site_id
+        site = Site.objects.get(id=site_id)
+        server_id = Server.objects.get(server=site.server).id
+        redirect_url = '/django.cgi/site/detail?site_id=' + site_id + "&server_id=" + str(server_id)
         return HttpResponseRedirect(redirect_url)
 
 
@@ -1603,7 +1658,9 @@ def site_key(request):
             created_at=datetime.now()
         )
         site_comment_obj.save()
-    return HttpResponseRedirect('/django.cgi/site/detail?site_id=' + str(site_id))
+    site = Site.objects.get(id=site_id)
+    server_id = Server.objects.get(server=site.server).id
+    return HttpResponseRedirect('/django.cgi/site/detail?site_id=' + str(site_id) + '&server_id=' + str(server_id))
 
 
 @login_required
@@ -1680,7 +1737,6 @@ def delete_confirm(request):
     }
     if kind == 'templates':
         name = Templates.objects.get(id=check_id).templates
-        print Site.objects.filter(template=name).count()
         if Site.objects.filter(template=name).count() != 0:
             data['result'] = 'yes'
             data['reason'] = 'site'
