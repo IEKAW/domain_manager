@@ -182,7 +182,7 @@ def site(request):
         if tmp['japanese'] == tmp['url']:
             tmp['japanese'] = ''
         try:
-            server_id = Server.objects.get(server_company=site_data[5])
+            server_id = Server.objects.get(server=site_data[5])
             tmp['server_id'] = server_id.id
         except:
             pass
@@ -823,6 +823,7 @@ def create_site(request):
         login_id = request.POST['login_id']
         login_pass = request.POST['login_pass']
         remarks = request.POST['remarks']
+        server = request.POST['server']
         domain_name = url.split('/')[2]
         if domain_name[:4] == "www.":
             domain_name = domain_name[4:]
@@ -842,7 +843,8 @@ def create_site(request):
                 'login_url': login_url,
                 'login_pass': login_pass,
                 'remarks': remarks,
-                'domain_name': domain_name
+                'domain_name': domain_name,
+                'server': server
             }
             params = "?"
             for key, value in data.iteritems():
@@ -850,7 +852,7 @@ def create_site(request):
                     value = urllib.quote_plus(value)
                 params += key + '=' + value + '&'
             return redirect(reverse('system.views.domain_warning') + params[:-1])
-        server = domain.server_company
+        # server = domain.server_company
         if DomainDetail.objects.filter(domain_id=domain.id).count() == 0:
             domain_detail = DomainDetail(
                 domain_id=domain.id,
@@ -900,6 +902,7 @@ def domain_warning(request):
         login_pass = request.GET['login_pass']
         remarks = request.GET['remarks']
         domain_name = request.GET['domain_name']
+        server = request.POST['server']
         japanese = urllib.unquote_plus(japanese)
         data = {
             'title': title,
@@ -912,12 +915,13 @@ def domain_warning(request):
             'login_url': login_url,
             'login_pass': login_pass,
             'remarks': remarks,
-            'domain_name': domain_name
+            'domain_name': domain_name,
+            'server_default': server
         }
         next_year = datetime.today() + timedelta(days=365)
         day = datetime.strftime(next_year, '%Y-%m-%d')
         company = Setting_Domain.objects.all()
-        server = Setting_Server.objects.all()
+        server = Server.objects.all()
         data['next_year'] = day
         data['company'] = company
         data['server'] = server

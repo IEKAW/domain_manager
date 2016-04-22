@@ -18,10 +18,10 @@
             <option value="{{ r.group }}">{{ r.group }}</option>
         {% endfor %}
     </select>
-    <label for="server">サーバー会社</label>
+    <label for="server">サーバー</label>
         <select name="server" class="form-control">
             {% for r in server %}
-                <option value="{{ r.server_company }}">{{ r.server_company }}</option>
+                <option value="{{ r.server }}">{{ r.server}}</option>
             {% endfor %}
         </select>
     <label for="update_at">作成日:</label>
