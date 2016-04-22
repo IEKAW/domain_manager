@@ -836,7 +836,7 @@ def create_site(request):
             if domain_name[:4] == "www.":
                 domain_name = domain_name[4:]
         except:
-            domain_name = ''
+            domain_name = url
         try:
             domain = Domain.objects.get(
                 domain_name=domain_name
