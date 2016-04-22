@@ -182,7 +182,7 @@ def site(request):
         if tmp['japanese'] == tmp['url']:
             tmp['japanese'] = ''
         try:
-            server_id = Server.objects.get(server=site_data[5])
+            server_id = Server.objects.get(server_company=site_data[5])
             tmp['server_id'] = server_id.id
         except:
             pass
@@ -438,7 +438,7 @@ def domain_detail(request):
             tmp['title'] = detail[3]
             tmp['is_represetative'] = detail[4]
             try:
-                server_id = Server.objects.get(server=data['server'])
+                server_id = Server.objects.get(server_company=data['server'])
                 tmp['server_id'] = server_id.id
             except:
                 tmp['server_id'] = -1
@@ -475,7 +475,7 @@ def domain_detail(request):
             tmp['title'] = detail[3]
             tmp['is_represetative'] = detail[4]
             try:
-                server_id = Server.objects.get(server=data['server'])
+                server_id = Server.objects.get(server_company=data['server'])
                 tmp['server_id'] = server_id.id
             except:
                 tmp['server_id'] = -1
