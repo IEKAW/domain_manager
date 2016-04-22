@@ -1257,7 +1257,10 @@ def comment_delete(request):
     )
     site_comment_obj.delete()
     site = Site.objects.get(id=site_id)
-    server_id = Server.objects.get(server=site.server).id
+    try:
+        server_id = Server.objects.get(server=site.server).id
+    except:
+        server_id = -1
     redirect_url = '/django.cgi/site/detail?site_id=' + site_id + "&server_id=" + str(server_id)
     return HttpResponseRedirect(redirect_url)
 
@@ -1283,7 +1286,10 @@ def comment_edit(request):
             site_id=site_id
         ).update(comment=comment, created_at=created_at)
         site = Site.objects.get(id=site_id)
-        server_id = Server.objects.get(server=site.server).id
+        try:
+            server_id = Server.objects.get(server=site.server).id
+        except:
+            server_id = -1
         redirect_url = '/django.cgi/site/detail?site_id=' + site_id + "&server_id=" + str(server_id)
         return HttpResponseRedirect(redirect_url)
 
