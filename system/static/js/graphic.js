@@ -64,6 +64,10 @@ if (location.href == "http://localhost:8000/server/create"){
 function delete_check(site_id){
   if(confirm("本当に削除してもよいですか？")){
       console.log(location.host + "/site/delete?site_id=" + site_id);
-      location.href = "http://" + location.host + "/site/delete?site_id=" + site_id;
+      if (location.host == 'localhost:8000'){
+        location.href = "http://" + location.host + "/site/delete?site_id=" + site_id;
+      } else {
+        location.href = "http://" + location.host + "django.cgi/site/delete?site_id=" + site_id;
+      }
   }
 }
