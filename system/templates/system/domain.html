@@ -34,7 +34,7 @@
         <td>{{ raw.japanese }}</td>
         <td>{{ raw.updated_at }}</td>
         <td width="200" style="word-break: break-all;"><a href="{{ raw.company_url }}">{{ raw.company }}</a></td>
-        {% if domain.representative != 'not selected' or domain.site_id != -1 %}
+        {% if raw.representative != 'not selected' and raw.site_id != -1 %}
             <td width="200"><a href="{% url 'system.views.site_detail' %}?server_id={{ raw.server_id }}&site_id={{ raw.site_id }}">{{ raw.representative }}</a></td>
         {% elif domain.site_id == -1 %}
             <td width="200">{{ raw.representative }}</td>
