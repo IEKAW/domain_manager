@@ -998,7 +998,7 @@ def domain_warning(request):
 
 
 @login_required
-def _link(request):
+def create_link(request):
     if request.method == 'GET':
         site_id = request.GET["site_id"]
         sites = Site.objects.get(id=site_id)
