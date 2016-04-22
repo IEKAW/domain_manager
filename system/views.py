@@ -515,6 +515,7 @@ def server_detail(request):
         data['db_pass'] = raw[4]
         data['payment'] = raw[6]
         data['remarks'] = raw[7]
+        data['login_url'] = raw[13]
         data['login_id'] = raw[9]
         data['login_pass'] = raw[10]
     result = {'data': data, 'method': 'server', 'server_id': server_id}
