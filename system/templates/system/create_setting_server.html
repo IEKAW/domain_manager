@@ -1,7 +1,7 @@
 {% extends "layouts/base.html" %}
 {% block title %} Home {% endblock %}
 {% block content %}
-<h1>新規サーバー追加</h1>
+<h1>新規サーバー会社追加</h1>
 
 <form method="POST" action="{% url 'system.views.create_setting_server' %}">
     {% csrf_token %}
