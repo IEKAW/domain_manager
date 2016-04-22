@@ -808,9 +808,12 @@ def create_site(request):
         japanese = None
         if url != '':
             japanese = url_pyu_quote(url).encode('utf8')
-        else:
+        elif japanese != '':
             japanese = request.POST['japanese']
             url = url_idna_quote(japanese)
+        else:
+            url = ''
+            japanese = ''
         try:
             group = request.POST['group']
         except:
@@ -828,9 +831,12 @@ def create_site(request):
             server = request.POST['server']
         except:
             server = ""
-        domain_name = url.split('/')[2]
-        if domain_name[:4] == "www.":
-            domain_name = domain_name[4:]
+        try:
+            domain_name = url.split('/')[2]
+            if domain_name[:4] == "www.":
+                domain_name = domain_name[4:]
+        except:
+            domain_name = ''
         try:
             domain = Domain.objects.get(
                 domain_name=domain_name
