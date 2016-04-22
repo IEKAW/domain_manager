@@ -7,6 +7,14 @@ function dropsort() {
     get_login();
 }
 
+function server() {
+    if ($("#server_comp").val() == 'new'){
+        location.href = 'http://mimimimim.sakura.ne.jp/django.cgi/server/create';
+    }
+    //get_id_pass();
+    get_login();
+}
+
 path = $(location).attr('pathname');
 if (path == '/warning') {
     if (confirm("ドメインが登録されていません。続いてドメインの登録もしますか？")) {

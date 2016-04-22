@@ -23,6 +23,7 @@
             {% for r in server %}
                 <option value="{{ r.server }}">{{ r.server}}</option>
             {% endfor %}
+            <option value="new">新規作成</option>
         </select>
     <label for="update_at">作成日:</label>
     <input type="date" name="update_at" class="form-control" value="{{ day }}"><br/>

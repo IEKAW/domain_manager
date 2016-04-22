@@ -23,10 +23,11 @@
         <option value="hand">手動</option>
     </select>
     <label for="company">サーバー:</label>
-    <select name="server" id="server_comp" class="form-control" onchange="dropsort()">
+    <select name="server" id="server_comp" class="form-control" onchange="server()">
         {% for r in server %}
             <option value="{{ r.server_company }}">{{ r.server_company }}</option>
         {% endfor %}
+            <option value="new">新規作成</option>
     </select>
     <input type="submit" value="登録" class="btn btn-default">
 </form>
