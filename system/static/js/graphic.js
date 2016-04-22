@@ -67,7 +67,7 @@ function delete_check(site_id){
       if (location.host == 'localhost:8000'){
         location.href = "http://" + location.host + "/site/delete?site_id=" + site_id;
       } else {
-        location.href = "http://" + location.host + "django.cgi/site/delete?site_id=" + site_id;
+        location.href = "http://" + location.host + "/django.cgi/site/delete?site_id=" + site_id;
       }
   }
 }
