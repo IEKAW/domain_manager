@@ -797,8 +797,8 @@ def create_site(request):
         server = Server.objects.all()
         group = Group.objects.all()
         template = Templates.objects.all()
-        today = datetime.today()
-        day = datetime.strftime(today, '%Y-%m-%d')
+        next_year = datetime.today() + timedelta(days=365)
+        day = datetime.strftime(next_year, '%Y-%m-%d')
         return render(request, 'system/create_site.html', {'server': server, 'group': group, 'template': template, 'day': day, 'domain_id': domain_id})
     elif request.method == 'POST':
         domain_id = request.POST['domain_id']
@@ -998,7 +998,7 @@ def domain_warning(request):
 
 
 @login_required
-def create_link(request):
+def _link(request):
     if request.method == 'GET':
         site_id = request.GET["site_id"]
         sites = Site.objects.get(id=site_id)
