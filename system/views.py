@@ -823,7 +823,10 @@ def create_site(request):
         login_id = request.POST['login_id']
         login_pass = request.POST['login_pass']
         remarks = request.POST['remarks']
-        server = request.POST['server']
+        try:
+            server = request.POST['server']
+        except:
+            server = ""
         domain_name = url.split('/')[2]
         if domain_name[:4] == "www.":
             domain_name = domain_name[4:]
