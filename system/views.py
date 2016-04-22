@@ -1675,7 +1675,7 @@ def site_key(request):
         )
         site_comment_obj.save()
     site = Site.objects.get(id=site_id)
-    server_id = Server.objects.get(server=site.server).id
+    server_id = Server.objects.get(server_company=site.server).id
     return HttpResponseRedirect('/django.cgi/site/detail?site_id=' + str(site_id) + '&server_id=' + str(server_id))
 
 
