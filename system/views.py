@@ -954,6 +954,8 @@ def domain_warning(request):
         updated_date = request.POST['updated_date']
         update_method = request.POST['update_method']
         server = request.POST['server']
+        if server == "new":
+            server = ""
         domain_obj = Domain(
             domain_name=domain,
             japanese=japanese_domain,
