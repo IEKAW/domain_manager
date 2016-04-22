@@ -19,7 +19,7 @@
         {% endfor %}
     </select>
     <label for="server">サーバー</label>
-        <select name="server" id="server_comp" class="form-control" onchange="server()">
+        <select name="server" id="server_comp" class="form-control" onchange="server_new()">
             {% for r in server %}
                 <option value="{{ r.server }}">{{ r.server}}</option>
             {% endfor %}

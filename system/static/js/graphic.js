@@ -7,7 +7,7 @@ function dropsort() {
     get_login();
 }
 
-function server() {
+function server_new() {
     if ($("#server_comp").val() == 'new'){
         location.href = 'http://mimimimim.sakura.ne.jp/django.cgi/server/create';
     }
