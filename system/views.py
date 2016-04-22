@@ -1284,8 +1284,8 @@ def comment_delete(request):
 @login_required
 def comment_edit(request):
     if request.method == 'GET':
-        comment = request.GET['comment']
         comment_id = request.GET['comment_id']
+        comment = SiteComment.objects.get(id=comment_id).comment
         site_id = request.GET['site_id']
         return render(
             request,
