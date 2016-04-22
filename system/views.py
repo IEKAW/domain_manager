@@ -902,7 +902,7 @@ def domain_warning(request):
         login_pass = request.GET['login_pass']
         remarks = request.GET['remarks']
         domain_name = request.GET['domain_name']
-        server = request.POST['server']
+        server = request.GET['server']
         japanese = urllib.unquote_plus(japanese)
         data = {
             'title': title,
