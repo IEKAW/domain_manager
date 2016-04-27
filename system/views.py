@@ -639,10 +639,12 @@ def site_detail(request):
 @login_required
 def link(request, site_id):
     links = get_link_info(site_id)
+    site = Site.objects.get(id=site_id)
     data = []
     children_data = []
     for i, link in enumerate(links):
         tmp = {}
+        tmp['id'] = link[0]
         tmp['date'] = link[3]
         tmp['url'] = link[5]
         tmp['anchr'] = link[10]
@@ -653,10 +655,12 @@ def link(request, site_id):
         children = get_link_info(link[9])
         for child in children:
             tmp_child = {}
+            tmp_child['id'] = child[0]
             tmp_child['date'] = child[3]
             tmp_child['url'] = child[5]
             tmp_child['title'] = child[1]
             tmp_child['position'] = child[2]
+            tmp_child['anchr'] = child[10]
             tmp_child['color'] = COLOR_LIST[i]
             children_data.append(tmp_child)
     check_list = []
@@ -672,6 +676,8 @@ def link(request, site_id):
         'children': children_data,
         'check': check_list,
         'children_check': children_list,
+        'site_id': site_id,
+        'site': site
     }
     return render(request, 'system/link.html', result)
 
@@ -802,6 +808,14 @@ def create_site(request):
         day = datetime.strftime(next_year, '%Y-%m-%d')
         return render(request, 'system/create_site.html', {'server': server, 'group': group, 'template': template, 'day': day, 'domain_id': domain_id})
     elif request.method == 'POST':
+        try:
+            free = request.POST['free']
+        except:
+            free = "off"
+        try:
+            others = request.POST['others']
+        except:
+            others = "off"
         domain_id = request.POST['domain_id']
         title = request.POST['title']
         url = request.POST['url']
@@ -837,6 +851,22 @@ def create_site(request):
                 domain_name = domain_name[4:]
         except:
             domain_name = url
+        if free == "on" or others == "on":
+            site_obj = Site(
+                site_title=title,
+                url=url,
+                japanese=japanese,
+                group_name=group,
+                server=server,
+                updated_date=update_at,
+                template=template,
+                login_url=login_url,
+                login_id=login_id,
+                login_pass=login_pass,
+                remarks=remarks
+            )
+            site_obj.save()
+            return HttpResponseRedirect('/django.cgi/site')
         try:
             domain = Domain.objects.get(
                 domain_name=domain_name
@@ -1049,9 +1079,16 @@ def create_link(request):
         )
         link_obj.save()
         created_date = datetime.now()
-        comment = link_site + ' ' + url + u'からリンクをもらう'
+        comment = site_title + ' ' + link_url + u'からリンクをもらう'
         obj = SiteComment(
             site_id=from_id,
+            comment=comment,
+            created_at=created_date
+        )
+        obj.save()
+        comment = link_site + ' ' + url + u'にリンクを送る'
+        obj = SiteComment(
+            site_id=to_id,
             comment=comment,
             created_at=created_date
         )
@@ -1205,6 +1242,9 @@ def delete(request):
     if request.POST['kind'] == 'domain':
         obj = Domain.objects.filter(id=deleted_id)
         obj.delete()
+        site_ids = DomainDetail.objects.filter(domain_id=deleted_id).all()
+        for site_id in site_ids:
+            Site.objects.filter(site_title=site_id.title).delete()
         return redirect('system.views.domain_unup')
     elif request.POST['kind'] == 'server':
         obj = Server.objects.filter(id=deleted_id)
@@ -1239,6 +1279,9 @@ def delete_all(request):
     if json_data['kind'] == 'domain':
         obj = Domain.objects.filter(id=json_data['id'])
         obj.delete()
+        site_ids = DomainDetail.objects.filter(domain_id=json_data['id']).all()
+        for site_id in site_ids:
+            Site.objects.filter(site_title=site_id.title).delete()
     elif json_data['kind'] == 'server':
         obj = Server.objects.filter(id=json_data['id'])
         obj.delete()
@@ -1524,16 +1567,24 @@ def updomain(request):
         else:
             day = '%d' % domain_day.day
         server_company = request.GET['server']
+        domain_company = request.GET['domain_company']
         server = Server.objects.all()
+        company = Setting_Domain.objects.all()
         update_date = year + '-' + month + '-' + day
-        return render(request, 'system/updomain.html', {'server': server, 'server_company': server_company, 'data': domain, 'date': update_date})
+        return render(request, 'system/updomain.html', {'server': server, 'server_company': server_company, 'data': domain, 'date': update_date, 'domain_company': company, 'company': domain})
     elif request.method == 'POST':
         domain_id = request.POST['id']
         update_at = request.POST['update_at']
         server = request.POST['server']
+        domain_company = request.POST['domain']
         Domain.objects.filter(
             id=domain_id
-        ).update(updated_date=update_at, server_company=server)
+        ).update(updated_date=update_at, server_company=server, domain_company=domain_company)
+        sites = DomainDetail.objects.filter(domain_id=domain_id).all()
+        for site in sites:
+            Site.objects.filter(
+                site_title=site.title
+            ).update(server=server)
         redirect_url = '/django.cgi/domain/detail?domain_id=' + str(domain_id)
         return HttpResponseRedirect(redirect_url)
 
@@ -1650,6 +1701,16 @@ def site_edit(request):
             template=request.POST['template'],
             updated_date=request.POST['update_at']
         )
+        try:
+            domains = DomainDetail.objects.filter(
+                url=url
+            ).all()
+            for domain in domains:
+                Domain.objects.filter(
+                    id=domain.domain_id
+                ).update(server_company=request.POST['server'])
+        except:
+            pass
         return HttpResponseRedirect('/django.cgi/site/detail?site_id=' + str(site_id) + '&server_id=' + str(server_id))
 
 
@@ -1799,3 +1860,74 @@ def get_login(request):
         'login_pass': server_obj.login_pass,
     }
     return HttpResponse(json.dumps(data), content_type='application/json')
+
+
+def delete_link(request):
+    link_id = request.GET['link_id']
+    site_id = request.GET['site_id']
+    Link.objects.filter(id=link_id).delete()
+    return HttpResponseRedirect('/django.cgi/link/' + str(site_id))
+
+
+def edit_link(request):
+    if request.method == "GET":
+        link_id = request.GET['link_id']
+        site_id = request.GET['site_id']
+        data = {}
+        data['site_id'] = site_id
+        data['link_id'] = link_id
+        raw_site_list = get_site_list()
+        data['site'] = []
+        data['url'] = []
+        today = datetime.today()
+        data['day'] = datetime.strftime(today, '%Y-%m-%d')
+        for i, site in enumerate(raw_site_list):
+            data['site'].append({'num': i, 'site': site[0]})
+            data['url'].append(site[1])
+        position = Setting_Link.objects.all()
+        data['position'] = position
+        data["me"] = Link.objects.get(id=link_id)
+        return render(request, 'system/edit_link.html', data)
+    elif request.method == "POST":
+        link_id = request.POST['link_id']
+        site_id = request.POST['site_id']
+        site_title = request.POST['site_title']
+        url = request.POST['url']
+        send_day = request.POST['send_day']
+        link_url = request.POST['link_url']
+        link_site = request.POST['link_site']
+        link_pos = request.POST['link_pos']
+        server = request.POST['server']
+        anchr = request.POST['anchr']
+        from_obj = Site.objects.get(url=url, site_title=site_title)
+        from_id = from_obj.id
+        to_obj = Site.objects.get(url=link_url, site_title=link_site)
+        to_id = to_obj.id
+        link_obj = Link.objects.filter(id=link_id).update(
+            site_title=site_title,
+            url=url,
+            created_at=send_day,
+            to_url=link_url,
+            to_site=link_site,
+            link_position=link_pos,
+            server=server,
+            from_id=from_id,
+            to_id=to_id,
+            anchr=anchr
+        )
+        created_date = datetime.now()
+        comment = site_title + ' ' + link_url + u'からリンクをもらう'
+        obj = SiteComment(
+            site_id=from_id,
+            comment=comment,
+            created_at=created_date
+        )
+        obj.save()
+        comment = link_site + ' ' + url + u'にリンクを送る'
+        obj = SiteComment(
+            site_id=to_id,
+            comment=comment,
+            created_at=created_date
+        )
+        obj.save()
+        return HttpResponseRedirect('/django.cgi/link/' + str(site_id))

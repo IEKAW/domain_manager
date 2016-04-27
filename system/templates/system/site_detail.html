@@ -8,39 +8,39 @@
 <table class="table table-bordered table-hover" border="2" style="background-color: white">
     <tr>
         <th>グループ</th>
-        <th>{{ data.group_name }}</th>
+        <th width="200" style="word-break: break-all;">{{ data.group_name }}</th>
     </tr>
     <tr>
         <th>日本語</th>
         {% if data.japanese != data.url %}
-            <th>{{ data.japanese }}</th>
+            <th width="200" style="word-break: break-all;">{{ data.japanese }}</th>
         {% else %}
-            <th></th>
+            <th width="200" style="word-break: break-all;"></th>
         {% endif %}
     </tr>
     <tr>
         <th>サーバー</th>
-        <th><a href="{% url 'system.views.server_detail' %}?server_id={{ server_id }}">{{ data.server }}</a></th>
+        <th width="200" style="word-break: break-all;"><a href="{% url 'system.views.server_detail' %}?server_id={{ server_id }}">{{ data.server }}</a></th>
     </tr>
     <tr>
         <th>作成日</th>
-        <th>{{ data.updated_date }}</th>
+        <th width="200" style="word-break: break-all;">{{ data.updated_date }}</th>
     </tr>
     <tr>
         <th>テンプレート</th>
-        <th>{{ data.template }}</th>
+        <th width="200" style="word-break: break-all;">{{ data.template }}</th>
     </tr>
     <tr>
         <th>ログインURL</th>
-        <th><a href="{{data.login_url}}">{{ data.login_url }}</a></th>
+        <th width="200" style="word-break: break-all;"><a href="{{data.login_url}}">{{ data.login_url }}</a></th>
     </tr>
     <tr>
         <th>ログインID</th>
-        <th>{{ data.login_id }}</th>
+        <th width="200" style="word-break: break-all;">{{ data.login_id }}</th>
     </tr>
     <tr>
         <th>ログインパスワード</th>
-        <th>{{ data.login_pass }}</th>
+        <th width="200" style="word-break: break-all;">{{ data.login_pass }}</th>
     </tr>
 </table>
 <a class="btn btn-default" href="{% url 'system.views.site_edit' %}?site_id={{site_id}}&server_id={{ server_id }}">編集</a>

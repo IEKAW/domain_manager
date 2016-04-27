@@ -57,4 +57,6 @@ urlpatterns = [
     url(r'^site_url.json$', views.site_to_url),
     url(r'^delete_confirm.json$', views.delete_confirm),
     url(r'^get_login.json$', views.get_login),
+    url(r'^delete/link$', views.delete_link),
+    url(r'^edit/link$', views.edit_link)
 ]

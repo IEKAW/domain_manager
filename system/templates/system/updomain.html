@@ -25,6 +25,20 @@
             </select>
             </td>
         </tr>
+        <tr>
+            <td>ドメイン会社</td>
+            <td>
+            <select name="domain" class="form-control">
+            {% for row in domain_company %}
+                {% if row.domain_company == company %}
+                    <option value="{{ row.domain_company }}" selected="">{{ row.domain_company }}</option>
+                {% else %}
+                    <option value="{{ row.domain_company }}">{{ row.domain_company }}</option>
+                {% endif %}
+            {% endfor %}
+            </select>
+            </td>
+        </tr>
     </table><br/>
     <input type="submit" value="更新" class="btn btn-info" />
     <a href="/django.cgi/domain/detail?domain_id={{ data.id }}" class="btn btn-warning">キャンセル</a>

@@ -17,11 +17,12 @@
     </select>
     <label for="update_at">更新日:</label>
     <input type="date" name="update_at" class="form-control" value="{{ next_year }}"><br/>
-    <label for="update_method">自動更新</label>
-    <select name="update_method" class="form-control">
+    <!-- <label for="update_method">自動更新</label> -->
+    <!-- <select name="update_method" class="form-control">
         <option value="auto">自動</option>
         <option value="hand">手動</option>
-    </select>
+    </select> -->
+    <input type="hidden" name="update_method" value="auto"/>
     <label for="company">サーバー:</label>
     <select name="server" id="server_comp" class="form-control" onchange="server_new()">
         {% for r in server %}

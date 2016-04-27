@@ -21,7 +21,7 @@
     <label for="server">サーバー</label>
         <select name="server" id="server_comp" class="form-control" onchange="server_new()">
             {% for r in server %}
-                <option value="{{ r.server }}">{{ r.server}}</option>
+                <option value="{{ r.server_company }}">{{ r.server_company}}</option>
             {% endfor %}
             <option value="new">新規作成</option>
         </select>
@@ -41,7 +41,11 @@
     <input type="text" name="login_pass" class="form-control" ><br/>
     <label for="remarks">備考:</label>
     <textarea name="remarks" id="remarks" cols="7" rows="10" class="form-control"></textarea>
-    <input type="submit" value="登録" class="btn btn-default">
+    <label for="free">無料サービス:</label>
+    <input type="checkbox" name="free"><br/>
+    <label for="others">他社運営サイト:</label>
+    <input type="checkbox" name="others"><br/>
+    <input type="submit" value="登録" class="btn btn-default" onclick="check_site()">
 </form>
 
  {% endblock %}

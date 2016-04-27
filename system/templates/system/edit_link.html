@@ -1,0 +1,53 @@
+{% extends "layouts/base.html" %}
+{% block title %} Home {% endblock %}
+{% block content %}
+<h1>新規リンク追加</h1>
+
+<form action="{% url 'system.views.edit_link' %}" method="POST">
+    {% csrf_token %}
+    <input name="site_id" type="hidden" value="{{ site_id }}"/>
+    <input name="link_id" type="hidden" value="{{ link_id }}"/>
+    <label for="site_title">サイトタイトル:</label>
+    <select name="site_title" class="form-control" onchange="get_urls()">
+        {% for link in site %}
+            {% if link.site == me.site_title %}
+                <option value="{{ link.site }}" selected>{{ link.site }}</option>
+            {% else %}
+                <option value="{{ link.site }}">{{ link.site }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+    <label for="url">URL:</label>
+    <input type="text" name="url" class="form-control" value="{{ me.url }}"><br/>
+    <label for="send_day">リンクを送った日:</label>
+    <input type="date" name="send_day" class="form-control" value="{{ day }}"><br/>
+    <label for="server">サーバー:</label>
+    <input type="text" name="server" class="form-control" value="{{ me.server }}"><br/>
+    <label for="link_site">被リンク先サイト:</label>
+    <select name="link_site" class="form-control" onchange="get_url()">
+        {% for link in site %}
+                {% if link.site == me.to_site %}
+                  <option value="{{ link.site }}" id="{{ link.num }}" selected="">{{ link.site }}</option>
+                {% else %}
+                  <option value="{{ link.site }}" id="{{ link.num }}">{{ link.site }}</option>
+                {% endif %}
+        {% endfor %}
+    </select>
+    <label for="link_url">被リンク先URL:</label>
+    <input type="text" name="link_url" value="{{ me.to_url }}" class="form-control">
+    <label for="link_pos">リンク位置:</label>
+    <select name="link_pos" class="form-control">
+        {% for row in position %}
+            {% if row.link == me.link_position %}
+              <option value="{{ row.link }}" selected="">{{ row.link }}</option>
+            {% else %}
+              <option value="{{ row.link }}">{{ row.link }}</option>
+            {% endif %}
+        {% endfor %}
+    </select>
+    <label for="anchr">アンカーテキスト:</label>
+    <input type="text" name="anchr" class="form-control" value="{{me.anchr}}">
+    <input type="submit" value="登録" class="btn btn-default">
+</form>
+
+ {% endblock %}

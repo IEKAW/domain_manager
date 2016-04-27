@@ -23,6 +23,22 @@ if (path == '/warning') {
     }
 }
 
+function check_site() {
+    var site_name = $("input[name=title]").val();
+    if (site_name=="") {
+      alert("サイトタイトルを入れてください。");
+      if(location.host == "localhost:8000"){
+        setTimeout("redirect('http://localhost:8000/site/create')", 5);
+      } else {
+        setTimeout("redirect('http://mimimimim.sakura.ne.jp/django.cgi/site/create')", 5);
+      }
+    }
+}
+
+function redirect(url){
+    location.href=url;
+}
+
 // urlから自動でsite_titleを取得してくれる
 function get_id_pass(){
     url = $('select[name=company]').val();
