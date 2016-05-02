@@ -12,7 +12,7 @@
     <label for="group">グループ</label>
     <select name="group" class="form-control">
         {% for row in group %}
-            {% if row.group == data.group %}
+            {% if row.group == data.group_name %}
                 <option value="{{row.group}}" selected>{{row.group}}</option>
             {% else %}
                 <option value="{{row.group}}">{{row.group}}</option>

@@ -3,7 +3,7 @@
 
 import json
 import urllib
-
+import random
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseRedirect, HttpResponse
@@ -61,6 +61,7 @@ COLOR_LIST = [
     'active'
 ]
 
+rc = lambda: random.randint(0, 255)
 
 @login_required
 def home(request):
@@ -643,25 +644,28 @@ def link(request, site_id):
     data = []
     children_data = []
     for i, link in enumerate(links):
+        color = '#{:x}{:x}{:x}'.format(rc(), rc(), rc())
         tmp = {}
         tmp['id'] = link[0]
+        tmp['server'] = link[7]
         tmp['date'] = link[3]
         tmp['url'] = link[5]
         tmp['anchr'] = link[10]
         tmp['title'] = link[1]
         tmp['position'] = link[2]
-        tmp['color'] = COLOR_LIST[i]
+        tmp['color'] = color
         data.append(tmp)
         children = get_link_info(link[9])
         for child in children:
             tmp_child = {}
             tmp_child['id'] = child[0]
+            tmp_child['server'] = child[7]
             tmp_child['date'] = child[3]
             tmp_child['url'] = child[5]
             tmp_child['title'] = child[1]
             tmp_child['position'] = child[2]
             tmp_child['anchr'] = child[10]
-            tmp_child['color'] = COLOR_LIST[i]
+            tmp_child['color'] = color
             children_data.append(tmp_child)
     check_list = []
     for r in data:
@@ -1556,7 +1560,7 @@ def updomain(request):
         domain_id = request.GET['domain_id']
         domain = Domain.objects.get(id=domain_id)
         domain_day = domain.updated_date
-        year_int = domain_day.year + 1
+        year_int = domain_day.year
         year = '%d' % year_int
         if domain_day.month < 10:
             month = '0%d' % domain_day.month

@@ -33,13 +33,13 @@
         <option value="auto">自動</option>
         <option value="hand">手動</option>
     </select>
-    <label for="company">サーバー会社:</label>
+    <label for="company">サーバー:</label>
     <select name="server" id="server_comp" class="form-control" onchange="dropsort()">
         {% for r in server %}
-            {% if r.server == server_default %}
-            <option value="{{ r.server }}" selected="">{{ r.server }}</option>
+            {% if r.server_company == server_default %}
+            <option value="{{ r.server_company }}" selected="">{{ r.server_company }}</option>
             {% else %}
-            <option value="{{ r.server }}">{{ r.server }}</option>
+            <option value="{{ r.server_company }}">{{ r.server_company }}</option>
             {% endif %}
         {% endfor %}
         <option value="new">新規登録</option>

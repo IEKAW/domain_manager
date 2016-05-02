@@ -3,7 +3,9 @@
 {% block content %}
 <h1>リンク</h1>
 
-<div class="col-md-6 col-md-offset-3">
+<a href="{% url 'system.views.create_link' %}?site_id={{ site_id }}" class="btn btn-default">リンクを貰う</a>
+
+<div class="col-md-12 col-md-offset-">
     <table class="table table-bordered table-hover">
         <tr>
           <th>タイトル</th>
@@ -24,23 +26,25 @@
     </table>
 </div>
 
-<div class="col-md-5">
-    <table class="table table-bordered table-hover">
+<div style="width: 2000px;">
+    <table class="table table-bordered table-hover" style="float:left; width:1000px;">
         <tr>
             <th>日付</th>
-            <th>URL</th>
-            <th>アンカーテキスト</th>
-            <th>サテライトサイト</th>
-            <th>リンク位置</th>
+            <th width="200" style="word-break: break-all;">URL</th>
+            <th width="200" style="word-break: break-all;">サーバー</th>
+            <th width="200" style="word-break: break-all;">アンカーテキスト</th>
+            <th width="200" style="word-break: break-all;">サテライトサイト</th>
+            <th width="200" style="word-break: break-all;">リンク位置</th>
             <th></th>
         </tr>
         {% for raw in data %}
-        <tr class="{{ raw.color }}">
+        <tr style="background-color:{{ raw.color }}">
             <td>{{ raw.date }}</td>
-            <td>{{ raw.url }}</td>
-            <td>{{ raw.anchr }}</td>
-            <td>{{ raw.title }}</td>
-            <td>{{ raw.position }}</td>
+            <td width="200" style="word-break: break-all;">{{ raw.url }}</td>
+            <td width="200" style="word-break: break-all;">{{ raw.server }}</td>
+            <td width="200" style="word-break: break-all;">{{ raw.anchr }}</td>
+            <td width="200" style="word-break: break-all;">{{ raw.title }}</td>
+            <td width="200" style="word-break: break-all;">{{ raw.position }}</td>
             <td>
               <a class="btn btn-danger" href="{% url 'system.views.delete_link' %}?link_id={{raw.id}}&site_id={{ site_id }}">削除</a>
               <a class="btn btn-warning" href="{% url 'system.views.edit_link' %}?link_id={{raw.id}}&site_id={{ site_id }}">編集</a>
@@ -48,25 +52,24 @@
         </tr>
         {% endfor %}
     </table>
-</div>
-
-<div class="col-md-7 col-md-offset-0">
-    <table class="table table-bordered table-hover">
+    <table class="table table-bordered table-hover" style="width:1000px;">
         <tr>
             <th>日付</th>
-            <th>URL</th>
+            <th width="200" style="word-break: break-all;">URL</th>
+            <th width="400" style="word-break: break-all;">サーバー</th>
             <th width="200" style="word-break: break-all;">アンカーテキスト</th>
-            <th>サイト</th>
-            <th>リンク位置</th>
+            <th width="200" style="word-break: break-all;">サイト</th>
+            <th width="200" style="word-break: break-all;">リンク位置</th>
             <th></th>
         </tr>
         {% for raw in children %}
-        <tr class="{{ raw.color }}">
+        <tr style="background-color:{{ raw.color }}">
             <td>{{ raw.date }}</td>
-            <td>{{ raw.url }}</td>
+            <td width="200" style="word-break: break-all;">{{ raw.url }}</td>
+            <td width="400" style="word-break: break-all;">{{ raw.server }}</td>
             <td width="200" style="word-break: break-all;">{{ raw.anchr }}</td>
-            <td>{{ raw.title }}</td>
-            <th>{{ raw.position }}</th>
+            <td width="200" style="word-break: break-all;">{{ raw.title }}</td>
+            <th width="200" style="word-break: break-all;">{{ raw.position }}</th>
             <td>
               <a class="btn btn-danger" href="{% url 'system.views.delete_link' %}?link_id={{raw.id}}&site_id={{ site_id }}">削除</a>
               <a class="btn btn-warning" href="{% url 'system.views.edit_link' %}?link_id={{raw.id}}&site_id={{ site_id }}">編集</a>

@@ -5,7 +5,7 @@
 
 <table class="table table-bordered table-hover" style="background-color: white">
     <tr>
-        <th>サーバー会社
+        <th width="600" style="word-break: break-all;">サーバー会社
         <div class="btn-group">
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown">全表示
                 <span class="caret"></span>
@@ -24,7 +24,7 @@
     </tr>
     {% for raw in data %}
     <tr>
-        <td><a href="{% url 'system.views.server_detail' %}?server_id={{raw.id}}">{{ raw.company }}</a></td>
+        <td width="600" style="word-break: break-all;"><a href="{% url 'system.views.server_detail' %}?server_id={{raw.id}}">{{ raw.company }}</a></td>
         <td>{{ raw.updated_at }}</td>
         <td>{{ raw.host }}</td>
         <td>
