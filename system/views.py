@@ -54,11 +54,16 @@ from system.aggregate import(
 )
 
 COLOR_LIST = [
-    'info',
-    'success',
-    'warning',
-    'danger',
-    'active'
+    '#EE82EE',
+    '#FFE4C4',
+    '#E0FFFF',
+    '#A9A9A9',
+    '#FFFF00',
+    '#00BFFF',
+    '#00FA9A',
+    '#6A5ACD',
+    '#7B68EE',
+    '#DC143C'
 ]
 
 rc = lambda: random.randint(0, 255)
@@ -653,7 +658,7 @@ def link(request, site_id):
         tmp['anchr'] = link[10]
         tmp['title'] = link[1]
         tmp['position'] = link[2]
-        tmp['color'] = color
+        tmp['color'] = COLOR_LIST[i % 10]
         data.append(tmp)
         children = get_link_info(link[9])
         for child in children:
@@ -665,7 +670,7 @@ def link(request, site_id):
             tmp_child['title'] = child[1]
             tmp_child['position'] = child[2]
             tmp_child['anchr'] = child[10]
-            tmp_child['color'] = color
+            tmp_child['color'] = COLOR_LIST[i % 10]
             children_data.append(tmp_child)
     check_list = []
     for r in data:
