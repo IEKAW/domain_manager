@@ -54,7 +54,7 @@
     </table>
     <table class="table table-bordered table-hover" style="width:1000px;">
         <tr>
-            <th>日付</th>
+            <th width="200" style="word-break: break-all;">日付</th>
             <th width="200" style="word-break: break-all;">URL</th>
             <th width="400" style="word-break: break-all;">サーバー</th>
             <th width="200" style="word-break: break-all;">アンカーテキスト</th>
@@ -64,7 +64,7 @@
         </tr>
         {% for raw in children %}
         <tr style="background-color:{{ raw.color }}">
-            <td>{{ raw.date }}</td>
+            <td width="200" style="word-break: break-all;">{{ raw.date }}</td>
             <td width="200" style="word-break: break-all;">{{ raw.url }}</td>
             <td width="400" style="word-break: break-all;">{{ raw.server }}</td>
             <td width="200" style="word-break: break-all;">{{ raw.anchr }}</td>
