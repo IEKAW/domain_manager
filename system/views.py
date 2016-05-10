@@ -813,7 +813,7 @@ def create_site(request):
         server = Server.objects.all()
         group = Group.objects.all()
         template = Templates.objects.all()
-        next_year = datetime.today() + timedelta(days=365)
+        next_year = datetime.today()
         day = datetime.strftime(next_year, '%Y-%m-%d')
         return render(request, 'system/create_site.html', {'server': server, 'group': group, 'template': template, 'day': day, 'domain_id': domain_id})
     elif request.method == 'POST':
