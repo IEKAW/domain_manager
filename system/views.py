@@ -62,7 +62,7 @@ COLOR_LIST = [
     '#00BFFF',
     '#00FA9A',
     '#E6E6FA',
-    '#F5F5DC',
+    '#F5DEB3',
     '#FAFAD2'
 ]
 
