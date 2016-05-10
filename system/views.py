@@ -1581,7 +1581,7 @@ def updomain(request):
         server = Server.objects.all()
         company = Setting_Domain.objects.all()
         update_date = year + '-' + month + '-' + day
-        return render(request, 'system/updomain.html', {'server': server, 'server_company': server_company, 'data': domain, 'date': update_date, 'domain_company': company, 'company': domain})
+        return render(request, 'system/updomain.html', {'server': server, 'server_company': server_company, 'data': domain, 'date': update_date, 'domain_company': company, 'company': domain, "dcompany": domain_company})
     elif request.method == 'POST':
         domain_id = request.POST['id']
         update_at = request.POST['update_at']
