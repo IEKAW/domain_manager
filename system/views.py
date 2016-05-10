@@ -61,9 +61,9 @@ COLOR_LIST = [
     '#FFFF00',
     '#00BFFF',
     '#00FA9A',
-    '#6A5ACD',
+    '#E6E6FA',
     '#7B68EE',
-    '#DC143C'
+    '#FAFAD2'
 ]
 
 rc = lambda: random.randint(0, 255)
