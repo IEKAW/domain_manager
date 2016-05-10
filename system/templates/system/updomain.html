@@ -30,7 +30,7 @@
             <td>
             <select name="domain" class="form-control">
             {% for row in domain_company %}
-                {% if row.domain_company == company %}
+                {% if row.domain_company == domain_company %}
                     <option value="{{ row.domain_company }}" selected="">{{ row.domain_company }}</option>
                 {% else %}
                     <option value="{{ row.domain_company }}">{{ row.domain_company }}</option>
