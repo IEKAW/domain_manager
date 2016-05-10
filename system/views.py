@@ -990,6 +990,7 @@ def domain_warning(request):
         login_pass = request.POST['login_pass']
         remarks = request.POST['remarks']
         domain_name = request.POST['domain_name']
+        date_site = request.POST["date"]
         # ika
         domain = request.POST['domain']
         japanese_domain = request.POST['japanese_domain']
@@ -1032,7 +1033,7 @@ def domain_warning(request):
             japanese=japanese,
             group_name=group_name,
             server=server,
-            updated_date=updated_date,
+            updated_date=date_site,
             template=template,
             login_url=login_url,
             login_id=login_id,
