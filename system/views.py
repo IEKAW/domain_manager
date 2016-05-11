@@ -1089,14 +1089,14 @@ def create_link(request):
         )
         link_obj.save()
         created_date = datetime.now()
-        comment = site_title + ' ' + link_url + u'からリンクをもらう'
+        comment = link_site + ' ' + link_url + u'からリンクをもらう'
         obj = SiteComment(
             site_id=from_id,
             comment=comment,
             created_at=created_date
         )
         obj.save()
-        comment = link_site + ' ' + url + u'にリンクを送る'
+        comment = site_title + ' ' + url + u'にリンクを送る'
         obj = SiteComment(
             site_id=to_id,
             comment=comment,
