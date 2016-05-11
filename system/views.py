@@ -1406,7 +1406,7 @@ def group_edit(request):
     elif request.method == "POST":
         group_id = request.POST['group_id']
         name = request.POST['group']
-        group = Group.objects.get(id=group_id)
+        group = Group.objects.get(id=group_id).group
         Group.objects.filter(id=group_id).update(
             group=name
         )
