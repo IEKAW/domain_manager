@@ -1432,9 +1432,11 @@ def templates_edit(request):
         Templates.objects.filter(id=templates_id).update(
             templates=name
         )
-        Site.objects.filter(template=template.templates).update(
-            template=name
-        )
+        sites = Site.objects.filter(template=template.templates).all()
+        for site in sites:
+            Site.objects.filter(id=site.id).update(
+                template=template
+            )
         return redirect('system.views.setting_templates')
 
 
