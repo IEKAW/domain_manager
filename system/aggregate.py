@@ -319,7 +319,8 @@ def raw_get_site_from_url(url):
 def raw_get_url_from_site(site_title):
     sql = """
         SELECT
-            url
+            url,
+            server
         FROM
             system_site
         WHERE
