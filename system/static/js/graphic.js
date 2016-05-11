@@ -33,6 +33,25 @@ function check_site() {
         setTimeout("redirect('http://mimimimim.sakura.ne.jp/django.cgi/site/create')", 5);
       }
     }
+    var url = $("input[name=url]").val();
+    query_params = {
+        'url': url
+    };
+    if (location.host == 'localhost:8000'){
+      base_url = [location.protocol, '/', location.host, "check/url.json"].join('/');
+    } else {
+      base_url = [location.protocol, '/', location.host, "django.cgi", "check/url.json"].join('/');
+    }
+    http_url = [base_url, $.param(query_params)].join('?');
+    var xmlHttp;
+    xmlHttp = new XMLHttpRequest();
+    xmlHttp.open("GET", http_url, false);
+    xmlHttp.send(null);
+    result = JSON.parse(xmlHttp.responseText)["result"];
+    if(result == 0){
+      alert("このURLは登録されています。");
+      setTimeout("redirect('http://localhost:8000/site/create')", 5);
+    }
 }
 
 function redirect(url){

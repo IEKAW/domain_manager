@@ -78,6 +78,7 @@ function get_url(){
     xmlHttp.open("GET", http_url, false);
     xmlHttp.send(null);
     $('input[name=link_url]').val(JSON.parse(xmlHttp.responseText)["url"][0]);
+		$('input[name=server]').val(JSON.parse(xmlHttp.responseText)["server"][0]);
 }
 
 
@@ -99,7 +100,6 @@ function get_urls(){
     xmlHttp.open("GET", http_url, false);
     xmlHttp.send(null);
     $('input[name=url]').val(JSON.parse(xmlHttp.responseText)["url"][0]);
-		$('input[name=server]').val(JSON.parse(xmlHttp.responseText)["server"][0]);
 }
 
 function communicate_http(url){

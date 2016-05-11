@@ -572,7 +572,7 @@ def update_server(request):
         data['id'] = server_id
         for raw in server:
             data['server'] = raw[1]
-            year_int = raw[2].year
+            year_int = raw[2].year + 1
             year = '%d' % year_int
             if raw[2].month < 10:
                 month = '0%d' % raw[2].month
@@ -940,6 +940,8 @@ def create_site(request):
             return HttpResponseRedirect('/django.cgi/site')
 
 
+
+
 @login_required
 def domain_warning(request):
     if request.method == 'GET':
@@ -962,7 +964,7 @@ def domain_warning(request):
             'japanese': japanese,
             'group_name': group_name,
             'updated_date': updated_date,
-            'tempalte': template,
+            'template': template,
             'login_id': login_id,
             'login_url': login_url,
             'login_pass': login_pass,
@@ -1680,6 +1682,7 @@ def site_edit(request):
         server_id = request.GET['server_id']
         obj = Site.objects.get(id=site_id)
         data = {}
+        data['title'] = obj.site_title
         data['site_id'] = obj.id
         data['group_name'] = obj.group_name
         data['site_title'] = obj.site_title
@@ -1715,6 +1718,7 @@ def site_edit(request):
                 else:
                     url = url + '/' + request.POST['japanese'][len(site.japanese)-1:]
         Site.objects.filter(id=site_id).update(
+            site_title=request.POST['title'],
             url=url,
             group_name=request.POST['group'],
             japanese=japanese,
@@ -1958,3 +1962,13 @@ def edit_link(request):
         )
         obj.save()
         return HttpResponseRedirect('/django.cgi/link/' + str(site_id))
+
+@login_required
+def check_url(request):
+    url = request.GET['url']
+    count = Site.objects.filter(url=url).count()
+    if count == 0:
+        json_data = {"result": 1}
+    else:
+        json_data = {"result": 0}
+    return HttpResponse(json.dumps(json_data), content_type='application/json')
