@@ -1830,7 +1830,7 @@ def site_to_url(request):
     site_names = raw_get_url_from_site(site)
     data = {}
     data['url'] = []
-    data['server']
+    data['server'] = []
     for site_name in site_names:
         data['url'].append(site_name[0])
         data['server'].append(site_name[1])
