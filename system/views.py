@@ -1410,7 +1410,7 @@ def group_edit(request):
         Group.objects.filter(id=group_id).update(
             group=name
         )
-        sites = Site.objects.filter(group=group).all()
+        sites = Site.objects.filter(group_name=group).all()
         for site in sites:
             Site.objects.filter(id=site.id).update(
                 group_name=name
