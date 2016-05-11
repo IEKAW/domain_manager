@@ -1410,9 +1410,9 @@ def group_edit(request):
         Group.objects.filter(id=group_id).update(
             group=name
         )
-        groupes = Group.objects.filter(group=group).all()
-        for groupe in groupes:
-            Site.objects.filter(id=groupe.id).update(
+        sites = Site.objects.filter(group=group).all()
+        for site in sites:
+            Site.objects.filter(id=site.id).update(
                 group_name=name
             )
         return redirect('system.views.setting_group')
