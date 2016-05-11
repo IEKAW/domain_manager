@@ -569,7 +569,7 @@ def update_server(request):
         data['id'] = server_id
         for raw in server:
             data['server'] = raw[1]
-            year_int = raw[2].year + 1
+            year_int = raw[2].year
             year = '%d' % year_int
             if raw[2].month < 10:
                 month = '0%d' % raw[2].month
@@ -1605,7 +1605,7 @@ def upserver(request):
         server_id = request.GET['server_id']
         server = Server.objects.get(id=server_id)
         server_day = server.updated_date
-        year_int = server_day.year + 1
+        year_int = server_day.year
         year = '%d' % year_int
         if server_day.month < 10:
             month = '0%d' % server_day.month
