@@ -1406,9 +1406,15 @@ def group_edit(request):
     elif request.method == "POST":
         group_id = request.POST['group_id']
         name = request.POST['group']
+        group = Group.objects.get(id=group_id)
         Group.objects.filter(id=group_id).update(
             group=name
         )
+        groupes = Group.objects.filter(group=group).all()
+        for groupe in groupes:
+            Site.objects.filter(id=groupe.id).update(
+                group_name=name
+            )
         return redirect('system.views.setting_group')
 
 
