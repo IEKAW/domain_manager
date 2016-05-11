@@ -69,7 +69,7 @@ function get_url(){
     id = $('select[name=link_site] option:selected').attr('id');
 		if (location.host == 'localhost:8000'){
     	base_url = [location.protocol, '/', location.host,"site_url.json"].join('/');
-    } else{
+    } else {
 			base_url = [location.protocol, '/', location.host, "django.cgi", "site_url.json"].join('/');
 		}
 		http_url = [base_url, $.param(query_params)].join('?');
@@ -99,6 +99,7 @@ function get_urls(){
     xmlHttp.open("GET", http_url, false);
     xmlHttp.send(null);
     $('input[name=url]').val(JSON.parse(xmlHttp.responseText)["url"][0]);
+		$('input[name=server]').val(JSON.parse(xmlHttp.responseText)["server"][0]);
 }
 
 function communicate_http(url){
