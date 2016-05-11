@@ -1428,8 +1428,12 @@ def templates_edit(request):
     elif request.method == "POST":
         templates_id = request.POST['templates_id']
         name = request.POST['templates']
+        template = Templates.objects.get(id=templates_id)
         Templates.objects.filter(id=templates_id).update(
             templates=name
+        )
+        Site.objects.filter(template=template.templates).update(
+            template=name
         )
         return redirect('system.views.setting_templates')
 
