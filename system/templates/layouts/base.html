@@ -3,7 +3,19 @@
 <html>
 <head>
     <meta charset="UTF-8">
-    <title>ドメイン管理ツール</title>
+    {% if request.get_full_path == "/django.cgi/domain" %}
+      <title>ドメイン管理｜サイト管理システム</title>
+    {% elif request.get_full_path == "/django.cgi/server" %}
+      <title>サーバー管理｜サイト管理システム</title>
+    {% elif request.get_full_path == "/django.cgi/site" %}
+      <title>サイト管理｜サイト管理システム</title>
+    {% if request.get_full_path == "/django.cgi/domain/unupdate" %}
+      <title>更新しないドメイン管理｜サイト管理システム</title>
+    {% if request.get_full_path == "/django.cgi/server/unupdate" %}
+      <title>更新しないサーバー管理｜サイト管理システム</title>
+    {% else %}
+      <title>サイト管理システム</title>
+    {% endif %}
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link type="text/css" rel="stylesheet" href="{% static 'asset/css/bootstrap.min.css' %}"/>
