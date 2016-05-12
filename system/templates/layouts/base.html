@@ -9,9 +9,9 @@
       <title>サーバー管理｜サイト管理システム</title>
     {% elif request.get_full_path == "/django.cgi/site" %}
       <title>サイト管理｜サイト管理システム</title>
-    {% if request.get_full_path == "/django.cgi/domain/unupdate" %}
+    {% elif request.get_full_path == "/django.cgi/domain/unupdate" %}
       <title>更新しないドメイン管理｜サイト管理システム</title>
-    {% if request.get_full_path == "/django.cgi/server/unupdate" %}
+    {% elif request.get_full_path == "/django.cgi/server/unupdate" %}
       <title>更新しないサーバー管理｜サイト管理システム</title>
     {% else %}
       <title>サイト管理システム</title>
