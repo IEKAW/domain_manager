@@ -1918,6 +1918,7 @@ def edit_link(request):
         position = Setting_Link.objects.all()
         data['position'] = position
         data["me"] = Link.objects.get(id=link_id)
+        data['day'] = datetime.strftime(data['me'].created_at, '%Y-%m-%d')
         return render(request, 'system/edit_link.html', data)
     elif request.method == "POST":
         link_id = request.POST['link_id']
