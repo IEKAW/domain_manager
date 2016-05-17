@@ -647,7 +647,15 @@ def site_detail(request):
 
 @login_required
 def link(request, site_id):
-    links = get_link_info(site_id)
+    try:
+        sort = request.GET['sort']
+    except:
+        sort = "off"
+    try:
+        sub_sort = request.GET['sub_sort']
+    except:
+        sub_sort = "off"
+    links = get_link_info(site_id, sort)
     site = Site.objects.get(id=site_id)
     data = []
     children_data = []
@@ -663,7 +671,7 @@ def link(request, site_id):
         tmp['position'] = link[2]
         tmp['color'] = COLOR_LIST[i % 10]
         data.append(tmp)
-        children = get_link_info(link[9])
+        children = get_link_info(link[9], sub_sort)
         for child in children:
             tmp_child = {}
             tmp_child['id'] = child[0]
@@ -689,7 +697,9 @@ def link(request, site_id):
         'check': check_list,
         'children_check': children_list,
         'site_id': site_id,
-        'site': site
+        'site': site,
+        'reverse': sort,
+        'sub_reverse': sub_sort
     }
     return render(request, 'system/link.html', result)
 

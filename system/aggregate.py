@@ -408,15 +408,29 @@ def get_exact_server(site_id):
         yield row
 
 
-def get_link_info(site_id):
-    sql = """
-        SELECT
-            *
-        FROM
-            system_link
-        WHERE
-            from_id = %s
-    """ % site_id
+def get_link_info(site_id, sort):
+    if sort == "off":
+        sql = """
+            SELECT
+                *
+            FROM
+                system_link
+            WHERE
+                from_id = %s
+            ORDER BY
+                created_at desc
+        """ % site_id
+    elif sort == "on":
+        sql = """
+            SELECT
+                *
+            FROM
+                system_link
+            WHERE
+                from_id = %s
+            ORDER BY
+                created_at
+        """ % site_id
     cursor = connection.cursor()
     cursor.execute(sql)
     for row in cursor.fetchall():

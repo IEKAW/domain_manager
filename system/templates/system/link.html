@@ -29,7 +29,17 @@
 <div style="width: 2000px;">
     <table class="table table-bordered table-hover" style="float:left; width:1000px;">
         <tr>
-            <th width="200" style="word-break: break-all;">日付</th>
+            <th width="200" style="word-break: break-all;">日付
+              {% if reverse == "on" %}
+              <a href="/django.cgi/link/{{ site_id }}?sort=off&sub_sort={{ sub_reverse }}">
+                  <span class="glyphicon glyphicon-triangle-bottom" style="display:;"></span>
+              </a>
+              {% else %}
+              <a href="/django.cgi/link/{{ site_id }}?sort=on&sub_sort={{ sub_reverse }}">
+                  <span class="glyphicon glyphicon-triangle-top" style="display:;"></span>
+              </a>
+              {% endif %}
+            </th>
             <th width="200" style="word-break: break-all;">URL</th>
             <th width="200" style="word-break: break-all;">サーバー</th>
             <th width="200" style="word-break: break-all;">アンカーテキスト</th>
@@ -54,7 +64,17 @@
     </table>
     <table class="table table-bordered table-hover" style="width:1000px;">
         <tr>
-            <th width="200" style="word-break: break-all;">日付</th>
+            <th width="200" style="word-break: break-all;">日付
+              {% if sub_reverse == "on" %}
+              <a href="/django.cgi/link/{{ site_id }}?sort={{ reverse }}&sub_sort=off">
+                  <span class="glyphicon glyphicon-triangle-bottom" style="display:;"></span>
+              </a>
+              {% else %}
+              <a href="/django.cgi/link/{{ site_id }}?sort=on&sub_sort=on">
+                  <span class="glyphicon glyphicon-triangle-top" style="display:;"></span>
+              </a>
+              {% endif %}
+            </th>
             <th width="200" style="word-break: break-all;">URL</th>
             <th width="400" style="word-break: break-all;">サーバー</th>
             <th width="200" style="word-break: break-all;">アンカーテキスト</th>
