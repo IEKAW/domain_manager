@@ -1948,20 +1948,6 @@ def edit_link(request):
             anchr=anchr
         )
         created_date = datetime.now()
-        comment = site_title + ' ' + link_url + u'からリンクをもらう'
-        obj = SiteComment(
-            site_id=from_id,
-            comment=comment,
-            created_at=created_date
-        )
-        obj.save()
-        comment = link_site + ' ' + url + u'にリンクを送る'
-        obj = SiteComment(
-            site_id=to_id,
-            comment=comment,
-            created_at=created_date
-        )
-        obj.save()
         return HttpResponseRedirect('/django.cgi/link/' + str(site_id))
 
 @login_required
