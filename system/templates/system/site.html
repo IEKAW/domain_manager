@@ -32,8 +32,8 @@
     {% for raw in data %}
     <tr>
         <td width="200" style="word-break: break-all;" height="5px">{{ raw.group }}</td>
-        <td><a href="{% url 'system.views.site_detail' %}?site_id={{ raw.id }}&server_id={{ raw.server_id }}">{{ raw.title }}</a></td>
-        <td width="250" style="word-break: break-all;"><a href="{{ raw.url }}">{{ raw.url }}</a></td>
+        <td width="300" style="word-break: break-all;"><a href="{% url 'system.views.site_detail' %}?site_id={{ raw.id }}&server_id={{ raw.server_id }}">{{ raw.title }}</a></td>
+        <td width="200" style="word-break: break-all;"><a href="{{ raw.url }}">{{ raw.url }}</a></td>
         <td>{{ raw.japanese }}</td>
         {% if raw.server_id == -1 %}
             <td>{{ raw.server }}</td>
